@@ -18,7 +18,7 @@ CREATE TABLE `asset_order_record` (
   `new_status` tinyint(4) NOT NULL,
 
 
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`id`)
 
 ) DEFAULT CHARSET=utf8 COLLATE = utf8_bin
 
