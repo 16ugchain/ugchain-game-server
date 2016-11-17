@@ -10,6 +10,8 @@ import org.apache.ibatis.annotations.Select;
 @Mapper
 public interface SequenceMapper {
 
+    String ASSET = "ASSET";
+
     @Select("SELECT nextval('${table}')")
     int nextId(@Param("table")String table);
 

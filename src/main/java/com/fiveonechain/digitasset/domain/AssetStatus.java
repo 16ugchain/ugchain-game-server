@@ -9,6 +9,7 @@ public enum AssetStatus {
     PASS_EVALUATE(2),
     ISSUING(3),
     EXPIRE(4),
+    FROZEN(6),
     REJECT_EVALUATE(5);
 
 

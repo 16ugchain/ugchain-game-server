@@ -34,6 +34,7 @@ public class JwtTokenFactory {
      * @param userContext
      * @return
      */
+    /*
     public AccessJwtToken createAccessJwtToken(UserContext userContext) {
         Assert.notNull(userContext.getUserId());
         Assert.notEmpty(userContext.getAuthorities());
@@ -52,7 +53,7 @@ public class JwtTokenFactory {
         .compact();
 
         return new AccessJwtToken(token, claims);
-    }
+    }*/
 
 
     public static void main(String[] args) {
@@ -69,7 +70,7 @@ public class JwtTokenFactory {
                 .setClaims(claims)
                 .setIssuer("http://svlada.com")
                 .setIssuedAt(Date.from(currentTime.atZone(ZoneId.systemDefault()).toInstant()))
-                .setExpiration(Date.from(currentTime.plusMinutes(30).atZone(ZoneId.systemDefault()).toInstant()))
+                .setExpiration(Date.from(currentTime.plusMinutes(3000).atZone(ZoneId.systemDefault()).toInstant()))
                 .signWith(SignatureAlgorithm.HS512, "xm8EV6Hy5RMFK4EEACIDAwQus")
                 .compact();
         System.out.println(token);
