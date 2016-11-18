@@ -26,25 +26,35 @@ public interface AssetMapper {
     @Insert("INSERT INTO asset(" + INSERT_COLUMN + ") VALUES (" + INSERT_PROPERTY +")")
     int insert(Asset asset);
 
+    @Results({
+            @Result(property = "assetId", column = "asset_id"),
+            @Result(property = "userId", column = "user_id"),
+            @Result(property = "guarId", column = "guar_id"),
+            @Result(property = "name", column = "name"),
+            @Result(property = "value", column = "value"),
+            @Result(property = "description", column = "description"),
+            @Result(property = "certificate", column = "certificate"),
+            @Result(property = "photos", column = "photos"),
+            @Result(property = "startTime", column = "start_time"),
+            @Result(property = "endTime", column = "end_time"),
+            @Result(property = "evalConclusion", column = "eval_conclusion"),
+            @Result(property = "evalValue", column = "eval_value"),
+            @Result(property = "fee", column = "fee"),
+            @Result(property = "expEarnings", column = "exp_earnings"),
+            @Result(property = "status", column = "status"),
+    })
     @Select("SELECT " + ALL_COLUMN + " FROM asset WHERE asset_id = #{assetId}")
     Asset select(@Param("assetId") int assetId);
 
-    /*
-    @Results({
-            @Result(property = "id", column = "id"),
-            @Result(property = "name", column = "name")
-    })
-    @Select("SELECT * FROM user WHERE id = #{id}")
-    User findById(Long id);
 
+    @Select("SELECT status FROM asset WHERE asset_id = #{assetId} FOR UPDATE")
+    Integer selectStatusForUpdate(@Param("assetId") int assetId);
 
-    @Insert("INSERT INTO user(id, name) VALUES(#{id}, #{name})")
-    int insertUser(User user);
+    @Update("UPDATE asset SET status = #{status} WHERE asset_id = #{assetId}")
+    int updateStatusByAssetId(@Param("status") int status, @Param("assetId") int assetId);
 
-    @Update("UPDATE user SET name = #{name} WHERE id = #{id}")
-    int updateUser(User user);
-    */
-
+    @Update("UPDATE asset SET eval_conclusion = #{evalConclusion}, eval_value = #{evalValue}, fee = #{fee}, exp_earnings = #{expEarnings} WHERE asset_id = #{assetId}")
+    int updateAssetEvalInfoByAssetId(Asset asset);
 }
 
 /*

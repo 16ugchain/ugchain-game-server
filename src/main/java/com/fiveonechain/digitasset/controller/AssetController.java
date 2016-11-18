@@ -2,8 +2,11 @@ package com.fiveonechain.digitasset.controller;
 
 import com.fiveonechain.digitasset.auth.UserContext;
 import com.fiveonechain.digitasset.domain.Asset;
+import com.fiveonechain.digitasset.domain.AssetStatus;
 import com.fiveonechain.digitasset.domain.result.ErrorInfo;
 import com.fiveonechain.digitasset.domain.result.Result;
+import com.fiveonechain.digitasset.exception.AssetNotFoundException;
+import com.fiveonechain.digitasset.exception.AssetStatusTransferException;
 import com.fiveonechain.digitasset.service.AssetService;
 import com.fiveonechain.digitasset.util.ResultUtil;
 import org.slf4j.Logger;
@@ -103,7 +106,7 @@ public class AssetController {
      * @param earnings
      */
     @RequestMapping(value = "assets/{assetId}/evaluate", method = RequestMethod.POST)
-    public void evaluateAsset(
+    public Result evaluateAsset(
             @AuthenticationPrincipal UserContext userContext,
             @PathVariable("assetId") int assetId,
             @RequestParam("result") boolean result,
@@ -112,6 +115,21 @@ public class AssetController {
             @RequestParam(value = "fee", required = false) Integer fee,
             @RequestParam(value = "earnings", required = false) Integer earnings) {
 
+        if (result) {
+            assetService.updateAssetStatusStateMachine(assetId, AssetStatus.REJECT_EVALUATE);
+        } else {
+            Asset asset = new Asset();
+            asset.setAssetId(assetId);
+            asset.setEvalConclusion(conclusion);
+            asset.setEvalValue(value);
+            asset.setFee(fee);
+            asset.setExpEarnings(earnings);
+
+            assetService.updateAssetEvalInfo(asset);
+            assetService.updateAssetStatusStateMachine(assetId, AssetStatus.PASS_EVALUATE);
+        }
+
+        return ResultUtil.success();
     }
 
     /**
@@ -121,10 +139,15 @@ public class AssetController {
      * @param assetId
      */
     @RequestMapping(value = "assets/{assetId}/issue", method = RequestMethod.POST)
-    public void issueAsset(
+    public Result issueAsset(
             @AuthenticationPrincipal UserContext userContext,
             @PathVariable("assetId") int assetId) {
 
+        // TODO check pay order
+        // TODO check assetId
+
+        assetService.updateAssetStatusStateMachine(assetId, AssetStatus.ISSUE);
+        return ResultUtil.success();
     }
 
     /**
@@ -134,10 +157,14 @@ public class AssetController {
      * @param assetId
      */
     @RequestMapping(value = "assets/{assetId}/freeze", method = RequestMethod.POST)
-    public void freezeAsset(
+    public Result freezeAsset(
             @AuthenticationPrincipal UserContext userContext,
             @PathVariable("assetId") int assetId) {
 
+        // TODO check assetId
+
+        assetService.updateAssetStatusStateMachine(assetId, AssetStatus.FROZEN);
+        return ResultUtil.success();
     }
 
     /**
@@ -153,5 +180,15 @@ public class AssetController {
 
     }
 
+    @ExceptionHandler(AssetStatusTransferException.class)
+    @ResponseBody
+    public Result handleAssetStatusTransferException() {
+        return ResultUtil.buildErrorResult(ErrorInfo.ASSET_STATUS_TRANSFER_ERROR);
+    }
 
+    @ExceptionHandler(AssetNotFoundException.class)
+    @ResponseBody
+    public Result handleAssetNotFoundException() {
+        return ResultUtil.buildErrorResult(ErrorInfo.ASSET_NOT_FOUND);
+    }
 }

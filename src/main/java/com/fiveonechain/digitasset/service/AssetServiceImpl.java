@@ -2,13 +2,17 @@ package com.fiveonechain.digitasset.service;
 
 import com.fiveonechain.digitasset.domain.Asset;
 import com.fiveonechain.digitasset.domain.AssetStatus;
+import com.fiveonechain.digitasset.exception.AssetNotFoundException;
+import com.fiveonechain.digitasset.exception.AssetStatusTransferException;
 import com.fiveonechain.digitasset.mapper.AssetMapper;
 import com.fiveonechain.digitasset.mapper.SequenceMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -21,6 +25,8 @@ public class AssetServiceImpl implements AssetService {
     private static final Logger LOGGER = LoggerFactory.getLogger(AssetServiceImpl.class);
 
     private static final int DUMMY_GUAR_ID = -1;
+
+    private static final BigDecimal FEE_RATE = new BigDecimal("0.001");
 
     @Autowired
     private SequenceMapper seqMapper;
@@ -37,12 +43,18 @@ public class AssetServiceImpl implements AssetService {
     public void createAsset(Asset asset, boolean needGuar) {
         int assetId = nextAssetId();
         asset.setAssetId(assetId);
-        asset.setStatus(AssetStatus.WAIT_EVALUATE.getCode());
-        if (!needGuar) {
+        if (needGuar) {
+            asset.setStatus(AssetStatus.WAIT_EVALUATE.getCode());
+        } else {
             asset.setGuarId(DUMMY_GUAR_ID);
-            asset.setFee(asset.getValue());
+            asset.setFee(calculateFee(asset.getValue()));
+            asset.setStatus(AssetStatus.PASS_EVALUATE.getCode());
         }
         assetMapper.insert(asset);
+    }
+
+    private int calculateFee(int value) {
+        return FEE_RATE.multiply(new BigDecimal(value)).intValue();
     }
 
     @Override
@@ -61,13 +73,77 @@ public class AssetServiceImpl implements AssetService {
     }
 
     @Override
-    public void updateAssetStatus(AssetStatus status) {
+    @Transactional
+    public void updateAssetStatusStateMachine(int assetId, AssetStatus newStatus) {
+        Integer curStatusCode = assetMapper.selectStatusForUpdate(assetId);
+        if (curStatusCode == null) {
+            throw new AssetNotFoundException(assetId);
+        }
 
+        AssetStatus curStatus = AssetStatus.fromValue(curStatusCode);
+        if (newStatus == AssetStatus.PASS_EVALUATE) {
+            // TODO check user role
+            if (curStatus != AssetStatus.WAIT_EVALUATE) {
+                throw new AssetStatusTransferException(curStatus, newStatus);
+            }
+        } else if (newStatus == AssetStatus.REJECT_EVALUATE) {
+            // TODO check user role
+            if (curStatus != AssetStatus.WAIT_EVALUATE) {
+                throw new AssetStatusTransferException(curStatus, newStatus);
+            }
+        } else if (newStatus == AssetStatus.ISSUE) {
+            // TODO check user role
+            // TODO check pay order
+            if ((curStatus != AssetStatus.PASS_EVALUATE)
+                    && (curStatus != AssetStatus.FROZEN)) {
+                throw new AssetStatusTransferException(curStatus, newStatus);
+            }
+        } else if (newStatus == AssetStatus.EXPIRE_TO_ISSUE) {
+            if (curStatus != AssetStatus.PASS_EVALUATE) {
+                throw new AssetStatusTransferException(curStatus, newStatus);
+            }
+        }else if (newStatus == AssetStatus.FROZEN) {
+            // TODO check user role
+            if (curStatus != AssetStatus.ISSUE) {
+                throw new AssetStatusTransferException(curStatus, newStatus);
+            }
+        } else if (newStatus == AssetStatus.MATURITY) {
+            // TODO check user role
+            if ((curStatus != AssetStatus.ISSUE)
+                    && (curStatus != AssetStatus.FROZEN)) {
+                throw new AssetStatusTransferException(curStatus, newStatus);
+            }
+        } else if (newStatus == curStatus) {
+            //nothing
+            return;
+        } else {
+            throw new AssetStatusTransferException(curStatus, newStatus);
+        }
+
+        assetMapper.updateStatusByAssetId(newStatus.getCode(), assetId);
     }
 
     @Override
     public List<Asset> getAssetListByStatus(AssetStatus status) {
         return null;
+    }
+
+    @Override
+    public void updateAssetEvalInfo(Asset asset) {
+        assetMapper.updateAssetEvalInfoByAssetId(asset);
+    }
+
+    @Override
+    public void issueAsset(int assetId, String payOrder) {
+        Asset asset = getAsset(assetId);
+        if (asset == null) {
+            throw new AssetNotFoundException(assetId);
+        }
+
+        // TODO check pay order
+
+
+
     }
 }
 

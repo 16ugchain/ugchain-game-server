@@ -22,7 +22,11 @@ public interface AssetService {
 
     List<Asset> getAssetListByStatus(AssetStatus status);
 
-    void updateAssetStatus(AssetStatus status);
+    void updateAssetStatusStateMachine(int assetId, AssetStatus newStatus);
+
+    void updateAssetEvalInfo(Asset asset);
+
+    void issueAsset(int assetId, String payOrder);
 
 }
 

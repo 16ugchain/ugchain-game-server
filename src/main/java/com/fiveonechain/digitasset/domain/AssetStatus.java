@@ -7,9 +7,10 @@ public enum AssetStatus {
 
     WAIT_EVALUATE(1),
     PASS_EVALUATE(2),
-    ISSUING(3),
-    EXPIRE(4),
+    ISSUE(3),
+    MATURITY(4),
     FROZEN(6),
+    EXPIRE_TO_ISSUE(7),
     REJECT_EVALUATE(5);
 
 
@@ -21,5 +22,14 @@ public enum AssetStatus {
 
     public int getCode() {
         return this.code;
+    }
+
+    public static AssetStatus fromValue(int code) {
+        for (AssetStatus status : AssetStatus.values()) {
+            if (status.getCode() == code) {
+                return status;
+            }
+        }
+        return null;
     }
 }
