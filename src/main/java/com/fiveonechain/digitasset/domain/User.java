@@ -1,5 +1,7 @@
 package com.fiveonechain.digitasset.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * Created by yuanshichao on 2016/11/7.
  */
@@ -8,12 +10,23 @@ public class User {
     private Long id;
     private Long user_id;
     private String user_name;
+    @JsonIgnore
     private String password;
     private int role;
     private int status;
     private String telephone;
     private String create_time;
     private String update_time;
+
+    private String token;
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
 
     public Long getId() {
         return id;
@@ -86,6 +99,7 @@ public class User {
     public void setTelephone(String telephone) {
         this.telephone = telephone;
     }
+
 
     @Override
     public String toString() {
