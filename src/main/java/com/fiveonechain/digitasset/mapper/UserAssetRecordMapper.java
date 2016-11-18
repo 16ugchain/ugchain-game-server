@@ -21,7 +21,7 @@ CREATE TABLE `user_asset_record` (
   `create_time` timestamp NOT NULL default CURRENT_TIMESTAMP,
 
   PRIMARY KEY (`id`),
-  UNIQUE KEY `idx_assetid_userid` (`asset_id`, `user_id`),
+  UNIQUE KEY `idx_assetid_userid` (`asset_id`, `from_user_id`,`to_user_id`)
 
 ) DEFAULT CHARSET=utf8 COLLATE = utf8_bin
 
