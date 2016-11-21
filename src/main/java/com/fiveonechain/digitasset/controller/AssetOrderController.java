@@ -5,6 +5,7 @@ import com.fiveonechain.digitasset.domain.AssetOrder;
 import com.fiveonechain.digitasset.domain.AssetOrderStatusEnum;
 import com.fiveonechain.digitasset.domain.result.ErrorInfo;
 import com.fiveonechain.digitasset.domain.result.Result;
+import com.fiveonechain.digitasset.exception.AssetOrderException;
 import com.fiveonechain.digitasset.service.IAssetOrderService;
 import com.fiveonechain.digitasset.util.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,6 +84,10 @@ public class AssetOrderController {
             @RequestParam("result") boolean result
             ) {
         AssetOrder assetOrder = iAssetOrderService.getAssetOrder(assetOrderId);
+        if(assetOrder == null){
+            return ResultUtil.buildErrorResult(ErrorInfo.ORDER_NOT_FOUND);
+        }
+        // TODO: 同意后需要锁死份额 
         LocalDateTime currentTime = LocalDateTime.now();
         Date startTime = Date.from(currentTime.atZone(ZoneId.systemDefault()).toInstant());
         if(assetOrder.getEnd_time().before(startTime)){
@@ -166,6 +171,12 @@ public class AssetOrderController {
         }
 
         return ResultUtil.success();
+    }
+
+    @ExceptionHandler(AssetOrderException.class)
+    @ResponseBody
+    public Result handleOrderException() {
+        return ResultUtil.buildErrorResult(ErrorInfo.ORDER_EXCEPTION);
     }
 
 }
