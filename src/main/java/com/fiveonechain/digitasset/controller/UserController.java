@@ -6,6 +6,7 @@ import com.fiveonechain.digitasset.config.QiNiuConfig;
 import com.fiveonechain.digitasset.domain.*;
 import com.fiveonechain.digitasset.domain.result.ErrorInfo;
 import com.fiveonechain.digitasset.domain.result.Result;
+import com.fiveonechain.digitasset.exception.ImageUploadException;
 import com.fiveonechain.digitasset.service.*;
 import com.fiveonechain.digitasset.util.ResultUtil;
 import com.fiveonechain.digitasset.util.StringBuilderHolder;
@@ -19,10 +20,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -80,7 +78,7 @@ public class UserController {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.SERVER_ERROR);
             return result;
         }
-        Claims claims = Jwts.claims().setSubject(Long.valueOf(101).toString());
+        Claims claims = Jwts.claims().setSubject(user_name);
         List<GrantedAuthority> authorities = Arrays.asList(new SimpleGrantedAuthority(UserRoleEnum.USER.name()));
         claims.put("scopes", authorities.stream().map(s -> s.toString()).collect(Collectors.toList()));
         claims.put("id", userGet.getUser_id());
@@ -105,7 +103,7 @@ public class UserController {
         }
         User user = iUserService.getUserByUserName(user_name);
         Claims claims = Jwts.claims().setSubject(user_name);
-        List<GrantedAuthority> authorities = Arrays.asList(new SimpleGrantedAuthority(UserRoleEnum.getUserRoleById(user.getRole()).name()));
+        List<GrantedAuthority> authorities = Arrays.asList(new SimpleGrantedAuthority(UserRoleEnum.fromValue(user.getRole()).name()));
         claims.put("scopes", authorities.stream().map(s -> s.toString()).collect(Collectors.toList()));
         claims.put("id", user.getUser_id());
         LocalDateTime currentTime = LocalDateTime.now();
@@ -157,7 +155,7 @@ public class UserController {
             @RequestParam("type") int type,
             @AuthenticationPrincipal UserContext userContext
             ) {
-        ImageTypeEnum imageTypeEnum = ImageTypeEnum.getImageTypeById(type);
+        ImageTypeEnum imageTypeEnum = ImageTypeEnum.fromValue(type);
         if(imageTypeEnum == null){
             Result result = ResultUtil.buildErrorResult(ErrorInfo.IMAGETYPE_NOT_FOUND);
             return result;
@@ -180,9 +178,7 @@ public class UserController {
             byte[] imageByte = image.getBytes();
             message += imageUploadService.uploadQiNiu(imageByte);
         }  catch (IOException e){
-            ErrorInfo errorInfo = ErrorInfo.IMAGE_UPLOAD_FAIL;
-            Result result = ResultUtil.buildErrorResult(errorInfo);
-            return result;
+            throw new ImageUploadException(user.getUser_id(),type);
         }
 
         JsonObject jsonObject = new Gson().fromJson(message,JsonObject.class);
@@ -252,4 +248,11 @@ public class UserController {
         Result result = ResultUtil.success(guaranteeCorp);
         return result;
     }
+
+    @ExceptionHandler(ImageUploadException.class)
+    @ResponseBody
+    public Result handleUploadImageException() {
+        return ResultUtil.buildErrorResult(ErrorInfo.IMAGE_UPLOAD_FAIL);
+    }
+
 }

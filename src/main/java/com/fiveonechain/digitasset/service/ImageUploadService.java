@@ -1,6 +1,7 @@
 package com.fiveonechain.digitasset.service;
 
 import com.fiveonechain.digitasset.config.QiNiuConfig;
+import com.fiveonechain.digitasset.exception.ImageUploadException;
 import com.qiniu.common.QiniuException;
 import com.qiniu.common.Zone;
 import com.qiniu.http.Response;
@@ -19,7 +20,10 @@ public class ImageUploadService {
     @Autowired
     private QiNiuConfig qiNiuConfig;
 
-    public  String uploadQiNiu(byte[] image) throws QiniuException{
+    public String uploadQiNiu(byte[] image) {
+        if(image == null){
+            throw new ImageUploadException();
+        }
         String imageName = DigestUtils.md5DigestAsHex(image);
         String bucketName = qiNiuConfig.getBucket();
         String ak = qiNiuConfig.getAk();
@@ -31,15 +35,18 @@ public class ImageUploadService {
         //创建上传对象
         UploadManager uploadManager = new UploadManager(c);
         //imageName相同允许用户修改，只需要设置上传的空间名就可以了
-        String uptoken = auth.uploadToken(bucketName,imageName);
+        String uptoken = auth.uploadToken(bucketName, imageName);
         String body = "";
-                //调用put方法上传
-                Response res = uploadManager.put(image, imageName, uptoken);
-                //打印返回的信息
-                body += res.bodyString();
-                System.out.println(res.bodyString());
+        //调用put方法上传
+        Response res = null;
+        try {
+            res = uploadManager.put(image, imageName, uptoken);
+            body += res.bodyString();
+        } catch (QiniuException e) {
+            throw new ImageUploadException();
+        }
+        //打印返回的信息
 
-
-       return body;
+        return body;
     }
 }

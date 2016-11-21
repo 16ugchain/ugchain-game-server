@@ -6,6 +6,7 @@ import com.fiveonechain.digitasset.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Created by fanjl on 16/11/16.
@@ -23,6 +24,7 @@ public class UserServiceImpl implements IUserService {
 
 
     @Override
+    @Transactional
     public User insertAndGetUser(User user) {
         int userId = sequenceMapper.nextId(SEQUENCE_NAME);
         user.setUser_id(Long.valueOf(userId));

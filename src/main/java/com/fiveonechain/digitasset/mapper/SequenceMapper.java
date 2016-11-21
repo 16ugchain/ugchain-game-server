@@ -12,6 +12,16 @@ public interface SequenceMapper {
 
     String ASSET = "ASSET";
 
+    String USER = "USER";
+
+    String ASSET_ORDER = "ASSET_ORDER";
+
+    String IMAGE_URL = "IMAGE_URL";
+
+    String GUARANTEECORP_ID = "GUARANTEE_CORP";
+
+
+
     @Select("SELECT nextval('${table}')")
     int nextId(@Param("table")String table);
 

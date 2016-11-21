@@ -11,8 +11,8 @@ import org.apache.ibatis.annotations.Select;
  */
 @Mapper
 public interface GuaranteeCorpMapper {
-    final static String columns = "user_id,corp_name,juristic_person,main_business,status";
-    final static String entity = "#{guaranteeCorp.user_id},#{guaranteeCorp.corp_name},#{guaranteeCorp.juristic_person},#{guaranteeCorp.main_business},#{guaranteeCorp.status}";
+    final static String columns = "guaranteecorp_id,user_id,corp_name,juristic_person,main_business,status";
+    final static String entity = "#{guaranteeCorp.guaranteecorp_id},#{guaranteeCorp.user_id},#{guaranteeCorp.corp_name},#{guaranteeCorp.juristic_person},#{guaranteeCorp.main_business},#{guaranteeCorp.status}";
     @Insert("insert into guarantee_corp ("+columns+") values("+entity+")")
     int insertCorp(@Param("guaranteeCorp") GuaranteeCorp guaranteeCorp);
 
@@ -29,6 +29,7 @@ public interface GuaranteeCorpMapper {
 CREATE TABLE `guarantee_corp` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
+  `guaranteecorp_id` int(11) NOT NULL,
   `corp_name` varchar(5) NOT NULL,
   `create_time` timestamp NOT NULL default CURRENT_TIMESTAMP,
   `update_time` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,

@@ -14,7 +14,11 @@ public enum ErrorInfo {
     USER_NAME_EXITS(6002,"用户名已被注册"),
     PASSWORD_ERROR(6003,"密码错误"),
     IDENTITY_EXISTS(6004,"身份证已被注册"),
-    CORP_EXISTS(6004,"公司已注册"),
+    CORP_EXISTS(6005,"公司已注册"),
+    ORDER_NOT_FOUND(7001,"订单不存在"),
+    ORDER_APPLY_OUTTIME(7002,"申请操作超时"),
+    ORDER_OBLIGATION_OUTTIME(7003,"支付操作超时"),
+    ORDER_COMEPLETE_OUTTIME(7004,"完成操作超时，进入仲裁"),
     SERVER_ERROR(9001,"服务器错误");
 
     private int errorCode;

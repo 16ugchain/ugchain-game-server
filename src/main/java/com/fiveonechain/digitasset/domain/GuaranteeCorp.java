@@ -6,6 +6,7 @@ import java.util.Date;
  * Created by fanjl on 16/11/18.
  */
 public class GuaranteeCorp {
+    private int guranteecorp_id;
     private int user_id;
     private String corp_name;
     private String juristic_person;
@@ -68,5 +69,13 @@ public class GuaranteeCorp {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public int getGuranteecorp_id() {
+        return guranteecorp_id;
+    }
+
+    public void setGuranteecorp_id(int guranteecorp_id) {
+        this.guranteecorp_id = guranteecorp_id;
     }
 }

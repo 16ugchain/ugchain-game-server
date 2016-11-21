@@ -15,7 +15,6 @@ import org.springframework.stereotype.Component;
 public class ImageUrlServiceImpl implements IimageUrlService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ImageUrlServiceImpl.class);
 
-    private static final String sequenceTable = "IMAGE_URL";
 
     @Autowired
     private SequenceMapper sequenceMapper;
@@ -46,6 +45,6 @@ public class ImageUrlServiceImpl implements IimageUrlService {
 
     @Override
     public int nextImageUrlId() {
-        return sequenceMapper.nextId(sequenceTable);
+        return sequenceMapper.nextId(SequenceMapper.IMAGE_URL);
     }
 }
