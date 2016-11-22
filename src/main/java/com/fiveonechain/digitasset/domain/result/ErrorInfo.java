@@ -6,6 +6,7 @@ public enum ErrorInfo {
     JWT_TOKEN_EXPIRED(4002, "TOKEN过期"),
     ASSET_NOT_FOUND(4003, "资产不存在"),
     ASSET_STATUS_TRANSFER_ERROR(4004, "资产状态异常"),
+    DIGIT_ASSET_NOT_FOUND(4005, "数字资产不存在"),
     IMAGETYPE_NOT_FOUND(5001,"图片类型不存在"),
     IMAGE_EXISTS(5002,"此类型图片已经上传过"),
     IMAGE_TOO_LARGE(5003,"图片太大"),
