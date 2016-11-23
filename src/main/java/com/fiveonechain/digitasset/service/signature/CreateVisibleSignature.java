@@ -1,4 +1,4 @@
-package com.fiveonechain.digitasset.service.pdfbox;/*
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -14,10 +14,9 @@ package com.fiveonechain.digitasset.service.pdfbox;/*
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.fiveonechain.digitasset.service.signature;
 
 import org.apache.pdfbox.cos.COSName;
-import org.apache.pdfbox.examples.signature.CreateSignatureBase;
-import org.apache.pdfbox.examples.signature.TSAClient;
 import org.apache.pdfbox.io.IOUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.interactive.digitalsignature.ExternalSigningSupport;
@@ -50,16 +49,16 @@ public class CreateVisibleSignature extends CreateSignatureBase
     private PDVisibleSignDesigner visibleSignDesigner;
     private final PDVisibleSigProperties visibleSignatureProperties = new PDVisibleSigProperties();
 
-    public void setVisibleSignDesigner(String filename, int x, int y, int zoomPercent,
-                                       FileInputStream imageStream, int page)
+    public void setVisibleSignDesigner(String filename, int x, int y, int zoomPercent, 
+            FileInputStream imageStream, int page) 
             throws IOException
     {
         visibleSignDesigner = new PDVisibleSignDesigner(filename, imageStream, page);
         visibleSignDesigner.xAxis(x).yAxis(y).zoom(zoomPercent);
     }
-
-    public void setVisibleSignatureProperties(String name, String location, String reason, int preferredSize,
-                                              int page, boolean visualSignEnabled) throws IOException
+    
+    public void setVisibleSignatureProperties(String name, String location, String reason, int preferredSize, 
+            int page, boolean visualSignEnabled) throws IOException
     {
         visibleSignatureProperties.signerName(name).signerLocation(location).signatureReason(reason).
                 preferredSize(preferredSize).page(page).visualSignEnabled(visualSignEnabled).
@@ -134,10 +133,10 @@ public class CreateVisibleSignature extends CreateSignatureBase
 
         // default filter
         signature.setFilter(PDSignature.FILTER_ADOBE_PPKLITE);
-
+        
         // subfilter for basic and PAdES Part 2 signatures
         signature.setSubFilter(PDSignature.SUBFILTER_ADBE_PKCS7_DETACHED);
-
+        
         if (visibleSignatureProperties != null)
         {
             // this builds the signature structures in a separate document
@@ -187,7 +186,7 @@ public class CreateVisibleSignature extends CreateSignatureBase
             doc.saveIncremental(fos);
         }
         doc.close();
-
+        
         // do not close options before saving, because some COSStream objects within options 
         // are transferred to the signed document.
         IOUtils.closeQuietly(signatureOptions);
@@ -231,11 +230,11 @@ public class CreateVisibleSignature extends CreateSignatureBase
      * [3] image of visible signature
      *
      * @param args
-     * @throws java.security.KeyStoreException
-     * @throws java.security.cert.CertificateException
-     * @throws java.io.IOException
-     * @throws java.security.NoSuchAlgorithmException
-     * @throws java.security.UnrecoverableKeyException
+     * @throws KeyStoreException
+     * @throws CertificateException
+     * @throws IOException
+     * @throws NoSuchAlgorithmException
+     * @throws UnrecoverableKeyException
      */
     public static void main(String[] args) throws KeyStoreException, CertificateException,
             IOException, NoSuchAlgorithmException, UnrecoverableKeyException
@@ -307,9 +306,9 @@ public class CreateVisibleSignature extends CreateSignatureBase
     {
         System.err.println("Usage: java " + CreateVisibleSignature.class.getName()
                 + " <pkcs12-keystore-file> <pin> <input-pdf> <sign-image>\n" + "" +
-                "options:\n" +
-                "  -tsa <url>    sign timestamp using the given TSA server\n"+
-                "  -e            sign using external signature creation scenario");
+                           "options:\n" +
+                           "  -tsa <url>    sign timestamp using the given TSA server\n"+
+                           "  -e            sign using external signature creation scenario");
     }
 
 }

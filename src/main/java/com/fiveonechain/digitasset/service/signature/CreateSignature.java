@@ -1,4 +1,4 @@
-package com.fiveonechain.digitasset.service.pdfbox;/*
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -14,14 +14,14 @@ package com.fiveonechain.digitasset.service.pdfbox;/*
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.fiveonechain.digitasset.service.signature;
 
-import org.apache.pdfbox.examples.signature.CreateSignatureBase;
-import org.apache.pdfbox.examples.signature.TSAClient;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.interactive.digitalsignature.ExternalSigningSupport;
 import org.apache.pdfbox.pdmodel.interactive.digitalsignature.PDSignature;
 
 import java.io.*;
+import java.net.URL;
 import java.security.*;
 import java.security.cert.CertificateException;
 import java.util.Calendar;
@@ -140,65 +140,64 @@ public class CreateSignature extends CreateSignatureBase
 
     public static void main(String[] args) throws IOException, GeneralSecurityException
     {
+        if (args.length < 3)
+        {
+            usage();
+            System.exit(1);
+        }
 
-//        if (args.length < 3)
-//        {
-//            usage();
-//            System.exit(1);
-//        }
-//
-//        String tsaUrl = null;
-//        boolean externalSig = false;
-//        for (int i = 0; i < args.length; i++)
-//        {
-//            if (args[i].equals("-tsa"))
-//            {
-//                i++;
-//                if (i >= args.length)
-//                {
-//                    usage();
-//                    System.exit(1);
-//                }
-//                tsaUrl = args[i];
-//            }
-//            if (args[i].equals("-e"))
-//            {
-//                externalSig = true;
-//            }
-//        }
+        String tsaUrl = null;
+        boolean externalSig = false;
+        for (int i = 0; i < args.length; i++)
+        {
+            if (args[i].equals("-tsa"))
+            {
+                i++;
+                if (i >= args.length)
+                {
+                    usage();
+                    System.exit(1);
+                }
+                tsaUrl = args[i];
+            }
+            if (args[i].equals("-e"))
+            {
+                externalSig = true;
+            }
+        }
 
-//        // load the keystore
-//        KeyStore keystore = KeyStore.getInstance("PKCS12");
-//        char[] password = args[1].toCharArray(); // TODO use Java 6 java.io.Console.readPassword
-//        keystore.load(new FileInputStream(args[0]), password);
-//        // TODO alias command line argument
-//
-//        // TSA client
-//        TSAClient tsaClient = null;
-//        if (tsaUrl != null)
-//        {
-//            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-//            tsaClient = new TSAClient(new URL(tsaUrl), null, null, digest);
-//        }
-//
-//        // sign PDF
-//        CreateSignature signing = new CreateSignature(keystore, password);
-//        signing.setExternalSigning(externalSig);
-//
-//        File inFile = new File(args[2]);
-//        String name = inFile.getName();
-//        String substring = name.substring(0, name.lastIndexOf('.'));
-//
-//        File outFile = new File(inFile.getParent(), substring + "_signed.pdf");
-//        signing.signDetached(inFile, outFile, tsaClient);
+        // load the keystore
+        KeyStore keystore = KeyStore.getInstance("PKCS12");
+        char[] password = args[1].toCharArray(); // TODO use Java 6 java.io.Console.readPassword
+        keystore.load(new FileInputStream(args[0]), password);
+        // TODO alias command line argument
+
+        // TSA client
+        TSAClient tsaClient = null;
+        if (tsaUrl != null)
+        {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            tsaClient = new TSAClient(new URL(tsaUrl), null, null, digest);
+        }
+
+        // sign PDF
+        CreateSignature signing = new CreateSignature(keystore, password);
+        signing.setExternalSigning(externalSig);
+
+        File inFile = new File(args[2]);
+        String name = inFile.getName();
+        String substring = name.substring(0, name.lastIndexOf('.'));
+
+        File outFile = new File(inFile.getParent(), substring + "_signed.pdf");
+        signing.signDetached(inFile, outFile, tsaClient);
     }
 
     private static void usage()
     {
         System.err.println("usage: java " + CreateSignature.class.getName() + " " +
-                "<pkcs12_keystore> <password> <pdf_to_sign>\n" + "" +
-                "options:\n" +
-                "  -tsa <url>    sign timestamp using the given TSA server\n" +
-                "  -e            sign using external signature creation scenario");
+                           "<pkcs12_keystore> <password> <pdf_to_sign>\n" + "" +
+                           "options:\n" +
+                           "  -tsa <url>    sign timestamp using the given TSA server\n" +
+                           "  -e            sign using external signature creation scenario");
     }
 }
