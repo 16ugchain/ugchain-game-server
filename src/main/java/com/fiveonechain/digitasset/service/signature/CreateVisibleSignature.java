@@ -32,8 +32,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URL;
-import java.security.*;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.util.Calendar;
 
@@ -236,68 +238,68 @@ public class CreateVisibleSignature extends CreateSignatureBase
      * @throws NoSuchAlgorithmException
      * @throws UnrecoverableKeyException
      */
-    public static void main(String[] args) throws KeyStoreException, CertificateException,
-            IOException, NoSuchAlgorithmException, UnrecoverableKeyException
-    {
-        // generate with
-        // keytool -storepass 123456 -storetype PKCS12 -keystore file.p12 -genkey -alias client -keyalg RSA
-        if (args.length < 4)
-        {
-            usage();
-            System.exit(1);
-        }
-
-        String tsaUrl = null;
-        boolean externalSig = false;
-        for (int i = 0; i < args.length; i++)
-        {
-            if (args[i].equals("-tsa"))
-            {
-                i++;
-                if (i >= args.length)
-                {
-                    usage();
-                    System.exit(1);
-                }
-                tsaUrl = args[i];
-            }
-            if (args[i].equals("-e"))
-            {
-                externalSig = true;
-            }
-        }
-
-        File ksFile = new File(args[0]);
-        KeyStore keystore = KeyStore.getInstance("PKCS12");
-        char[] pin = args[1].toCharArray();
-        keystore.load(new FileInputStream(ksFile), pin);
-
-        // TSA client
-        TSAClient tsaClient = null;
-        if (tsaUrl != null)
-        {
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            tsaClient = new TSAClient(new URL(tsaUrl), null, null, digest);
-        }
-
-        File documentFile = new File(args[2]);
-
-        CreateVisibleSignature signing = new CreateVisibleSignature(keystore, pin.clone());
-
-        FileInputStream imageStream = new FileInputStream(args[3]);
-
-        String name = documentFile.getName();
-        String substring = name.substring(0, name.lastIndexOf('.'));
-        File signedDocumentFile = new File(documentFile.getParent(), substring + "_signed.pdf");
-
-        // page is 1-based here
-        int page = 1;
-        signing.setVisibleSignDesigner(args[2], 0, 0, -50, imageStream, page);
-        imageStream.close();
-        signing.setVisibleSignatureProperties("name", "location", "Security", 0, page, true);
-        signing.setExternalSigning(externalSig);
-        signing.signPDF(documentFile, signedDocumentFile, tsaClient);
-    }
+//    public static void main(String[] args) throws KeyStoreException, CertificateException,
+//            IOException, NoSuchAlgorithmException, UnrecoverableKeyException
+//    {
+//        // generate with
+//        // keytool -storepass 123456 -storetype PKCS12 -keystore file.p12 -genkey -alias client -keyalg RSA
+//        if (args.length < 4)
+//        {
+//            usage();
+//            System.exit(1);
+//        }
+//
+//        String tsaUrl = null;
+//        boolean externalSig = false;
+//        for (int i = 0; i < args.length; i++)
+//        {
+//            if (args[i].equals("-tsa"))
+//            {
+//                i++;
+//                if (i >= args.length)
+//                {
+//                    usage();
+//                    System.exit(1);
+//                }
+//                tsaUrl = args[i];
+//            }
+//            if (args[i].equals("-e"))
+//            {
+//                externalSig = true;
+//            }
+//        }
+//
+//        File ksFile = new File(args[0]);
+//        KeyStore keystore = KeyStore.getInstance("PKCS12");
+//        char[] pin = args[1].toCharArray();
+//        keystore.load(new FileInputStream(ksFile), pin);
+//
+//        // TSA client
+//        TSAClient tsaClient = null;
+//        if (tsaUrl != null)
+//        {
+//            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+//            tsaClient = new TSAClient(new URL(tsaUrl), null, null, digest);
+//        }
+//
+//        File documentFile = new File(args[2]);
+//
+//        CreateVisibleSignature signing = new CreateVisibleSignature(keystore, pin.clone());
+//
+//        FileInputStream imageStream = new FileInputStream(args[3]);
+//
+//        String name = documentFile.getName();
+//        String substring = name.substring(0, name.lastIndexOf('.'));
+//        File signedDocumentFile = new File(documentFile.getParent(), substring + "_signed.pdf");
+//
+//        // page is 1-based here
+//        int page = 1;
+//        signing.setVisibleSignDesigner(args[2], 0, 0, -50, imageStream, page);
+//        imageStream.close();
+//        signing.setVisibleSignatureProperties("name", "location", "Security", 0, page, true);
+//        signing.setExternalSigning(externalSig);
+//        signing.signPDF(documentFile, signedDocumentFile, tsaClient);
+//    }
 
     /**
      * This will print the usage for this program.

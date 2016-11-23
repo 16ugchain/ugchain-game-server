@@ -33,12 +33,12 @@ import java.io.OutputStream;
  *
  * @author Thomas Chojecki
  */
-class CMSProcessableInputStream implements CMSTypedData
+public class CMSProcessableInputStream implements CMSTypedData
 {
     private InputStream in;
     private final ASN1ObjectIdentifier contentType;
 
-    CMSProcessableInputStream(InputStream is)
+    public CMSProcessableInputStream(InputStream is)
     {
         this(new ASN1ObjectIdentifier(CMSObjectIdentifiers.data.getId()), is);
     }

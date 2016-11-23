@@ -67,7 +67,7 @@ public final class ShowSignature
      * @throws SignatureException
      */
     public static void main(String[] args) throws IOException, CertificateException,
-                                                  NoSuchAlgorithmException, InvalidKeyException, 
+                                                  NoSuchAlgorithmException, InvalidKeyException,
                                                   NoSuchProviderException, SignatureException
     {
         ShowSignature show = new ShowSignature();

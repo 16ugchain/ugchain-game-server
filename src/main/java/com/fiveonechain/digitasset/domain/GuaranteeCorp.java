@@ -6,11 +6,12 @@ import java.util.Date;
  * Created by fanjl on 16/11/18.
  */
 public class GuaranteeCorp {
-    private int guranteecorp_id;
+    private int guaranteecorp_id;
     private int user_id;
     private String corp_name;
     private String juristic_person;
     private String main_business;
+    private byte[] pkcs12;
     private Date create_time;
     private Date update_time;
     private int status;
@@ -71,11 +72,19 @@ public class GuaranteeCorp {
         this.status = status;
     }
 
-    public int getGuranteecorp_id() {
-        return guranteecorp_id;
+    public int getGuaranteecorp_id() {
+        return guaranteecorp_id;
     }
 
-    public void setGuranteecorp_id(int guranteecorp_id) {
-        this.guranteecorp_id = guranteecorp_id;
+    public void setGuaranteecorp_id(int guaranteecorp_id) {
+        this.guaranteecorp_id = guaranteecorp_id;
+    }
+
+    public byte[] getPkcs12() {
+        return pkcs12;
+    }
+
+    public void setPkcs12(byte[] pkcs12) {
+        this.pkcs12 = pkcs12;
     }
 }

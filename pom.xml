@@ -109,7 +109,6 @@
 			<version>2.1.0-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
->>>>>>> edc71e17206ef3a0baa83838a8170b3932542e46
 
     <build>
         <plugins>

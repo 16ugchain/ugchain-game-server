@@ -29,7 +29,7 @@ public class GuaranteeCorpServiceImpl implements IGuaranteeCorpService {
     @Override
     public int insertCorp(GuaranteeCorp guaranteeCorp) {
         int guaranteecorp_id = nextId();
-        guaranteeCorp.setGuranteecorp_id(guaranteecorp_id);
+        guaranteeCorp.setGuaranteecorp_id(guaranteecorp_id);
         return guaranteeCorpMapper.insertCorp(guaranteeCorp);
     }
 
