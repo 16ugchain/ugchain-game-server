@@ -11,8 +11,8 @@ import org.apache.ibatis.annotations.Select;
  */
 @Mapper
 public interface GuaranteeCorpMapper {
-    final static String columns = "guaranteecorp_id,user_id,corp_name,juristic_person,main_business,status";
-    final static String entity = "#{guaranteeCorp.guaranteecorp_id},#{guaranteeCorp.user_id},#{guaranteeCorp.corp_name},#{guaranteeCorp.juristic_person},#{guaranteeCorp.main_business},#{guaranteeCorp.status}";
+    final static String columns = "guaranteecorp_id,user_id,corp_name,juristic_person,main_business,pkcs12,status";
+    final static String entity = "#{guaranteeCorp.guaranteecorp_id},#{guaranteeCorp.user_id},#{guaranteeCorp.corp_name},#{guaranteeCorp.juristic_person},#{guaranteeCorp.main_business},#{guaranteeCorp.pkcs12},#{guaranteeCorp.status}";
     @Insert("insert into guarantee_corp ("+columns+") values("+entity+")")
     int insertCorp(@Param("guaranteeCorp") GuaranteeCorp guaranteeCorp);
 

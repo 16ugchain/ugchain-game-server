@@ -21,8 +21,10 @@ import org.apache.pdfbox.pdmodel.interactive.digitalsignature.ExternalSigningSup
 import org.apache.pdfbox.pdmodel.interactive.digitalsignature.PDSignature;
 
 import java.io.*;
-import java.net.URL;
-import java.security.*;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.util.Calendar;
 
@@ -138,59 +140,59 @@ public class CreateSignature extends CreateSignatureBase
         }
     }
 
-    public static void main(String[] args) throws IOException, GeneralSecurityException
-    {
-        if (args.length < 3)
-        {
-            usage();
-            System.exit(1);
-        }
-
-        String tsaUrl = null;
-        boolean externalSig = false;
-        for (int i = 0; i < args.length; i++)
-        {
-            if (args[i].equals("-tsa"))
-            {
-                i++;
-                if (i >= args.length)
-                {
-                    usage();
-                    System.exit(1);
-                }
-                tsaUrl = args[i];
-            }
-            if (args[i].equals("-e"))
-            {
-                externalSig = true;
-            }
-        }
-
-        // load the keystore
-        KeyStore keystore = KeyStore.getInstance("PKCS12");
-        char[] password = args[1].toCharArray(); // TODO use Java 6 java.io.Console.readPassword
-        keystore.load(new FileInputStream(args[0]), password);
-        // TODO alias command line argument
-
-        // TSA client
-        TSAClient tsaClient = null;
-        if (tsaUrl != null)
-        {
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            tsaClient = new TSAClient(new URL(tsaUrl), null, null, digest);
-        }
-
-        // sign PDF
-        CreateSignature signing = new CreateSignature(keystore, password);
-        signing.setExternalSigning(externalSig);
-
-        File inFile = new File(args[2]);
-        String name = inFile.getName();
-        String substring = name.substring(0, name.lastIndexOf('.'));
-
-        File outFile = new File(inFile.getParent(), substring + "_signed.pdf");
-        signing.signDetached(inFile, outFile, tsaClient);
-    }
+//    public static void main(String[] args) throws IOException, GeneralSecurityException
+//    {
+//        if (args.length < 3)
+//        {
+//            usage();
+//            System.exit(1);
+//        }
+//
+//        String tsaUrl = null;
+//        boolean externalSig = false;
+//        for (int i = 0; i < args.length; i++)
+//        {
+//            if (args[i].equals("-tsa"))
+//            {
+//                i++;
+//                if (i >= args.length)
+//                {
+//                    usage();
+//                    System.exit(1);
+//                }
+//                tsaUrl = args[i];
+//            }
+//            if (args[i].equals("-e"))
+//            {
+//                externalSig = true;
+//            }
+//        }
+//
+//        // load the keystore
+//        KeyStore keystore = KeyStore.getInstance("PKCS12");
+//        char[] password = args[1].toCharArray(); // TODO use Java 6 java.io.Console.readPassword
+//        keystore.load(new FileInputStream(args[0]), password);
+//        // TODO alias command line argument
+//
+//        // TSA client
+//        TSAClient tsaClient = null;
+//        if (tsaUrl != null)
+//        {
+//            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+//            tsaClient = new TSAClient(new URL(tsaUrl), null, null, digest);
+//        }
+//
+//        // sign PDF
+//        CreateSignature signing = new CreateSignature(keystore, password);
+//        signing.setExternalSigning(externalSig);
+//
+//        File inFile = new File(args[2]);
+//        String name = inFile.getName();
+//        String substring = name.substring(0, name.lastIndexOf('.'));
+//
+//        File outFile = new File(inFile.getParent(), substring + "_signed.pdf");
+//        signing.signDetached(inFile, outFile, tsaClient);
+//    }
 
     private static void usage()
     {

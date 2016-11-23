@@ -1,6 +1,7 @@
 package com.fiveonechain.digitasset.controller;
 
 import com.fiveonechain.digitasset.auth.UserContext;
+import com.fiveonechain.digitasset.config.CerConfig;
 import com.fiveonechain.digitasset.config.JwtConfig;
 import com.fiveonechain.digitasset.config.QiNiuConfig;
 import com.fiveonechain.digitasset.domain.*;
@@ -24,6 +25,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.security.KeyPair;
+import java.security.cert.Certificate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Arrays;
@@ -51,6 +54,10 @@ public class UserController {
     private QiNiuConfig qiNiuConfig;
     @Autowired
     private JwtConfig jwtConfig;
+    @Autowired
+    private CerConfig cerConfig;
+    @Autowired
+    private CertificateService certificateService;
 
     Pbkdf2PasswordEncoder passwordEncoder = new Pbkdf2PasswordEncoder();
 
@@ -221,12 +228,16 @@ public class UserController {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.USER_NOT_FOUND);
             return result;
         }
+        KeyPair keyPair = certificateService.generateKeyPair();
+        Certificate certificate = certificateService.signSelfCertificate(keyPair,corp_name);
+        byte[] pkcs12 = certificateService.generatePKCS12(certificate,keyPair,corp_name,cerConfig.getPassword());
         GuaranteeCorp guaranteeCorp = new GuaranteeCorp();
         guaranteeCorp.setCorp_name(corp_name);
         guaranteeCorp.setJuristic_person(juristic_person);
         guaranteeCorp.setMain_business(main_business);
         guaranteeCorp.setUser_id(userContext.getUserId());
         guaranteeCorp.setStatus(UserStatusEnum.ACTIVE.getId());
+        guaranteeCorp.setPkcs12(pkcs12);
         if(iGuaranteeCorpService.insertCorp(guaranteeCorp)!=1){
             Result result = ResultUtil.buildErrorResult(ErrorInfo.SERVER_ERROR);
             return result;

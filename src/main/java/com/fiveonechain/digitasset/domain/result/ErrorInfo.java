@@ -21,6 +21,7 @@ public enum ErrorInfo {
     ORDER_APPLY_OUTTIME(7003,"申请操作超时"),
     ORDER_OBLIGATION_OUTTIME(7004,"支付操作超时"),
     ORDER_COMEPLETE_OUTTIME(7005,"完成操作超时，进入仲裁"),
+    PDF_SIGN_ERROR(8001,"pdf签名失败"),
     SERVER_ERROR(9001,"服务器错误");
 
     private int errorCode;
