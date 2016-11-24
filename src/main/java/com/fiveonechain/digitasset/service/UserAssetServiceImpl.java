@@ -2,11 +2,14 @@ package com.fiveonechain.digitasset.service;
 
 import com.fiveonechain.digitasset.domain.Asset;
 import com.fiveonechain.digitasset.domain.UserAsset;
+import com.fiveonechain.digitasset.domain.UserAssetOperationEnum;
+import com.fiveonechain.digitasset.domain.UserAssetRecord;
 import com.fiveonechain.digitasset.exception.DigitAssetNotFoundException;
 import com.fiveonechain.digitasset.exception.DigitAssetTransferException;
 import com.fiveonechain.digitasset.exception.NoEnoughBalanceException;
 import com.fiveonechain.digitasset.exception.NoEnoughTradeBalanceException;
 import com.fiveonechain.digitasset.mapper.UserAssetMapper;
+import com.fiveonechain.digitasset.mapper.UserAssetRecordMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +31,14 @@ public class UserAssetServiceImpl implements UserAssetService {
     @Autowired
     private UserAssetMapper userAssetMapper;
 
+    @Autowired
+    private UserAssetRecordMapper userAssetRecordMapper;
+
     @Override
+    @Transactional
     public void createDigitAsset(Asset asset) {
+        // TODO contract
+        int contractId = 1;
 
         UserAsset userAsset = new UserAsset();
         userAsset.setAssetId(asset.getAssetId());
@@ -37,12 +46,17 @@ public class UserAssetServiceImpl implements UserAssetService {
         userAsset.setBalance(asset.getEvalValue());
         userAsset.setTradeBalance(0);
         userAsset.setLockBalance(0);
-
-        // TODO contract
-        userAsset.setContractId(0);
-
-
+        userAsset.setContractId(1);
         userAssetMapper.insert(userAsset);
+
+        UserAssetRecord record = new UserAssetRecord();
+        record.setAssetId(asset.getAssetId());
+        record.setUserId(asset.getUserId());
+        record.setPeerId(asset.getGuarId());
+        record.setAmount(asset.getEvalValue());
+        record.setContractId(1);
+        record.setOperation(UserAssetOperationEnum.ISSUE.getCode());
+        userAssetRecordMapper.insert(record);
     }
 
     @Override
@@ -100,10 +114,26 @@ public class UserAssetServiceImpl implements UserAssetService {
         // TODO check orderId
         // TODO contract
 
+        int contractId = 1;
+
         userAssetMapper.withdrawBalance(amount, assetId, fromId, 1);
         userAssetMapper.depositBalance(amount, assetId, toId, 1);
 
-        // TODO write record table
+        UserAssetRecord record = new UserAssetRecord();
+        record.setAssetId(assetId);
+        record.setUserId(fromId);
+        record.setPeerId(toId);
+        record.setAmount(amount);
+        record.setContractId(contractId);
+        record.setOperation(UserAssetOperationEnum.TRANSFER_OUT.getCode());
+        userAssetRecordMapper.insert(record);
+
+        record.setUserId(toId);
+        record.setPeerId(fromId);
+        record.setAmount(amount);
+        record.setContractId(contractId);
+        record.setOperation(UserAssetOperationEnum.TRANSFER_IN.getCode());
+        userAssetRecordMapper.insert(record);
 
     }
 

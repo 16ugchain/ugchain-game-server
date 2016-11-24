@@ -8,8 +8,8 @@ import java.util.Date;
 public class UserAssetRecord {
 
     private int assetId;
-    private int fromUserId;
-    private int toUserId;
+    private int userId;
+    private int peerId;
     private int operation;
     private int amount;
     private int contractId;
@@ -23,20 +23,20 @@ public class UserAssetRecord {
         this.assetId = assetId;
     }
 
-    public int getFromUserId() {
-        return fromUserId;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setFromUserId(int fromUserId) {
-        this.fromUserId = fromUserId;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
-    public int getToUserId() {
-        return toUserId;
+    public int getPeerId() {
+        return peerId;
     }
 
-    public void setToUserId(int toUserId) {
-        this.toUserId = toUserId;
+    public void setPeerId(int peerId) {
+        this.peerId = peerId;
     }
 
     public int getOperation() {
