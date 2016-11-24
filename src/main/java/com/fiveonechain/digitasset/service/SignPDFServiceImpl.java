@@ -2,7 +2,6 @@ package com.fiveonechain.digitasset.service;
 
 import com.fiveonechain.digitasset.exception.PdfSignException;
 import com.fiveonechain.digitasset.service.signature.CMSProcessableInputStream;
-import com.fiveonechain.digitasset.service.signature.CreateSignature;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -20,14 +19,14 @@ import org.bouncycastle.operator.ContentSigner;
 import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
 import org.bouncycastle.operator.jcajce.JcaDigestCalculatorProviderBuilder;
-import org.bouncycastle.tsp.TSPException;
 import org.bouncycastle.util.Store;
 import org.springframework.stereotype.Component;
 
-import java.io.*;
-import java.security.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.GeneralSecurityException;
+import java.security.KeyPair;
 import java.security.cert.Certificate;
-import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,30 +69,7 @@ public class SignPDFServiceImpl implements ISignPDFService {
         return doc;
     }
 
-    public PDDocument signPdf(PDDocument pdfFile, String outPath, KeyStore keyStore, String password) {
-        try {
-            CreateSignature signing = new CreateSignature(keyStore, password.toCharArray());
-            KeyStore keystore = KeyStore.getInstance("PKCS12");
-            keystore.load(new FileInputStream(outPath), password.toCharArray());
-            // sign PDF
-            FileOutputStream fos = new FileOutputStream(outPath);
-            signing.signDetached(pdfFile, fos, null);
-            File output = new File(outPath);
-            PDDocument pdDocument = PDDocument.load(output);
-            return pdDocument;
-        } catch (IOException e) {
-            throw new PdfSignException(outPath);
-        } catch (CertificateException e) {
-            throw new PdfSignException(outPath);
-        } catch (NoSuchAlgorithmException e) {
-            throw new PdfSignException(outPath);
-        } catch (KeyStoreException e) {
-            throw new PdfSignException(outPath);
-        } catch (UnrecoverableKeyException e) {
-            throw new PdfSignException(outPath);
-        }
 
-    }
 
     @Override
     public byte[] sign(InputStream content,Certificate certificate, KeyPair keyPair)  {
