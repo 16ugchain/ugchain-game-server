@@ -11,6 +11,9 @@ public enum AssetStatus {
     MATURITY(4),
     FROZEN(6),
     EXPIRE_TO_ISSUE(7),
+    APPLY_DELIVERY(8),
+    DELIVERY(9),
+    CLEAR(10),
     REJECT_EVALUATE(5);
 
 

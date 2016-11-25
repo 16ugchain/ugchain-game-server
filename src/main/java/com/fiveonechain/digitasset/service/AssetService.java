@@ -1,5 +1,6 @@
 package com.fiveonechain.digitasset.service;
 
+import com.fiveonechain.digitasset.auth.UserContext;
 import com.fiveonechain.digitasset.domain.Asset;
 import com.fiveonechain.digitasset.domain.AssetStatus;
 
@@ -22,7 +23,7 @@ public interface AssetService {
 
     List<Asset> getAssetListByStatus(AssetStatus status);
 
-    void updateAssetStatusStateMachine(int assetId, AssetStatus newStatus);
+    void updateAssetStatusStateMachine(UserContext host, int assetId, AssetStatus newStatus);
 
     void updateAssetEvalInfo(Asset asset);
 

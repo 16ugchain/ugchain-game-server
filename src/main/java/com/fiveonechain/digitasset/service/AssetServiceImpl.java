@@ -1,10 +1,13 @@
 package com.fiveonechain.digitasset.service;
 
+import com.fiveonechain.digitasset.auth.UserContext;
 import com.fiveonechain.digitasset.domain.Asset;
+import com.fiveonechain.digitasset.domain.AssetRecord;
 import com.fiveonechain.digitasset.domain.AssetStatus;
 import com.fiveonechain.digitasset.exception.AssetNotFoundException;
 import com.fiveonechain.digitasset.exception.AssetStatusTransferException;
 import com.fiveonechain.digitasset.mapper.AssetMapper;
+import com.fiveonechain.digitasset.mapper.AssetRecordMapper;
 import com.fiveonechain.digitasset.mapper.SequenceMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +36,9 @@ public class AssetServiceImpl implements AssetService {
 
     @Autowired
     private AssetMapper assetMapper;
+
+    @Autowired
+    private AssetRecordMapper assetRecordMapper;
 
     @Override
     public int nextAssetId() {
@@ -74,7 +80,7 @@ public class AssetServiceImpl implements AssetService {
 
     @Override
     @Transactional
-    public void updateAssetStatusStateMachine(int assetId, AssetStatus newStatus) {
+    public void updateAssetStatusStateMachine(UserContext host, int assetId, AssetStatus newStatus) {
         Integer curStatusCode = assetMapper.selectStatusForUpdate(assetId);
         if (curStatusCode == null) {
             throw new AssetNotFoundException(assetId);
@@ -95,6 +101,7 @@ public class AssetServiceImpl implements AssetService {
             // TODO check user role
             // TODO check pay order
             if ((curStatus != AssetStatus.PASS_EVALUATE)
+                    && (curStatus != AssetStatus.APPLY_DELIVERY)
                     && (curStatus != AssetStatus.FROZEN)) {
                 throw new AssetStatusTransferException(curStatus, newStatus);
             }
@@ -102,15 +109,27 @@ public class AssetServiceImpl implements AssetService {
             if (curStatus != AssetStatus.PASS_EVALUATE) {
                 throw new AssetStatusTransferException(curStatus, newStatus);
             }
-        }else if (newStatus == AssetStatus.FROZEN) {
+        } else if (newStatus == AssetStatus.APPLY_DELIVERY) {
+            // TODO check user role
+            if (curStatus != AssetStatus.ISSUE) {
+                throw new AssetStatusTransferException(curStatus, newStatus);
+            }
+        } else if (newStatus == AssetStatus.DELIVERY) {
+            if (curStatus != AssetStatus.APPLY_DELIVERY) {
+                throw new AssetStatusTransferException(curStatus, newStatus);
+            }
+        } else if (newStatus == AssetStatus.FROZEN) {
             // TODO check user role
             if (curStatus != AssetStatus.ISSUE) {
                 throw new AssetStatusTransferException(curStatus, newStatus);
             }
         } else if (newStatus == AssetStatus.MATURITY) {
             // TODO check user role
-            if ((curStatus != AssetStatus.ISSUE)
-                    && (curStatus != AssetStatus.FROZEN)) {
+            if (curStatus != AssetStatus.ISSUE) {
+                throw new AssetStatusTransferException(curStatus, newStatus);
+            }
+        } else if (newStatus == AssetStatus.CLEAR) {
+            if (curStatus != AssetStatus.MATURITY) {
                 throw new AssetStatusTransferException(curStatus, newStatus);
             }
         } else if (newStatus == curStatus) {
@@ -121,6 +140,11 @@ public class AssetServiceImpl implements AssetService {
         }
 
         assetMapper.updateStatusByAssetId(newStatus.getCode(), assetId);
+        AssetRecord record = new AssetRecord();
+        record.setUserId(host.getUserId());
+        record.setAssetId(assetId);
+        record.setStatus(newStatus.getCode());
+        assetRecordMapper.insert(record);
     }
 
     @Override
