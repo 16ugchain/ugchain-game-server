@@ -20,6 +20,8 @@ public interface SequenceMapper {
 
     String GUARANTEECORP_ID = "GUARANTEE_CORP";
 
+    String CONTRACT = "CONTRACT";
+
 
 
     @Select("SELECT nextval('${table}')")
