@@ -2,10 +2,12 @@ package com.fiveonechain.digitasset.mapper;
 
 import com.fiveonechain.digitasset.domain.UserAssetRecord;
 import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
  * Created by yuanshichao on 2016/11/14.
  */
+@Mapper
 public interface UserAssetRecordMapper {
 
     String INSERT_COLUMN = "asset_id, user_id, peer_id, operation, amount, contract_id";
