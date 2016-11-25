@@ -12,6 +12,16 @@ public class CerConfig {
 
     private String password;
 
+    private String signPdfPath;
+
+    public String getSignPdfPath() {
+        return signPdfPath;
+    }
+
+    public void setSignPdfPath(String signPdfPath) {
+        this.signPdfPath = signPdfPath;
+    }
+
     public String getPassword() {
         return password;
     }
