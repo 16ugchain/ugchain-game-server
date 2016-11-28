@@ -68,7 +68,6 @@ public class UserController {
     @RequestMapping(value = "/regist", method = RequestMethod.POST)
     public Result registUser(@RequestParam("user_name") String user_name,
                              @RequestParam("password") String password,
-                             @RequestParam("role") int role
                              ) {
         if (iUserService.isExistsUserName(user_name)) {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.USER_NAME_EXITS);
@@ -76,7 +75,7 @@ public class UserController {
         }
         User user = new User();
         user.setUser_name(user_name);
-        user.setRole(UserRoleEnum.fromValue(role).getId());
+        user.setRole(UserRoleEnum.USER_PUBLISHER.getId());
         user.setStatus(UserStatusEnum.ACTIVE.getId());
         String md5Pwd = passwordEncoder.encode(password);
         user.setPassword(md5Pwd);
@@ -86,7 +85,7 @@ public class UserController {
             return result;
         }
         Claims claims = Jwts.claims().setSubject(user_name);
-        List<GrantedAuthority> authorities = Arrays.asList(new SimpleGrantedAuthority(UserRoleEnum.fromValue(role).name()));
+        List<GrantedAuthority> authorities = Arrays.asList(new SimpleGrantedAuthority(UserRoleEnum.USER_PUBLISHER.name()));
         claims.put("scopes", authorities.stream().map(s -> s.toString()).collect(Collectors.toList()));
         claims.put("id", userGet.getUser_id());
         LocalDateTime currentTime = LocalDateTime.now();
@@ -99,6 +98,17 @@ public class UserController {
                 .compact();
         user.setToken(token);
         Result result = ResultUtil.success(user);
+        return result;
+    }
+
+    @RequestMapping(value = "/findUserName", method = RequestMethod.POST)
+    public Result findUserName(@RequestParam("user_name") String user_name
+                             ) {
+        if (iUserService.isExistsUserName(user_name)) {
+            Result result = ResultUtil.buildErrorResult(ErrorInfo.USER_NAME_EXITS);
+            return result;
+        }
+        Result result = ResultUtil.success();
         return result;
     }
     @RequestMapping(value = "/bindMobile", method = RequestMethod.POST)
@@ -130,7 +140,7 @@ public class UserController {
             return result;
         }
         User user = iUserService.getUserByUserName(user_name);
-        if(user.getRole() != role){
+        if(role == UserRoleEnum.CORP.getId() && user.getRole() != UserRoleEnum.CORP.getId()){
             Result result = ResultUtil.buildErrorResult(ErrorInfo.USER_ROLE_NOT_MATCH);
             return result;
         }
@@ -162,6 +172,7 @@ public class UserController {
                     .compact();
             user.setToken(token);
         }
+        user.setRole(role);
         Result result = ResultUtil.success(user);
         return result;
     }
@@ -173,7 +184,6 @@ public class UserController {
                                @RequestParam(value = "email", required = false, defaultValue = "") String email,
                                @RequestParam(value = "fixed_line", required = false, defaultValue = "") String fixed_line
     ) {
-        System.out.println(userContext);
         //验证identity后设置status
         boolean isExists = iUserAuthService.isExistsSameID(identity);
         if (isExists) {
