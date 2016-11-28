@@ -68,15 +68,14 @@ public class UserController {
     @RequestMapping(value = "/regist", method = RequestMethod.POST)
     public Result registUser(@RequestParam("user_name") String user_name,
                              @RequestParam("password") String password,
-                             @RequestParam("role") int role,
-                             @RequestParam("telephone") String telephone) {
+                             @RequestParam("role") int role
+                             ) {
         if (iUserService.isExistsUserName(user_name)) {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.USER_NAME_EXITS);
             return result;
         }
         User user = new User();
         user.setUser_name(user_name);
-        user.setTelephone(telephone);
         user.setRole(UserRoleEnum.fromValue(role).getId());
         user.setStatus(UserStatusEnum.ACTIVE.getId());
         String md5Pwd = passwordEncoder.encode(password);
@@ -99,9 +98,23 @@ public class UserController {
                 .signWith(SignatureAlgorithm.HS512, jwtConfig.getTokenSigningKey())
                 .compact();
         user.setToken(token);
-        Result result = ResultUtil.success((Object) user);
+        Result result = ResultUtil.success(user);
         return result;
     }
+    @RequestMapping(value = "/bindMobile", method = RequestMethod.POST)
+    public Result bindMobile(@RequestParam("telephone") String telephone,
+                             @AuthenticationPrincipal UserContext userContext
+                             ) {
+        User user = iUserService.getUserByUserId((long)userContext.getUserId());
+        user.setTelephone(telephone);
+        if (!iUserService.updateMobile(user)) {
+            Result result = ResultUtil.buildErrorResult(ErrorInfo.SERVER_ERROR);
+            return result;
+        }
+        Result result = ResultUtil.success(user);
+        return result;
+    }
+
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public Result login(@RequestParam("user_name") String user_name,

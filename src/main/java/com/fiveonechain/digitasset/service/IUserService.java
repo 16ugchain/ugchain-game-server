@@ -10,6 +10,8 @@ public interface IUserService {
 
     public User insertAndGetUser(User user);
 
+    boolean updateMobile(User user);
+
     public User getUserByUserId(Long userId);
 
     boolean isExistsUserName(String user_name);

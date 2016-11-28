@@ -33,6 +33,9 @@ public interface UserMapper {
     @Update("UPDATE user SET name = #{name} WHERE id = #{id}")
     int updateUser(User user);
 
+    @Update("UPDATE user SET telephone = #{user.telephone} WHERE user_id = #{user.user_id}")
+    boolean updateMobile(@Param("user")User user);
+
 }
 
 /*

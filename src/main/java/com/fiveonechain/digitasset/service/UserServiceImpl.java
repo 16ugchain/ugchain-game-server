@@ -33,6 +33,11 @@ public class UserServiceImpl implements IUserService {
         return userGet;
     }
 
+    @Override
+    public boolean updateMobile(User user) {
+        return userMapper.updateMobile(user);
+    }
+
 
     @Override
     public User getUserByUserId(Long userId) {
