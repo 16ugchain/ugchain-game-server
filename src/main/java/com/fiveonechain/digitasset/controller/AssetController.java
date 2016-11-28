@@ -116,7 +116,7 @@ public class AssetController {
             @RequestParam(value = "earnings", required = false) Integer earnings) {
 
         if (result) {
-            assetService.updateAssetStatusStateMachine(assetId, AssetStatus.REJECT_EVALUATE);
+            assetService.updateAssetStatusStateMachine(userContext, assetId, AssetStatus.REJECT_EVALUATE);
         } else {
             Asset asset = new Asset();
             asset.setAssetId(assetId);
@@ -126,7 +126,7 @@ public class AssetController {
             asset.setExpEarnings(earnings);
 
             assetService.updateAssetEvalInfo(asset);
-            assetService.updateAssetStatusStateMachine(assetId, AssetStatus.PASS_EVALUATE);
+            assetService.updateAssetStatusStateMachine(userContext, assetId, AssetStatus.PASS_EVALUATE);
         }
 
         return ResultUtil.success();
@@ -146,7 +146,7 @@ public class AssetController {
         // TODO check pay order
         // TODO check assetId
 
-        assetService.updateAssetStatusStateMachine(assetId, AssetStatus.ISSUE);
+        assetService.updateAssetStatusStateMachine(userContext, assetId, AssetStatus.ISSUE);
         return ResultUtil.success();
     }
 
@@ -163,7 +163,7 @@ public class AssetController {
 
         // TODO check assetId
 
-        assetService.updateAssetStatusStateMachine(assetId, AssetStatus.FROZEN);
+        assetService.updateAssetStatusStateMachine(userContext, assetId, AssetStatus.FROZEN);
         return ResultUtil.success();
     }
 
