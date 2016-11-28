@@ -111,7 +111,7 @@ public class UserController {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.SERVER_ERROR);
             return result;
         }
-        Result result = ResultUtil.success(user);
+        Result result = ResultUtil.success();
         return result;
     }
 
