@@ -67,7 +67,7 @@ public class UserController {
 
     @RequestMapping(value = "/regist", method = RequestMethod.POST)
     public Result registUser(@RequestParam("user_name") String user_name,
-                             @RequestParam("password") String password,
+                             @RequestParam("password") String password
                              ) {
         if (iUserService.isExistsUserName(user_name)) {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.USER_NAME_EXITS);
