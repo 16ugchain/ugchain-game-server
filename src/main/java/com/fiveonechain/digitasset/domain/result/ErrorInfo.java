@@ -20,6 +20,8 @@ public enum ErrorInfo {
     CORP_CERTIFICATE_NOT_FOUND(6007,"找不到证书"),
     CORP_KEYPAIR_NOT_FOUND(6008,"找不到公钥私钥"),
     CONTRACT_NOT_FOUND(6009,"找不到合同"),
+    USER_ROLE_NOT_MATCH(6010,"用户角色不匹配"),
+    USER_STATUS_ERROR(6011,"用户状态异常"),
     ORDER_EXCEPTION(7001,"订单异常"),
     ORDER_NOT_FOUND(7002,"订单不存在"),
     ORDER_APPLY_OUTTIME(7003,"申请操作超时"),

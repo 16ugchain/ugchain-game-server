@@ -5,7 +5,7 @@ package com.fiveonechain.digitasset.domain;
  */
 public enum UserStatusEnum {
     ACTIVE(1),
-    DELETE(2);
+    DELETE(0);
     private int id;
 
     UserStatusEnum(int id) {

@@ -4,8 +4,10 @@ package com.fiveonechain.digitasset.domain;
  * Created by fanjl on 16/11/16.
  */
 public enum UserRoleEnum {
-    USER(1),
-    ADMIN(2);
+    USER_PUBLISHER(1),
+    USER_ASSIGNEE(2),
+    CORP(3),
+    ADMIN(9);
 
     private int id;
 

@@ -13,6 +13,7 @@ public class User {
     @JsonIgnore
     private String password;
     private int role;
+    @JsonIgnore
     private int status;
     private String telephone;
     private String create_time;

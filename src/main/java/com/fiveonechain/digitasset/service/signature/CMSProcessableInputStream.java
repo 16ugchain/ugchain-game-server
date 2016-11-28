@@ -50,6 +50,8 @@ public class CMSProcessableInputStream implements CMSTypedData
     }
 
     @Override
+
+
     public Object getContent()
     {
         return in;

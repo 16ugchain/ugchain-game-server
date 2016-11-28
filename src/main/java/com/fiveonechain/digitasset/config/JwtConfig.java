@@ -31,6 +31,10 @@ public class JwtConfig {
      * {@link JwtToken} can be refreshed during this timeframe.
      */
     private Integer refreshTokenExpTime;
+    /**
+     * Auto login token expire time.
+     */
+    private Integer autoLogintokenExpTime;
 
     public Integer getTokenExpirationTime() {
         return tokenExpirationTime;
@@ -62,5 +66,13 @@ public class JwtConfig {
 
     public void setRefreshTokenExpTime(Integer refreshTokenExpTime) {
         this.refreshTokenExpTime = refreshTokenExpTime;
+    }
+
+    public Integer getAutoLogintokenExpTime() {
+        return autoLogintokenExpTime;
+    }
+
+    public void setAutoLogintokenExpTime(Integer autoLogintokenExpTime) {
+        this.autoLogintokenExpTime = autoLogintokenExpTime;
     }
 }

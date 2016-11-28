@@ -68,25 +68,26 @@ public class UserController {
     @RequestMapping(value = "/regist", method = RequestMethod.POST)
     public Result registUser(@RequestParam("user_name") String user_name,
                              @RequestParam("password") String password,
+                             @RequestParam("role") int role,
                              @RequestParam("telephone") String telephone) {
-        if(iUserService.isExistsUserName(user_name)){
+        if (iUserService.isExistsUserName(user_name)) {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.USER_NAME_EXITS);
             return result;
         }
         User user = new User();
         user.setUser_name(user_name);
         user.setTelephone(telephone);
-        user.setRole(UserRoleEnum.USER.getId());
+        user.setRole(UserRoleEnum.fromValue(role).getId());
         user.setStatus(UserStatusEnum.ACTIVE.getId());
         String md5Pwd = passwordEncoder.encode(password);
         user.setPassword(md5Pwd);
         User userGet = iUserService.insertAndGetUser(user);
-        if(userGet==null){
+        if (userGet == null) {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.SERVER_ERROR);
             return result;
         }
         Claims claims = Jwts.claims().setSubject(user_name);
-        List<GrantedAuthority> authorities = Arrays.asList(new SimpleGrantedAuthority(UserRoleEnum.USER.name()));
+        List<GrantedAuthority> authorities = Arrays.asList(new SimpleGrantedAuthority(UserRoleEnum.fromValue(role).name()));
         claims.put("scopes", authorities.stream().map(s -> s.toString()).collect(Collectors.toList()));
         claims.put("id", userGet.getUser_id());
         LocalDateTime currentTime = LocalDateTime.now();
@@ -98,48 +99,76 @@ public class UserController {
                 .signWith(SignatureAlgorithm.HS512, jwtConfig.getTokenSigningKey())
                 .compact();
         user.setToken(token);
-        Result result = ResultUtil.success((Object)user);
+        Result result = ResultUtil.success((Object) user);
         return result;
     }
+
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public Result login(@RequestParam("user_name") String user_name,
-                        @RequestParam("password") String password) {
-        if(!iUserService.checkUserLogin(user_name,password)){
+                        @RequestParam("password") String password,
+                        @RequestParam("role") int role,
+                        @RequestParam(value = "auto_login", defaultValue = "false", required = false) boolean auto_login) {
+        if (!iUserService.isExistsUserName(user_name)){
+            Result result = ResultUtil.buildErrorResult(ErrorInfo.USER_NOT_FOUND);
+            return result;
+        }
+        if (!iUserService.checkUserLogin(user_name, password)) {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.PASSWORD_ERROR);
             return result;
         }
         User user = iUserService.getUserByUserName(user_name);
+        if(user.getRole() != role){
+            Result result = ResultUtil.buildErrorResult(ErrorInfo.USER_ROLE_NOT_MATCH);
+            return result;
+        }
+        if(user.getStatus() != UserStatusEnum.ACTIVE.getId()){
+            Result result = ResultUtil.buildErrorResult(ErrorInfo.USER_STATUS_ERROR);
+            return result;
+        }
         Claims claims = Jwts.claims().setSubject(user_name);
         List<GrantedAuthority> authorities = Arrays.asList(new SimpleGrantedAuthority(UserRoleEnum.fromValue(user.getRole()).name()));
         claims.put("scopes", authorities.stream().map(s -> s.toString()).collect(Collectors.toList()));
         claims.put("id", user.getUser_id());
         LocalDateTime currentTime = LocalDateTime.now();
-        String token = Jwts.builder()
-                .setClaims(claims)
-                .setIssuer(jwtConfig.getTokenIssuer())
-                .setIssuedAt(Date.from(currentTime.atZone(ZoneId.systemDefault()).toInstant()))
-                .setExpiration(Date.from(currentTime.plusMinutes(jwtConfig.getTokenExpirationTime()).atZone(ZoneId.systemDefault()).toInstant()))
-                .signWith(SignatureAlgorithm.HS512, jwtConfig.getTokenSigningKey())
-                .compact();
-        user.setToken(token);
-        Result result = ResultUtil.success((Object)user);
+        if (auto_login) {
+            String token = Jwts.builder()
+                    .setClaims(claims)
+                    .setIssuer(jwtConfig.getTokenIssuer())
+                    .setIssuedAt(Date.from(currentTime.atZone(ZoneId.systemDefault()).toInstant()))
+                    .setExpiration(Date.from(currentTime.plusMinutes(jwtConfig.getAutoLogintokenExpTime()).atZone(ZoneId.systemDefault()).toInstant()))
+                    .signWith(SignatureAlgorithm.HS512, jwtConfig.getTokenSigningKey())
+                    .compact();
+            user.setToken(token);
+        } else {
+            String token = Jwts.builder()
+                    .setClaims(claims)
+                    .setIssuer(jwtConfig.getTokenIssuer())
+                    .setIssuedAt(Date.from(currentTime.atZone(ZoneId.systemDefault()).toInstant()))
+                    .setExpiration(Date.from(currentTime.plusMinutes(jwtConfig.getTokenExpirationTime()).atZone(ZoneId.systemDefault()).toInstant()))
+                    .signWith(SignatureAlgorithm.HS512, jwtConfig.getTokenSigningKey())
+                    .compact();
+            user.setToken(token);
+        }
+        Result result = ResultUtil.success(user);
         return result;
     }
 
     @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
     public Result authenticate(@AuthenticationPrincipal UserContext userContext,
                                @RequestParam("real_name") String real_name,
-                               @RequestParam("identity") String identity
-                               ) {
+                               @RequestParam("identity") String identity,
+                               @RequestParam(value = "email", required = false, defaultValue = "") String email,
+                               @RequestParam(value = "fixed_line", required = false, defaultValue = "") String fixed_line
+    ) {
         System.out.println(userContext);
         //验证identity后设置status
         boolean isExists = iUserAuthService.isExistsSameID(identity);
-        if(isExists){
+        if (isExists) {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.IDENTITY_EXISTS);
             return result;
         }
         boolean isExistsUser = iUserAuthService.isExistsUserAuth(userContext.getUserId());
-        if(isExistsUser){
+        if (isExistsUser) {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.AUTHENTICATION);
             return result;
         }
@@ -147,8 +176,10 @@ public class UserController {
         userAuth.setUser_id(userContext.getUserId());
         userAuth.setIdentity(identity);
         userAuth.setReal_name(real_name);
+        userAuth.setEmail(email);
+        userAuth.setFixed_line(fixed_line);
         userAuth.setStatus(UserAuthStatusEnum.SUCCESS.getId());
-        if(iUserAuthService.insertAndGetUserAuth(userAuth)!=1){
+        if (iUserAuthService.insertAndGetUserAuth(userAuth) != 1) {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.SERVER_ERROR);
             return result;
         }
@@ -161,22 +192,22 @@ public class UserController {
             @RequestParam("file") MultipartFile image,
             @RequestParam("type") int type,
             @AuthenticationPrincipal UserContext userContext
-            ) {
+    ) {
         ImageTypeEnum imageTypeEnum = ImageTypeEnum.fromValue(type);
-        if(imageTypeEnum == null){
+        if (imageTypeEnum == null) {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.IMAGETYPE_NOT_FOUND);
             return result;
         }
-        if(iimageUrlService.isExists(userContext.getUserId(),type)){
+        if (iimageUrlService.isExists(userContext.getUserId(), type)) {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.IMAGE_EXISTS);
             return result;
         }
         User user = iUserService.getUserByUserId(Long.valueOf(userContext.getUserId()));
-        if(user == null){
+        if (user == null) {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.USER_NOT_FOUND);
             return result;
         }
-        if(image.getSize() > qiNiuConfig.getImageMaxSize()){
+        if (image.getSize() > qiNiuConfig.getImageMaxSize()) {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.IMAGE_TOO_LARGE);
             return result;
         }
@@ -184,23 +215,23 @@ public class UserController {
         try {
             byte[] imageByte = image.getBytes();
             message += imageUploadService.uploadQiNiu(imageByte);
-        }  catch (IOException e){
-            throw new ImageUploadException(user.getUser_id(),type);
+        } catch (IOException e) {
+            throw new ImageUploadException(user.getUser_id(), type);
         }
 
-        JsonObject jsonObject = new Gson().fromJson(message,JsonObject.class);
+        JsonObject jsonObject = new Gson().fromJson(message, JsonObject.class);
         StringBuilder urlStrBuilder = stringBuilderHolder.resetAndGet();
-        if(jsonObject.has("key")){
+        if (jsonObject.has("key")) {
             String domain = qiNiuConfig.getDownloadUrl();
-            String domainStr = domain.replace("\"","");
-            urlStrBuilder.append(domainStr).append(jsonObject.get("key").toString().replace("\"",""));
+            String domainStr = domain.replace("\"", "");
+            urlStrBuilder.append(domainStr).append(jsonObject.get("key").toString().replace("\"", ""));
             System.out.println(urlStrBuilder.toString());
         }
         ImageUrl imageUrl = new ImageUrl();
         imageUrl.setUser_id(userContext.getUserId());
         imageUrl.setType(type);
         imageUrl.setUrl(urlStrBuilder.toString());
-        if(iimageUrlService.insertImageUrl(imageUrl)!=1){
+        if (iimageUrlService.insertImageUrl(imageUrl) != 1) {
             ErrorInfo errorInfo = ErrorInfo.SERVER_ERROR;
             Result result = ResultUtil.buildErrorResult(errorInfo);
             return result;
@@ -213,24 +244,24 @@ public class UserController {
 
     @RequestMapping(value = "/addCorpDetail", method = RequestMethod.POST)
     public Result addCorpDetail(@AuthenticationPrincipal UserContext userContext,
-                               @RequestParam("corp_name") String corp_name,
-                               @RequestParam("juristic_person") String juristic_person,
-                               @RequestParam("main_business") String main_business
+                                @RequestParam("corp_name") String corp_name,
+                                @RequestParam("juristic_person") String juristic_person,
+                                @RequestParam("main_business") String main_business
     ) {
         //验证identity后设置status
         boolean isExists = iGuaranteeCorpService.isExists(userContext.getUserId());
-        if(isExists){
+        if (isExists) {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.CORP_EXISTS);
             return result;
         }
         User user = iUserService.getUserByUserId(Long.valueOf(userContext.getUserId()));
-        if(user == null){
+        if (user == null) {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.USER_NOT_FOUND);
             return result;
         }
         KeyPair keyPair = certificateService.generateKeyPair();
-        Certificate certificate = certificateService.signSelfCertificate(keyPair,corp_name);
-        byte[] pkcs12 = certificateService.generatePKCS12(certificate,keyPair,corp_name,cerConfig.getPassword());
+        Certificate certificate = certificateService.signSelfCertificate(keyPair, corp_name);
+        byte[] pkcs12 = certificateService.generatePKCS12(certificate, keyPair, corp_name, cerConfig.getPassword());
         GuaranteeCorp guaranteeCorp = new GuaranteeCorp();
         guaranteeCorp.setCorp_name(corp_name);
         guaranteeCorp.setJuristic_person(juristic_person);
@@ -238,7 +269,7 @@ public class UserController {
         guaranteeCorp.setUser_id(userContext.getUserId());
         guaranteeCorp.setStatus(UserStatusEnum.ACTIVE.getId());
         guaranteeCorp.setPkcs12(pkcs12);
-        if(iGuaranteeCorpService.insertCorp(guaranteeCorp)!=1){
+        if (iGuaranteeCorpService.insertCorp(guaranteeCorp) != 1) {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.SERVER_ERROR);
             return result;
         }
@@ -251,7 +282,7 @@ public class UserController {
     ) {
         //验证identity后设置status
         User user = iUserService.getUserByUserId(Long.valueOf(userContext.getUserId()));
-        if(user == null){
+        if (user == null) {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.USER_NOT_FOUND);
             return result;
         }

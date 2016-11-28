@@ -10,10 +10,10 @@ public class UserAuth {
     private int user_id;
     private String real_name;
     private String identity;
-    private byte[] identityfront;
-    private byte[] identityback;
     private Date create_time;
     private Date update_time;
+    private String fixed_line;
+    private String email;
     private int status;
 
     public int getId() {
@@ -72,20 +72,20 @@ public class UserAuth {
         this.status = status;
     }
 
-    public byte[] getIdentityfront() {
-        return identityfront;
+    public String getFixed_line() {
+        return fixed_line;
     }
 
-    public void setIdentityfront(byte[] identityfront) {
-        this.identityfront = identityfront;
+    public void setFixed_line(String fixed_line) {
+        this.fixed_line = fixed_line;
     }
 
-    public byte[] getIdentityback() {
-        return identityback;
+    public String getEmail() {
+        return email;
     }
 
-    public void setIdentityback(byte[] identityback) {
-        this.identityback = identityback;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     @Override
