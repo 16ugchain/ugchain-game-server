@@ -16,9 +16,8 @@ public class UserServiceImpl implements IUserService {
 
     @Autowired
     private UserMapper userMapper;
-
+    @Autowired
     private SequenceMapper sequenceMapper;
-    private final String SEQUENCE_NAME="USER";
 
     Pbkdf2PasswordEncoder passwordEncoder = new Pbkdf2PasswordEncoder();
 
@@ -26,7 +25,7 @@ public class UserServiceImpl implements IUserService {
     @Override
     @Transactional
     public User insertAndGetUser(User user) {
-        int userId = sequenceMapper.nextId(SEQUENCE_NAME);
+        int userId = sequenceMapper.nextId(sequenceMapper.USER);
         user.setUser_id(Long.valueOf(userId));
         userMapper.insertUser(user);
         User userGet = userMapper.findByUserId(Long.valueOf(userId));
