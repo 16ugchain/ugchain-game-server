@@ -16,6 +16,8 @@ public interface IUserService {
 
     boolean isExistsUserName(String user_name);
 
+    boolean isExistsTelephone(String telephone);
+
     User getUserByUserName(String user_name);
 
     boolean checkUserLogin(String user_name,String password);

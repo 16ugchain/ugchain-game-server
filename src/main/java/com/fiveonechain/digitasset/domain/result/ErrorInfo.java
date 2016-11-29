@@ -22,6 +22,8 @@ public enum ErrorInfo {
     CONTRACT_NOT_FOUND(6009,"找不到合同"),
     USER_ROLE_NOT_MATCH(6010,"用户角色不匹配"),
     USER_STATUS_ERROR(6011,"用户状态异常"),
+    TELEPHONE_EXISTS(6012,"手机号已经注册"),
+    TELEPHONE_ILLEGAL(6013,"手机号不合法"),
     ORDER_EXCEPTION(7001,"订单异常"),
     ORDER_NOT_FOUND(7002,"订单不存在"),
     ORDER_APPLY_OUTTIME(7003,"申请操作超时"),

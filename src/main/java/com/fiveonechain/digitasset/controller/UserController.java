@@ -111,6 +111,36 @@ public class UserController {
         Result result = ResultUtil.success();
         return result;
     }
+
+    @RequestMapping(value = "/findMobile", method = RequestMethod.POST)
+    public Result findMobile(@RequestParam("telephone") String telephone
+    ) {
+        if(telephone.trim().length()==0||telephone==null){
+            Result result = ResultUtil.buildErrorResult(ErrorInfo.TELEPHONE_ILLEGAL);
+            return result;
+        }
+        if (iUserService.isExistsTelephone(telephone)) {
+            Result result = ResultUtil.buildErrorResult(ErrorInfo.TELEPHONE_EXISTS);
+            return result;
+        }
+        Result result = ResultUtil.success();
+        return result;
+    }
+    @RequestMapping(value = "/sendVerification", method = RequestMethod.POST)
+    public Result sendVerification(@RequestParam("telephone") String telephone
+    ) {
+        if(telephone.trim().length()==0||telephone==null){
+            Result result = ResultUtil.buildErrorResult(ErrorInfo.TELEPHONE_ILLEGAL);
+            return result;
+        }
+        if (iUserService.isExistsTelephone(telephone)) {
+            Result result = ResultUtil.buildErrorResult(ErrorInfo.TELEPHONE_EXISTS);
+            return result;
+        }
+        // TODO: 接入短信接口发送验证吗 
+        Result result = ResultUtil.success();
+        return result;
+    }
     @RequestMapping(value = "/bindMobile", method = RequestMethod.POST)
     public Result bindMobile(@RequestParam("telephone") String telephone,
                              @AuthenticationPrincipal UserContext userContext

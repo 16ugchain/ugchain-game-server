@@ -10,8 +10,8 @@ import org.apache.ibatis.annotations.*;
 @Mapper
 public interface UserMapper {
 
-    final String coloms="user_id,user_name,password,role,status";
-    final String entity="#{user.user_id}, #{user.user_name},#{user.password},#{user.role},#{user.status}";
+    final String coloms = "user_id,user_name,password,role,status";
+    final String entity = "#{user.user_id}, #{user.user_name},#{user.password},#{user.role},#{user.status}";
 
     @Results({
             @Result(property = "id", column = "id"),
@@ -26,15 +26,17 @@ public interface UserMapper {
     @Select("SELECT exists (select user_id FROM user WHERE user_name = #{user_name})")
     boolean isExistsUserName(String user_name);
 
+    @Select("SELECT exists (select telephone FROM user WHERE telephone = #{telephone})")
+    boolean isExistsTelephone(String telephone);
 
-    @Insert("INSERT INTO user("+coloms+") VALUES("+entity+")")
-    int insertUser(@Param("user")User user);
+    @Insert("INSERT INTO user(" + coloms + ") VALUES(" + entity + ")")
+    int insertUser(@Param("user") User user);
 
     @Update("UPDATE user SET name = #{name} WHERE id = #{id}")
     int updateUser(User user);
 
     @Update("UPDATE user SET telephone = #{user.telephone} WHERE user_id = #{user.user_id}")
-    boolean updateMobile(@Param("user")User user);
+    boolean updateMobile(@Param("user") User user);
 
 }
 

@@ -50,6 +50,11 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
+    public boolean isExistsTelephone(String telephone) {
+        return userMapper.isExistsTelephone(telephone);
+    }
+
+    @Override
     public User getUserByUserName(String user_name) {
         return userMapper.getUserByUserName(user_name);
     }
