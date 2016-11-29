@@ -37,6 +37,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         web.ignoring()
                 .antMatchers("/user/findUserName")
         ;
+        web.ignoring()
+                .antMatchers("/user/findMobile")
+        ;
     }
 
     @Override
