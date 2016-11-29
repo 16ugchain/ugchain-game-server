@@ -137,7 +137,7 @@ public class UserController {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.TELEPHONE_EXISTS);
             return result;
         }
-        // TODO: 接入短信接口发送验证吗 
+        // TODO: 接入短信接口发送验证码
         Result result = ResultUtil.success();
         return result;
     }
