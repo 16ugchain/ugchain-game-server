@@ -21,6 +21,10 @@ public class Result {
         this(meta, null);
     }
 
+    public Result(Object data) {
+        this(null, data);
+    }
+
     public Meta getMeta() {
         return meta;
     }

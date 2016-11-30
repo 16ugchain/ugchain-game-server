@@ -108,7 +108,8 @@ public class UserController {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.USER_NAME_EXITS);
             return result;
         }
-        Result result = ResultUtil.success();
+        String data = "{\"valid\": true}";
+        Result result = ResultUtil.userDefined(data);
         return result;
     }
 
@@ -123,7 +124,8 @@ public class UserController {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.TELEPHONE_EXISTS);
             return result;
         }
-        Result result = ResultUtil.success();
+        String data = "{\"valid\": true}";
+        Result result = ResultUtil.userDefined(data);
         return result;
     }
     @RequestMapping(value = "/sendVerification", method = RequestMethod.POST)
