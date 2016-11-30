@@ -14,10 +14,6 @@ public class ResultUtil {
         return new Result(meta, data);
     }
 
-    public static Result userDefined(Object data) {
-        return new Result(data);
-    }
-
     public static Result success() {
         return success(null);
     }

@@ -21,8 +21,8 @@ public class Result {
         this(meta, null);
     }
 
-    public Result(Object data) {
-        this(null, data);
+    public Result(String valid) {
+        this(null, valid);
     }
 
     public Meta getMeta() {

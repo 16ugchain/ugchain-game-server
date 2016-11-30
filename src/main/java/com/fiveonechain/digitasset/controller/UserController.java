@@ -102,31 +102,31 @@ public class UserController {
     }
 
     @RequestMapping(value = "/findUserName", method = RequestMethod.POST)
-    public Result findUserName(@RequestParam("user_name") String user_name
+    public String findUserName(@RequestParam("user_name") String user_name
                              ) {
+        String data = "{\"valid\": false}";
         if (iUserService.isExistsUserName(user_name)) {
-            Result result = ResultUtil.buildErrorResult(ErrorInfo.USER_NAME_EXITS);
-            return result;
+//            Result result = ResultUtil.buildErrorResult(ErrorInfo.USER_NAME_EXITS);
+            return data;
         }
-        String data = "{\"valid\": true}";
-        Result result = ResultUtil.userDefined(data);
-        return result;
+        data = "{\"valid\": true}";
+        return data;
     }
 
     @RequestMapping(value = "/findMobile", method = RequestMethod.POST)
-    public Result findMobile(@RequestParam("telephone") String telephone
+    public String findMobile(@RequestParam("telephone") String telephone
     ) {
+        String data = "{\"valid\": false}";
         if(telephone.trim().length()==0||telephone==null){
-            Result result = ResultUtil.buildErrorResult(ErrorInfo.TELEPHONE_ILLEGAL);
-            return result;
+//            Result result = ResultUtil.buildErrorResult(ErrorInfo.TELEPHONE_ILLEGAL);
+            return data;
         }
         if (iUserService.isExistsTelephone(telephone)) {
-            Result result = ResultUtil.buildErrorResult(ErrorInfo.TELEPHONE_EXISTS);
-            return result;
+//            Result result = ResultUtil.buildErrorResult(ErrorInfo.TELEPHONE_EXISTS);
+            return data;
         }
-        String data = "{\"valid\": true}";
-        Result result = ResultUtil.userDefined(data);
-        return result;
+        data = "{\"valid\": true}";
+        return data;
     }
     @RequestMapping(value = "/sendVerification", method = RequestMethod.POST)
     public Result sendVerification(@RequestParam("telephone") String telephone
