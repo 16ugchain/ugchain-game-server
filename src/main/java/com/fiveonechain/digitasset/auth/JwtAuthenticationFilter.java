@@ -12,15 +12,19 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Optional;
 
 /**
  * Created by yuanshichao on 2016/11/9.
  */
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
+    private static final String AUTH_TOKEN_NAME = "Authorization";
+    private static final String AUTH_BEARER = "Bearer ";
 
     private AuthenticationEntryPoint authenticationEntryPoint;
     private AuthenticationManager authenticationManager;
@@ -38,15 +42,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws IOException, ServletException {
 
-        String header = request.getHeader("Authorization");
-        if (header == null || !header.startsWith("Bearer ")) {
+        Optional<String> tokenOpt = extractTokenFromHeader(request);
+        if (!tokenOpt.isPresent()) {
+            tokenOpt = extractTokenFromCookie(request);
+        }
+        if (!tokenOpt.isPresent()) {
             this.authenticationEntryPoint.commence(request, response,
                     new AuthenticationCredentialsNotFoundException("[Authorization: Bearer jwt] NOT FOUND"));
             return;
         }
 
         try {
-            String token = extractAndDecodeHeader(header, request);
+            String token = tokenOpt.get();
             JwtAuthenticationToken authRequest = new JwtAuthenticationToken(new RawAccessJwtToken(token));
             Authentication authResult = this.authenticationManager
                     .authenticate(authRequest);
@@ -60,9 +67,22 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         chain.doFilter(request, response);
     }
 
-    private String extractAndDecodeHeader(String header, HttpServletRequest request)
-            throws IOException {
-        return header.substring(7);
+    private Optional<String> extractTokenFromHeader(HttpServletRequest request) {
+        String header = request.getHeader(AUTH_TOKEN_NAME);
+        if (header == null || !header.startsWith(AUTH_BEARER)) {
+            return Optional.empty();
+        }
+        return Optional.ofNullable(header.substring(7));
+    }
+
+    private Optional<String> extractTokenFromCookie(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        for (Cookie c : cookies) {
+            if (AUTH_TOKEN_NAME.equals(c.getName())) {
+                return Optional.ofNullable(c.getValue());
+            }
+        }
+        return Optional.empty();
     }
 
     protected AuthenticationEntryPoint getAuthenticationEntryPoint() {
