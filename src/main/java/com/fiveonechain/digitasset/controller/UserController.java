@@ -1,5 +1,7 @@
 package com.fiveonechain.digitasset.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fiveonechain.digitasset.auth.UserContext;
 import com.fiveonechain.digitasset.config.CerConfig;
 import com.fiveonechain.digitasset.config.JwtConfig;
@@ -8,6 +10,7 @@ import com.fiveonechain.digitasset.domain.*;
 import com.fiveonechain.digitasset.domain.result.ErrorInfo;
 import com.fiveonechain.digitasset.domain.result.Result;
 import com.fiveonechain.digitasset.exception.ImageUploadException;
+import com.fiveonechain.digitasset.exception.JsonSerializableException;
 import com.fiveonechain.digitasset.service.*;
 import com.fiveonechain.digitasset.util.HttpClientUtil;
 import com.fiveonechain.digitasset.util.RandomCharUtil;
@@ -31,9 +34,7 @@ import java.security.KeyPair;
 import java.security.cert.Certificate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -106,29 +107,40 @@ public class UserController {
     }
 
     @RequestMapping(value = "/findUserName", method = RequestMethod.POST)
-    public Result findUserName(@RequestParam("user_name") String user_name
+    public String findUserName(@RequestParam("user_name") String user_name
     ) {
-        if (iUserService.isExistsUserName(user_name)) {
-            Result result = ResultUtil.buildErrorResult(ErrorInfo.USER_NAME_EXITS);
-            return result;
+//        if (iUserService.isExistsUserName(user_name)) {
+//            Result result = ResultUtil.buildErrorResult(ErrorInfo.USER_NAME_EXITS);
+//            return result;
+//        }
+        boolean result = iUserService.isExistsUserName(user_name);
+        Map<String, Boolean> map = new HashMap<>();
+        map.put("valid", result);
+        ObjectMapper mapper = new ObjectMapper();
+        String resultString = "";
+        try {
+            resultString = mapper.writeValueAsString(map);
+        } catch (JsonProcessingException e) {
+            throw new JsonSerializableException(e);
         }
-        Result result = ResultUtil.success();
-        return result;
+        return resultString;
     }
 
     @RequestMapping(value = "/findMobile", method = RequestMethod.POST)
-    public Result findMobile(@RequestParam("telephone") String telephone
+    public String findMobile(@RequestParam("telephone") String telephone
     ) {
-        if (telephone.trim().length() == 0 || telephone == null) {
-            Result result = ResultUtil.buildErrorResult(ErrorInfo.TELEPHONE_ILLEGAL);
-            return result;
+        boolean result = iUserService.isExistsTelephone(telephone);
+        Map<String, Boolean> map = new HashMap<>();
+        map.put("valid", result);
+        ObjectMapper mapper = new ObjectMapper();
+        String resultString = "";
+        try {
+            resultString = mapper.writeValueAsString(map);
+        } catch (JsonProcessingException e) {
+            throw new JsonSerializableException(e);
         }
-        if (iUserService.isExistsTelephone(telephone)) {
-            Result result = ResultUtil.buildErrorResult(ErrorInfo.TELEPHONE_EXISTS);
-            return result;
-        }
-        Result result = ResultUtil.success();
-        return result;
+        return resultString;
+
     }
 
     @RequestMapping(value = "/sendVerification", method = RequestMethod.POST)
@@ -143,7 +155,7 @@ public class UserController {
             return result;
         }
         // TODO: 接入短信接口发送验证码
-        String num = RandomCharUtil.getRandomNumberChar(5);
+        String num = RandomCharUtil.getRandomNumberChar(6);
         HttpClientUtil.SMS(telephone, num);
         redisService.put(telephone, num);
         Result result = ResultUtil.success();
@@ -386,4 +398,9 @@ public class UserController {
         return ResultUtil.buildErrorResult(ErrorInfo.IMAGE_UPLOAD_FAIL);
     }
 
+    @ExceptionHandler(JsonSerializableException.class)
+    @ResponseBody
+    public Result handleJsonSerializableException() {
+        return ResultUtil.buildErrorResult(ErrorInfo.SERVER_ERROR);
+    }
 }
