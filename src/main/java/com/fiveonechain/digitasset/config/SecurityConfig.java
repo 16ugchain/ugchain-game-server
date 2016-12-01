@@ -28,6 +28,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         web.ignoring()
                 .antMatchers("/auth/**")
                 .antMatchers("/test_page")
+                .antMatchers("/index.html").antMatchers("/login.html")
+                .antMatchers("/register.html")
+                .antMatchers("/js/*").antMatchers("/css/*")
+                .antMatchers("/images/*")
         ;
         web.ignoring()
                 .antMatchers("/user/regist")

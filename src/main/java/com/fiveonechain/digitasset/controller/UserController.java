@@ -9,6 +9,8 @@ import com.fiveonechain.digitasset.domain.result.ErrorInfo;
 import com.fiveonechain.digitasset.domain.result.Result;
 import com.fiveonechain.digitasset.exception.ImageUploadException;
 import com.fiveonechain.digitasset.service.*;
+import com.fiveonechain.digitasset.util.HttpClientUtil;
+import com.fiveonechain.digitasset.util.RandomCharUtil;
 import com.fiveonechain.digitasset.util.ResultUtil;
 import com.fiveonechain.digitasset.util.StringBuilderHolder;
 import com.google.gson.Gson;
@@ -58,6 +60,8 @@ public class UserController {
     private CerConfig cerConfig;
     @Autowired
     private CertificateService certificateService;
+    @Autowired
+    private RedisService redisService;
 
     Pbkdf2PasswordEncoder passwordEncoder = new Pbkdf2PasswordEncoder();
 
@@ -65,10 +69,10 @@ public class UserController {
     StringBuilderHolder stringBuilderHolder = new StringBuilderHolder(0);
 
 
-    @RequestMapping(value = "/regist", method = RequestMethod.POST)
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
     public Result registUser(@RequestParam("user_name") String user_name,
                              @RequestParam("password") String password
-                             ) {
+    ) {
         if (iUserService.isExistsUserName(user_name)) {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.USER_NAME_EXITS);
             return result;
@@ -102,36 +106,35 @@ public class UserController {
     }
 
     @RequestMapping(value = "/findUserName", method = RequestMethod.POST)
-    public String findUserName(@RequestParam("user_name") String user_name
-                             ) {
-        String data = "{\"valid\": false}";
+    public Result findUserName(@RequestParam("user_name") String user_name
+    ) {
         if (iUserService.isExistsUserName(user_name)) {
-//            Result result = ResultUtil.buildErrorResult(ErrorInfo.USER_NAME_EXITS);
-            return data;
+            Result result = ResultUtil.buildErrorResult(ErrorInfo.USER_NAME_EXITS);
+            return result;
         }
-        data = "{\"valid\": true}";
-        return data;
+        Result result = ResultUtil.success();
+        return result;
     }
 
     @RequestMapping(value = "/findMobile", method = RequestMethod.POST)
-    public String findMobile(@RequestParam("telephone") String telephone
+    public Result findMobile(@RequestParam("telephone") String telephone
     ) {
-        String data = "{\"valid\": false}";
-        if(telephone.trim().length()==0||telephone==null){
-//            Result result = ResultUtil.buildErrorResult(ErrorInfo.TELEPHONE_ILLEGAL);
-            return data;
+        if (telephone.trim().length() == 0 || telephone == null) {
+            Result result = ResultUtil.buildErrorResult(ErrorInfo.TELEPHONE_ILLEGAL);
+            return result;
         }
         if (iUserService.isExistsTelephone(telephone)) {
-//            Result result = ResultUtil.buildErrorResult(ErrorInfo.TELEPHONE_EXISTS);
-            return data;
+            Result result = ResultUtil.buildErrorResult(ErrorInfo.TELEPHONE_EXISTS);
+            return result;
         }
-        data = "{\"valid\": true}";
-        return data;
+        Result result = ResultUtil.success();
+        return result;
     }
+
     @RequestMapping(value = "/sendVerification", method = RequestMethod.POST)
     public Result sendVerification(@RequestParam("telephone") String telephone
     ) {
-        if(telephone.trim().length()==0||telephone==null){
+        if (telephone.trim().length() == 0 || telephone == null) {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.TELEPHONE_ILLEGAL);
             return result;
         }
@@ -140,14 +143,24 @@ public class UserController {
             return result;
         }
         // TODO: 接入短信接口发送验证码
+        String num = RandomCharUtil.getRandomNumberChar(5);
+        HttpClientUtil.SMS(telephone, num);
+        redisService.put(telephone, num);
         Result result = ResultUtil.success();
         return result;
     }
+
     @RequestMapping(value = "/bindMobile", method = RequestMethod.POST)
     public Result bindMobile(@RequestParam("telephone") String telephone,
+                             @RequestParam("verification") String verification,
                              @AuthenticationPrincipal UserContext userContext
-                             ) {
-        User user = iUserService.getUserByUserId((long)userContext.getUserId());
+    ) {
+        String value = redisService.get(telephone);
+        if (value != verification || value == null) {
+            Result result = ResultUtil.buildErrorResult(ErrorInfo.TELEPHONE_VERIFY_FAIL);
+            return result;
+        }
+        User user = iUserService.getUserByUserId((long) userContext.getUserId());
         user.setTelephone(telephone);
         if (!iUserService.updateMobile(user)) {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.SERVER_ERROR);
@@ -157,13 +170,34 @@ public class UserController {
         return result;
     }
 
+    @RequestMapping(value = "/bindCreditCard", method = RequestMethod.POST)
+    public Result bindCreditCard(@RequestParam("creditCardId") String creditCardId,
+                                 @RequestParam("creditCardOwner") String creditCardOwner,
+                                 @RequestParam("creditCardBank") String creditCardBank,
+                                 @AuthenticationPrincipal UserContext userContext
+    ) {
+        UserAuth userAuth = iUserAuthService.getUserAuthByUserId((long) userContext.getUserId());
+        if(userAuth == null){
+            Result result = ResultUtil.buildErrorResult(ErrorInfo.SERVER_ERROR);
+            return result;
+        }
+        userAuth.setCredit_card_id(creditCardId);
+        userAuth.setCredit_card_owner(creditCardOwner);
+        userAuth.setCredit_card_bank(creditCardBank);
+        if (!iUserAuthService.bindCreditCard(userAuth)) {
+            Result result = ResultUtil.buildErrorResult(ErrorInfo.SERVER_ERROR);
+            return result;
+        }
+        Result result = ResultUtil.success();
+        return result;
+    }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public Result login(@RequestParam("user_name") String user_name,
                         @RequestParam("password") String password,
                         @RequestParam("role") int role,
                         @RequestParam(value = "auto_login", defaultValue = "false", required = false) boolean auto_login) {
-        if (!iUserService.isExistsUserName(user_name)){
+        if (!iUserService.isExistsUserName(user_name)) {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.USER_NOT_FOUND);
             return result;
         }
@@ -172,11 +206,11 @@ public class UserController {
             return result;
         }
         User user = iUserService.getUserByUserName(user_name);
-        if(role == UserRoleEnum.CORP.getId() && user.getRole() != UserRoleEnum.CORP.getId()){
+        if (role == UserRoleEnum.CORP.getId() && user.getRole() != UserRoleEnum.CORP.getId()) {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.USER_ROLE_NOT_MATCH);
             return result;
         }
-        if(user.getStatus() != UserStatusEnum.ACTIVE.getId()){
+        if (user.getStatus() != UserStatusEnum.ACTIVE.getId()) {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.USER_STATUS_ERROR);
             return result;
         }

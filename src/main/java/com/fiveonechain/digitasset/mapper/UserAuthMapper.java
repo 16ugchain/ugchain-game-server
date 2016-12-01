@@ -1,10 +1,7 @@
 package com.fiveonechain.digitasset.mapper;
 
 import com.fiveonechain.digitasset.domain.UserAuth;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 /**
  * Created by yuanshichao on 2016/11/10.
@@ -26,6 +23,11 @@ public interface UserAuthMapper {
 
     @Select("SELECT exists (select user_id FROM user_auth WHERE user_id = #{user_id})")
     boolean isExistsUserAuth(int user_id);
+
+    @Update("update user_auth set credit_card_id=#{credit_card_id},credit_card_owner=#{credit_card_owner},credit_card_bank=#{credit_card_bank}" +
+            "where user_id = #{user_id}")
+    boolean bindCreditCard(UserAuth userAuth);
+
 
 }
 

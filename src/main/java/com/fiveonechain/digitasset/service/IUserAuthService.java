@@ -12,5 +12,7 @@ public interface IUserAuthService {
 
     int insertAndGetUserAuth(UserAuth userAuth);
 
+    boolean bindCreditCard(UserAuth userAuth);
+
     UserAuth getUserAuthByUserId(Long userId);
 }

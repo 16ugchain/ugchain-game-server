@@ -1,0 +1,12 @@
+/*login media*/
+@charset 'utf-8';
+@media (max-width: 768px) {
+	.login-box {
+		float: none;
+		margin: 0 auto;
+	}
+	.login-contain {
+		background: none;
+	}
+}
+

@@ -1,0 +1,116 @@
+/*register style*/
+@charset 'utf-8';
+body {
+	background: #fafafa;
+}
+.register-box {
+	padding-top: 30px;
+}
+.tabs-container {
+	background: #fff;
+}
+.nav-tabs {
+	overflow: hidden;
+	border: 1px solid #e8e8e8;
+	border-radius: 3px 3px 0 0;
+}
+.nav-tabs li {
+	padding: 0px;
+	text-align: center;
+	margin-bottom: 0px;
+}
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus{
+	border: 1px solid #20b062;
+	color: #fff;
+	background: #20b062;
+}
+.nav-tabs>li>a:hover {
+	background: transparent;
+	border-color: transparent;
+}
+.nav-tabs>li>a {
+	margin-right: 0px;
+	border-radius: 0px;
+	color: #20b062;
+}
+.nav-tabs>li {
+	position: relative;
+}
+.nav-tabs>li:after,
+.nav-tabs>li>a:after{
+	position: absolute;
+    right: -21px;
+    top: 0;
+    bottom: 0;
+    height: 0;
+    width: 0;
+    border-bottom: 22px inset transparent;
+    border-left: 20px solid #fff;
+    border-top: 22px inset transparent;
+    content: "";
+    z-index: 10;
+}
+.nav-tabs>li:after {
+	top: 1px;
+	right: -21px;
+	border-left: 20px solid #e8e8e8;
+	z-index: 5;
+}
+.nav-tabs>li.active>a:after {
+	border-left: 20px solid #20b062;
+}
+.nav-tabs>li.active:after,
+.nav-tabs>li:nth-child(4):after,
+.nav-tabs>li:nth-child(4)>a:after {
+	border-left: 0 solid #20b062;
+}
+.tab-content {
+	border: 1px solid #e8e8e8;
+	border-top: none;
+	padding-bottom: 150px;
+}
+#tab-3 .btn-success,
+#tab-4 .btn-success,
+#tab-2 .btn-success,
+#tab-1 .btn-success {
+	margin-top: 17px;
+}
+.form-group {
+	position: relative;
+}
+.btn-skip {
+	position: absolute;
+	top: 30px;
+	right: -100px;
+	width: 100px;
+	text-align: center;
+}
+#tab-3 .col-sm-9 {
+	padding-right: 0px;
+}
+.uploadfile > div{
+	position: relative;
+	border: 1px solid #e8e8e8;
+	padding: 30px 0px;
+	margin-top: 10px;  
+	margin-bottom: 18px;
+	border-radius: 4px;
+	background: #fafafa;
+}
+#tab-4,
+#tab-2,
+#tab-1 {
+	padding-top: 124px;
+}
+.input-group-btn {
+	z-index: 1000000;
+	background: #fff;
+}
+/*注册 标题*/
+/*#tab-3 .label-title {
+	width: 50%;
+}*/
+/*注册 文本输入框*/
+/*#tab-3 .text-input {
+	width: 78%;
+}*/

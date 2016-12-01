@@ -24,6 +24,7 @@ public enum ErrorInfo {
     USER_STATUS_ERROR(6011,"用户状态异常"),
     TELEPHONE_EXISTS(6012,"手机号已经注册"),
     TELEPHONE_ILLEGAL(6013,"手机号不合法"),
+    TELEPHONE_VERIFY_FAIL(6014,"验证码错误"),
     ORDER_EXCEPTION(7001,"订单异常"),
     ORDER_NOT_FOUND(7002,"订单不存在"),
     ORDER_APPLY_OUTTIME(7003,"申请操作超时"),

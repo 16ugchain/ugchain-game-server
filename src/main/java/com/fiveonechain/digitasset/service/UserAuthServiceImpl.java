@@ -18,8 +18,13 @@ public class UserAuthServiceImpl implements IUserAuthService{
     }
 
     @Override
+    public boolean bindCreditCard(UserAuth userAuth) {
+        return userAuthMapper.bindCreditCard(userAuth);
+    }
+
+    @Override
     public UserAuth getUserAuthByUserId(Long userId) {
-        return null;
+        return userAuthMapper.findAuthById(userId);
     }
 
     @Override

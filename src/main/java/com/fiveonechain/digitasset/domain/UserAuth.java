@@ -12,6 +12,9 @@ public class UserAuth {
     private String identity;
     private Date create_time;
     private Date update_time;
+    private String credit_card_id;
+    private String credit_card_owner;
+    private String credit_card_bank;
     private String fixed_line;
     private String email;
     private int status;
@@ -86,6 +89,30 @@ public class UserAuth {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getCredit_card_id() {
+        return credit_card_id;
+    }
+
+    public void setCredit_card_id(String credit_card_id) {
+        this.credit_card_id = credit_card_id;
+    }
+
+    public String getCredit_card_owner() {
+        return credit_card_owner;
+    }
+
+    public void setCredit_card_owner(String credit_card_owner) {
+        this.credit_card_owner = credit_card_owner;
+    }
+
+    public String getCredit_card_bank() {
+        return credit_card_bank;
+    }
+
+    public void setCredit_card_bank(String credit_card_bank) {
+        this.credit_card_bank = credit_card_bank;
     }
 
     @Override
