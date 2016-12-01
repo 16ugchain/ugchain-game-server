@@ -115,7 +115,7 @@ public class UserController {
 //        }
         boolean result = iUserService.isExistsUserName(user_name);
         Map<String, Boolean> map = new HashMap<>();
-        map.put("valid", result);
+        map.put("valid", !result);
         ObjectMapper mapper = new ObjectMapper();
         String resultString = "";
         try {
@@ -131,7 +131,7 @@ public class UserController {
     ) {
         boolean result = iUserService.isExistsTelephone(telephone);
         Map<String, Boolean> map = new HashMap<>();
-        map.put("valid", result);
+        map.put("valid", !result);
         ObjectMapper mapper = new ObjectMapper();
         String resultString = "";
         try {
