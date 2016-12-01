@@ -12,7 +12,6 @@ import com.fiveonechain.digitasset.domain.result.Result;
 import com.fiveonechain.digitasset.exception.ImageUploadException;
 import com.fiveonechain.digitasset.exception.JsonSerializableException;
 import com.fiveonechain.digitasset.service.*;
-import com.fiveonechain.digitasset.util.HttpClientUtil;
 import com.fiveonechain.digitasset.util.RandomCharUtil;
 import com.fiveonechain.digitasset.util.ResultUtil;
 import com.fiveonechain.digitasset.util.StringBuilderHolder;
@@ -146,6 +145,11 @@ public class UserController {
     @RequestMapping(value = "/sendVerification", method = RequestMethod.POST)
     public Result sendVerification(@RequestParam("telephone") String telephone
     ) {
+        String value = redisService.get(telephone);
+        if (value != null){
+            Result result = ResultUtil.buildErrorResult(ErrorInfo.VERIFY_FREQUENCY_ERROR);
+            return result;
+        }
         if (telephone.trim().length() == 0 || telephone == null) {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.TELEPHONE_ILLEGAL);
             return result;
@@ -156,7 +160,7 @@ public class UserController {
         }
         // TODO: 接入短信接口发送验证码
         String num = RandomCharUtil.getRandomNumberChar(6);
-        HttpClientUtil.SMS(telephone, num);
+//        HttpClientUtil.SMS(telephone, num);
         redisService.put(telephone, num);
         Result result = ResultUtil.success();
         return result;
@@ -168,7 +172,7 @@ public class UserController {
                              @AuthenticationPrincipal UserContext userContext
     ) {
         String value = redisService.get(telephone);
-        if (value != verification || value == null) {
+        if ((!value.equals(verification)) || value == null) {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.TELEPHONE_VERIFY_FAIL);
             return result;
         }

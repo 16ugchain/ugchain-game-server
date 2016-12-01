@@ -34,7 +34,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/images/*")
         ;
         web.ignoring()
-                .antMatchers("/user/regist")
+                .antMatchers("/user/regist").antMatchers("/user/sendVerification")
         ;
         web.ignoring()
                 .antMatchers("/user/login")

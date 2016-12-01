@@ -25,6 +25,7 @@ public enum ErrorInfo {
     TELEPHONE_EXISTS(6012,"手机号已经注册"),
     TELEPHONE_ILLEGAL(6013,"手机号不合法"),
     TELEPHONE_VERIFY_FAIL(6014,"验证码错误"),
+    VERIFY_FREQUENCY_ERROR(6015,"发送太频繁，请等一分钟再试"),
     ORDER_EXCEPTION(7001,"订单异常"),
     ORDER_NOT_FOUND(7002,"订单不存在"),
     ORDER_APPLY_OUTTIME(7003,"申请操作超时"),

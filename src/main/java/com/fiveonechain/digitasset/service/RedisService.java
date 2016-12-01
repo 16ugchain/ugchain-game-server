@@ -31,7 +31,7 @@ public class RedisService {
     // redis set <K,V>
     public void put(String key, String value) {
         template.boundValueOps(PREFIX_NAME + String.valueOf(key))
-             .set(value, 5*60*60, TimeUnit.MINUTES);
+             .set(value, 1, TimeUnit.MINUTES);
     }
 
     // redis get <K>

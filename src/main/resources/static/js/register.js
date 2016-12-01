@@ -268,7 +268,7 @@ $(function () {
             console.log($.cookie("Authorization"));
             $.post(register.api.telephoneApi,{
                 telephone: register.userInfo.telephone,
-                verify: register.userInfo.verify
+                verification: register.userInfo.verify
             },function(data){
                 if(data.meta.code === 200){
                     console.log("绑定手机成功");
