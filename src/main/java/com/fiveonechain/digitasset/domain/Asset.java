@@ -17,6 +17,7 @@ public class Asset {
     private String certificate;
     private String photos;
 
+    private int cycle;
     private Date startTime;
     private Date endTime;
 
@@ -165,4 +166,13 @@ public class Asset {
     public void setStatus(int status) {
         this.status = status;
     }
+
+    public int getCycle() {
+        return cycle;
+    }
+
+    public void setCycle(int cycle) {
+        this.cycle = cycle;
+    }
+
 }

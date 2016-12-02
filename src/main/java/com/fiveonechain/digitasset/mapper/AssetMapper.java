@@ -11,17 +11,17 @@ import org.apache.ibatis.annotations.*;
 public interface AssetMapper {
 
     String INSERT_COLUMN = "asset_id, user_id, guar_id, name, "
-            + "value, description, certificate, photos, "
-            + "start_time, end_time, fee, status";
+            + "value, description, certificate, photos, cycle, "
+            + "fee, status";
 
     String INSERT_PROPERTY = "#{assetId}, #{userId}, #{guarId}, #{name}, "
-            + "#{value}, #{description}, #{certificate}, #{photos}, "
-            + "#{startTime}, #{endTime}, #{fee}, #{status}";
+            + "#{value}, #{description}, #{certificate}, #{photos}, #{cycle} "
+            + "#{fee}, #{status}";
 
     String ALL_COLUMN = "asset_id, user_id, guar_id, name, "
-            + "value, description, certificate, photos, "
+            + "value, description, certificate, photos, cycle, "
             + "start_time, end_time, eval_conclusion, eval_value, "
-            + "fee, exp_earnings, status";
+            + "fee, exp_earnings, status, create_time, update_time";
 
     @Insert("INSERT INTO asset(" + INSERT_COLUMN + ") VALUES (" + INSERT_PROPERTY +")")
     int insert(Asset asset);
@@ -42,6 +42,7 @@ public interface AssetMapper {
             @Result(property = "fee", column = "fee"),
             @Result(property = "expEarnings", column = "exp_earnings"),
             @Result(property = "status", column = "status"),
+            @Result(property = "cycle", column = "cycle"),
     })
     @Select("SELECT " + ALL_COLUMN + " FROM asset WHERE asset_id = #{assetId}")
     Asset select(@Param("assetId") int assetId);
@@ -71,8 +72,9 @@ CREATE TABLE `asset` (
   `certificate` varchar(32) CHARACTER SET latin1 NOT NULL,
   `photos` varchar(192) CHARACTER SET latin1 NOT NULL ,
 
-  `start_time` timestamp NOT NULL,
-  `end_time` timestamp NOT NULL,
+  `cycle` int(11) NOT NULL,
+  `start_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `end_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
 
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

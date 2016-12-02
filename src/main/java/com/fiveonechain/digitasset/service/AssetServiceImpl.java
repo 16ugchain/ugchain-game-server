@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -46,9 +47,8 @@ public class AssetServiceImpl implements AssetService {
     }
 
     @Override
+    @Transactional
     public void createAsset(Asset asset, boolean needGuar) {
-        int assetId = nextAssetId();
-        asset.setAssetId(assetId);
         if (needGuar) {
             asset.setStatus(AssetStatus.WAIT_EVALUATE.getCode());
         } else {
@@ -57,6 +57,12 @@ public class AssetServiceImpl implements AssetService {
             asset.setStatus(AssetStatus.PASS_EVALUATE.getCode());
         }
         assetMapper.insert(asset);
+
+        AssetRecord record = new AssetRecord();
+        record.setAssetId(asset.getAssetId());
+        record.setUserId(asset.getUserId());
+        record.setStatus(asset.getStatus());
+        assetRecordMapper.insert(record);
     }
 
     private int calculateFee(int value) {
