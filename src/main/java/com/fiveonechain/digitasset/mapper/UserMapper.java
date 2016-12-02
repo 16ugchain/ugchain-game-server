@@ -18,7 +18,7 @@ public interface UserMapper {
             @Result(property = "user_name", column = "user_name")
     })
     @Select("SELECT * FROM user WHERE user_id = #{user_id}")
-    User findByUserId(Long user_id);
+    User findByUserId(int user_id);
 
     @Select("SELECT * FROM user WHERE user_name = #{user_name}")
     User getUserByUserName(String user_name);

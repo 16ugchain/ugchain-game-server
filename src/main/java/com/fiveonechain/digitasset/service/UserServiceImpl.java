@@ -1,6 +1,7 @@
 package com.fiveonechain.digitasset.service;
 
 import com.fiveonechain.digitasset.domain.User;
+import com.fiveonechain.digitasset.domain.UserRoleEnum;
 import com.fiveonechain.digitasset.mapper.SequenceMapper;
 import com.fiveonechain.digitasset.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +27,9 @@ public class UserServiceImpl implements IUserService {
     @Transactional
     public User insertAndGetUser(User user) {
         int userId = sequenceMapper.nextId(sequenceMapper.USER);
-        user.setUser_id(Long.valueOf(userId));
+        user.setUser_id(userId);
         userMapper.insertUser(user);
-        User userGet = userMapper.findByUserId(Long.valueOf(userId));
+        User userGet = userMapper.findByUserId(userId);
         return userGet;
     }
 
@@ -39,7 +40,7 @@ public class UserServiceImpl implements IUserService {
 
 
     @Override
-    public User getUserByUserId(Long userId) {
+    public User getUserByUserId(int userId) {
         User user = userMapper.findByUserId(userId);
         return user;
     }
@@ -64,6 +65,15 @@ public class UserServiceImpl implements IUserService {
         User user = getUserByUserName(user_name);
         String pwd = user.getPassword();
         if(passwordEncoder.matches(password,pwd)){
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean isUserValid(int userId, UserRoleEnum expectedRole) {
+        User user = userMapper.findByUserId(userId);
+        if (user != null && user.getRole() == expectedRole.getId()) {
             return true;
         }
         return false;

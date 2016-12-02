@@ -175,7 +175,7 @@ public class UserController {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.TELEPHONE_VERIFY_FAIL);
             return result;
         }
-        User user = iUserService.getUserByUserId((long) userContext.getUserId());
+        User user = iUserService.getUserByUserId(userContext.getUserId());
         user.setTelephone(telephone);
         if (!iUserService.updateMobile(user)) {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.SERVER_ERROR);
@@ -309,7 +309,7 @@ public class UserController {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.IMAGE_EXISTS);
             return result;
         }
-        User user = iUserService.getUserByUserId(Long.valueOf(userContext.getUserId()));
+        User user = iUserService.getUserByUserId(userContext.getUserId());
         if (user == null) {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.USER_NOT_FOUND);
             return result;
@@ -360,7 +360,7 @@ public class UserController {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.CORP_EXISTS);
             return result;
         }
-        User user = iUserService.getUserByUserId(Long.valueOf(userContext.getUserId()));
+        User user = iUserService.getUserByUserId(userContext.getUserId());
         if (user == null) {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.USER_NOT_FOUND);
             return result;
@@ -387,7 +387,7 @@ public class UserController {
     public Result getCorpDetail(@AuthenticationPrincipal UserContext userContext
     ) {
         //验证identity后设置status
-        User user = iUserService.getUserByUserId(Long.valueOf(userContext.getUserId()));
+        User user = iUserService.getUserByUserId(userContext.getUserId());
         if (user == null) {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.USER_NOT_FOUND);
             return result;

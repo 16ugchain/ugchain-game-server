@@ -4,6 +4,8 @@ package com.fiveonechain.digitasset.domain;
  * Created by fanjl on 16/11/17.
  */
 public enum ImageTypeEnum {
+    ASSET_PHOTO(6, "资产照片"),
+    ASSET_CERT(5, "资产证书"),
     IDENTITY_FRONT(1, "身份证正面照"),
     IDENTITY_BACK(2, "身份证背面照"),
     CREDITCARD_FRONT(3, "银行卡正面照"),

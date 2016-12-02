@@ -1,6 +1,7 @@
 package com.fiveonechain.digitasset.service;
 
 import com.fiveonechain.digitasset.domain.User;
+import com.fiveonechain.digitasset.domain.UserRoleEnum;
 
 /**
  * Created by fanjl on 16/11/16.
@@ -12,7 +13,7 @@ public interface IUserService {
 
     boolean updateMobile(User user);
 
-    public User getUserByUserId(Long userId);
+    public User getUserByUserId(int userId);
 
     boolean isExistsUserName(String user_name);
 
@@ -21,5 +22,7 @@ public interface IUserService {
     User getUserByUserName(String user_name);
 
     boolean checkUserLogin(String user_name,String password);
+
+    boolean isUserValid(int userId, UserRoleEnum expectedRole);
 
 }
