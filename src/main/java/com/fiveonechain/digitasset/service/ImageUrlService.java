@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by fanjl on 16/11/18.
  */
-public interface IimageUrlService {
+public interface ImageUrlService {
     int insertImageUrl(ImageUrl imageUrl);
 
     ImageUrl findByImageId(int image_id);

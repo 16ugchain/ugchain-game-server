@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
  * Created by fanjl on 16/11/16.
  */
 @Component
-public class UserServiceImpl implements IUserService {
+public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserMapper userMapper;

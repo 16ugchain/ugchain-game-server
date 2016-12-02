@@ -7,7 +7,7 @@ import com.fiveonechain.digitasset.domain.UserRoleEnum;
  * Created by fanjl on 16/11/16.
  */
 
-public interface IUserService {
+public interface UserService {
 
     public User insertAndGetUser(User user);
 

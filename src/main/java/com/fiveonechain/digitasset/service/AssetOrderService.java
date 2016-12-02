@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by fanjl on 16/11/21.
  */
-public interface IAssetOrderService {
+public interface AssetOrderService {
     int nextOrderId();
 
     int createAssetOrder(AssetOrder assetOrder);

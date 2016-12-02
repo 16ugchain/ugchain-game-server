@@ -14,7 +14,7 @@ import java.util.List;
  * Created by fanjl on 16/11/21.
  */
 @Component
-public class AssetOrderServiceImpl implements IAssetOrderService {
+public class AssetOrderServiceImpl implements AssetOrderService {
     @Autowired
     private SequenceMapper sequenceMapper;
     @Autowired

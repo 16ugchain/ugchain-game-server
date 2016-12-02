@@ -43,15 +43,15 @@ import java.util.stream.Collectors;
 @RequestMapping("user")
 public class UserController {
     @Autowired
-    private IUserService iUserService;
+    private UserService iUserService;
     @Autowired
-    private IUserAuthService iUserAuthService;
+    private UserAuthService iUserAuthService;
     @Autowired
     private ImageUploadService imageUploadService;
     @Autowired
-    private IimageUrlService iimageUrlService;
+    private ImageUrlService imageUrlService;
     @Autowired
-    private IGuaranteeCorpService iGuaranteeCorpService;
+    private GuaranteeCorpService iGuaranteeCorpService;
     @Autowired
     private QiNiuConfig qiNiuConfig;
     @Autowired
@@ -305,7 +305,7 @@ public class UserController {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.IMAGETYPE_NOT_FOUND);
             return result;
         }
-        if (iimageUrlService.isExists(userContext.getUserId(), type)) {
+        if (imageUrlService.isExists(userContext.getUserId(), type)) {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.IMAGE_EXISTS);
             return result;
         }
@@ -338,7 +338,7 @@ public class UserController {
         imageUrl.setUser_id(userContext.getUserId());
         imageUrl.setType(type);
         imageUrl.setUrl(urlStrBuilder.toString());
-        if (iimageUrlService.insertImageUrl(imageUrl) != 1) {
+        if (imageUrlService.insertImageUrl(imageUrl) != 1) {
             ErrorInfo errorInfo = ErrorInfo.SERVER_ERROR;
             Result result = ResultUtil.buildErrorResult(errorInfo);
             return result;

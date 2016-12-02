@@ -15,7 +15,7 @@ import java.util.List;
  * Created by fanjl on 16/11/18.
  */
 @Component
-public class ImageUrlServiceImpl implements IimageUrlService {
+public class ImageUrlServiceImpl implements ImageUrlService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ImageUrlServiceImpl.class);
 
 

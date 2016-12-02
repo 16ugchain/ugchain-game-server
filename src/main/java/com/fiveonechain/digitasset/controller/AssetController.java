@@ -10,8 +10,8 @@ import com.fiveonechain.digitasset.domain.result.Result;
 import com.fiveonechain.digitasset.exception.AssetNotFoundException;
 import com.fiveonechain.digitasset.exception.AssetStatusTransferException;
 import com.fiveonechain.digitasset.service.AssetService;
-import com.fiveonechain.digitasset.service.IUserService;
-import com.fiveonechain.digitasset.service.IimageUrlService;
+import com.fiveonechain.digitasset.service.ImageUrlService;
+import com.fiveonechain.digitasset.service.UserService;
 import com.fiveonechain.digitasset.util.ResultUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,10 +43,10 @@ public class AssetController {
     private AssetService assetService;
 
     @Autowired
-    private IimageUrlService imageUrlService;
+    private ImageUrlService imageUrlService;
 
     @Autowired
-    private IUserService userService;
+    private UserService userService;
 
     /**
      * 登记实物资产

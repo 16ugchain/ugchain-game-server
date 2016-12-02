@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
  * Created by fanjl on 16/11/18.
  */
 @Component
-public class GuaranteeCorpServiceImpl implements IGuaranteeCorpService {
+public class GuaranteeCorpServiceImpl implements GuaranteeCorpService {
     @Autowired
     private GuaranteeCorpMapper guaranteeCorpMapper;
     @Autowired

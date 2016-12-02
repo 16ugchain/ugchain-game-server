@@ -6,7 +6,7 @@ import com.fiveonechain.digitasset.domain.AssetOrderStatusEnum;
 import com.fiveonechain.digitasset.domain.result.ErrorInfo;
 import com.fiveonechain.digitasset.domain.result.Result;
 import com.fiveonechain.digitasset.exception.AssetOrderException;
-import com.fiveonechain.digitasset.service.IAssetOrderService;
+import com.fiveonechain.digitasset.service.AssetOrderService;
 import com.fiveonechain.digitasset.util.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -24,7 +24,7 @@ import java.util.Date;
 @RequestMapping("assetOrder")
 public class AssetOrderController {
     @Autowired
-    private IAssetOrderService iAssetOrderService;
+    private AssetOrderService iAssetOrderService;
 
     @RequestMapping(value = "createOrder", method = RequestMethod.POST)
     public Result sellOrder(

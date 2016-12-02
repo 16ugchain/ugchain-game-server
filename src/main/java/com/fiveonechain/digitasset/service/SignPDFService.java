@@ -10,7 +10,7 @@ import java.security.cert.Certificate;
 /**
  * Created by fanjl on 2016/11/23.
  */
-public interface ISignPDFService {
+public interface SignPDFService {
 
     PDDocument imageToPdf(String outPath, String content, String imagePath, int imagex, int imagey);
 

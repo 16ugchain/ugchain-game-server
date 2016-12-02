@@ -27,7 +27,7 @@ import java.security.cert.CertificateException;
  * Created by fanjl on 2016/11/23.
  */
 @Component
-public class SignPDFServiceImpl implements ISignPDFService {
+public class SignPDFServiceImpl implements SignPDFService {
     @Autowired
     private ContractMapper contractMapper;
     @Autowired

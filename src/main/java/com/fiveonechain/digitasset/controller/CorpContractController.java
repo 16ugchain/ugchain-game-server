@@ -9,8 +9,8 @@ import com.fiveonechain.digitasset.domain.result.Result;
 import com.fiveonechain.digitasset.exception.PdfSignException;
 import com.fiveonechain.digitasset.exception.PdfVerifyException;
 import com.fiveonechain.digitasset.service.CertificateService;
-import com.fiveonechain.digitasset.service.IGuaranteeCorpService;
-import com.fiveonechain.digitasset.service.ISignPDFService;
+import com.fiveonechain.digitasset.service.GuaranteeCorpService;
+import com.fiveonechain.digitasset.service.SignPDFService;
 import com.fiveonechain.digitasset.util.ResultUtil;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,13 +28,13 @@ import java.security.cert.Certificate;
 @RequestMapping("pdf")
 public class CorpContractController {
     @Autowired
-    private IGuaranteeCorpService guaranteeCorpService;
+    private GuaranteeCorpService guaranteeCorpService;
     @Autowired
     private CerConfig cerConfig;
     @Autowired
     private CertificateService certificateService;
     @Autowired
-    private ISignPDFService signPDFService;
+    private SignPDFService signPDFService;
 
     @RequestMapping(value = "/sign", method = RequestMethod.POST)
     public Result sign(@AuthenticationPrincipal UserContext userContext
