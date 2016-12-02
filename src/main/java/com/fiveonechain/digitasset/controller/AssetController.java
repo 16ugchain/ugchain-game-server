@@ -20,10 +20,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Collections;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -134,7 +131,7 @@ public class AssetController {
         try {
             String[] tokens = str.split(",");
             for (String token : tokens) {
-                int id = Integer.parseInt(str);
+                int id = Integer.parseInt(token);
                 idList.add(id);
             }
         } catch (Exception e) {

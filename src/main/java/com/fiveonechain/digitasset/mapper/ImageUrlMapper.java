@@ -20,7 +20,7 @@ public interface ImageUrlMapper {
     @Select("select "+allcolumns+" from image_url where image_id=#{image_id}")
     ImageUrl getByImageId(@Param("image_id")int image_id);
 
-    @Select("SELECT " + allcolumns + " FROM image_url WHERE image_id=#{image_id} AND user_id=#{userId}")
+    @Select("SELECT " + allcolumns + " FROM image_url WHERE image_id=#{imageId} AND user_id=#{userId}")
     ImageUrl selectByImageIdAndUserId(
             @Param("imageId") int imageId,
             @Param("userId") int userId);

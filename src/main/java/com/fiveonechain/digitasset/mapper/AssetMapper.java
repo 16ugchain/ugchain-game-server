@@ -15,7 +15,7 @@ public interface AssetMapper {
             + "fee, status";
 
     String INSERT_PROPERTY = "#{assetId}, #{userId}, #{guarId}, #{name}, "
-            + "#{value}, #{description}, #{certificate}, #{photos}, #{cycle} "
+            + "#{value}, #{description}, #{certificate}, #{photos}, #{cycle}, "
             + "#{fee}, #{status}";
 
     String ALL_COLUMN = "asset_id, user_id, guar_id, name, "

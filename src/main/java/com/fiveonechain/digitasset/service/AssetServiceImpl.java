@@ -66,7 +66,11 @@ public class AssetServiceImpl implements AssetService {
     }
 
     private int calculateFee(int value) {
-        return FEE_RATE.multiply(new BigDecimal(value)).intValue();
+        int fee = FEE_RATE.multiply(new BigDecimal(value)).intValue();
+        if (fee <= 0) {
+            fee = 1;
+        }
+        return fee;
     }
 
     @Override
