@@ -10,6 +10,7 @@ public class UserAuth {
     private int user_id;
     private String real_name;
     private String identity;
+    private int identity_type;
     private Date create_time;
     private Date update_time;
     private String credit_card_id;
@@ -114,6 +115,15 @@ public class UserAuth {
     public void setCredit_card_bank(String credit_card_bank) {
         this.credit_card_bank = credit_card_bank;
     }
+
+    public int getIdentity_type() {
+        return identity_type;
+    }
+
+    public void setIdentity_type(int identity_type) {
+        this.identity_type = identity_type;
+    }
+
 
     @Override
     public String toString() {

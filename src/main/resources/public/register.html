@@ -40,11 +40,16 @@
 		<!-- bootstrapValidator.js 表单验证-->
 		<script src="//cdn.bootcss.com/bootstrap-validator/0.5.3/js/bootstrapValidator.min.js"></script>
 
+		<script src="http://malsup.github.com/jquery.form.js"></script>
+
+		<!-- 上传照片 -->
+		<link rel="stylesheet" href="//cdn.bootcss.com/bootstrap-fileinput/4.3.5/css/fileinput.min.css">	
+		<script src="//cdn.bootcss.com/bootstrap-fileinput/4.3.5/js/fileinput.js"></script>
+		<script src="//cdn.bootcss.com/bootstrap-fileinput/4.3.5/js/locales/zh.min.js"></script>
+
+		<!-- 注册样式 -->
 		<link rel="stylesheet" href="/css/register.css">
 		<link rel="stylesheet" href="/css/register-media.css">
-		
-
-		
 	</head>
 	<body>
 		<!-- 导航栏 -->
@@ -97,7 +102,7 @@
 		        <!-- tab内容 -->
 		        <div class="tab-content">
 		        	<!-- 注册 -->
-	        		<div id="tab-1" class="tab-pane" transition="expand">
+	        		<div id="tab-1" class="tab-pane " transition="expand">
 	        			<div class="row">
 	        				<div class="panel-body col-md-4 col-md-offset-4 col-xs-8 col-xs-offset-2">
 			                    <form role="form">
@@ -126,7 +131,7 @@
 	        			</div>
 		            </div>
 		            <!-- 绑定手机 -->
-		            <div id="tab-2" class="tab-pane active">
+		            <div id="tab-2" class="tab-pane">
 		                <div class="row">
 	        				<div class="panel-body col-md-4 col-md-offset-4 col-xs-8 col-xs-offset-2">
 			                    <form role="form" class="form-horizontal" >
@@ -160,13 +165,74 @@
 	        			</div>
 		            </div>
 		            <!-- 填写信息 -->
-		            <div id="tab-3" class="tab-pane">
+		            <div id="tab-3" class="tab-pane active">
 		                <div class="row">
 	        				<div class="panel-body col-md-4 col-md-offset-4 col-xs-8 col-xs-offset-2">
 	        					
-								<form class="form-horizontal" role="form">
-			                    <!-- 注册类型 -->
-    								<div class="form-group">
+								<form class="form-horizontal" role="form" id="auth">
+									<!-- 注册人真实姓名 -->
+									<div class="form-group">
+										<label for="registerName" class="col-sm-4 control-label">注册人真实姓名</label>
+										<div class="col-sm-8">
+											<input type="text" class="form-control" id="registerName" name="registerName" placeholder="请输入注册人真实姓名" v-model="userInfo.registerName">
+										</div>
+									</div>
+									<!-- 证件类型 -->
+									<div class="form-group">
+										<label for="papersType" class="col-sm-4 control-label">证件类型</label>
+										<div class="col-sm-8">
+											<select class="form-control" id="papersType" v-model="userInfo.papersType">
+												<option value="1" selected>
+													身份证
+												</option>
+												
+
+											</select>	
+										</div>
+									</div>
+									<!-- 证件号码 -->
+									<div class="form-group">
+										<label for="papersNum" class="col-sm-4 control-label">证件号码</label>
+										<div class="col-sm-8">
+											<input type="text" class="form-control" id="papersNum" name="papersNum" placeholder="请输入证件号码" v-model="userInfo.papersNum">
+										</div>
+									</div>
+									<!-- 上传证件图片 -->
+									<div class="form-group">
+										<label for="companyName" class="col-sm-4 control-label">上传证件图片</label>
+										<div class="col-sm-8">
+												<!--<input id="file-1"  class="file" data-overwrite-initial="false" data-min-file-count="1" type="file" name="file" >-->
+									            <input id="file-1" name="imageUrl" type="file" multiple class="file" data-overwrite-initial="false" data-min-file-count="2">
+										</div>
+									</div>
+									<!-- 固定电话 -->
+									<div class="form-group">
+										<label for="contactPhone" class="col-sm-4 control-label">固定电话</label>
+										<div class="col-sm-8">
+											<input type="text" class="form-control" id="contactPhone" name="contactPhone" placeholder="请输入固定电话" v-model="userInfo.contactPhone">
+										</div>
+									</div>
+									<!-- 邮箱 -->
+									<div class="form-group">
+										<label for="email" class="col-sm-4 control-label">邮箱</label>
+										<div class="col-sm-8">
+											<input type="email" class="form-control" id="email" name="email" placeholder="请输入邮箱" v-model="userInfo.email">
+										</div>
+									</div>
+									<!-- 注册按钮 -->
+									<div class="form-group">
+										<button type="submit" class="btn btn-success btn-absolutely">
+											继续
+										</button>
+										<a href="" class="text-muted btn-skip">
+											<u>
+												跳过 &gt;&gt; 
+											</u>
+										</a>
+									</div>
+
+			                    	<!-- 注册类型 -->
+    								<!-- <div class="form-group">
 										<label for="registerType" class="col-sm-3 control-label">
 											注册类型
 										</label>
@@ -178,16 +244,16 @@
 												<input type="radio" name="optionsRadios" id="optionsRadios2" value="option2" v-model="userInfo.registerType"> 法人代表
 											</label>
 										</div>
-									</div>
-								<!-- 企业全称 -->
-									<div class="form-group">
+									</div> -->
+									<!-- 企业全称 -->
+									<!-- <div class="form-group">
 										<label for="companyName" class="col-sm-3 control-label">企业全称</label>
 										<div class="col-sm-9">
 											<input type="text" class="form-control" id="companyName" name="companyName" placeholder="请输入企业全称" v-model="userInfo.companyName">
 										</div>
-									</div>
-								<!-- 企业类型 -->
-									<div class="form-group">
+									</div> -->
+									<!-- 企业类型 -->
+									<!-- <div class="form-group">
 										<label for="companyType" class="col-sm-3 control-label">企业类型</label>
 										<div class="col-sm-9">
 											<select class="form-control" id="firstname" v-model="userInfo.companyType">
@@ -197,22 +263,22 @@
 
 											</select>	
 										</div>
-									</div>
-								<!-- 主营业务 -->
-									<div class="form-group">
+									</div> -->
+									<!-- 主营业务 -->
+									<!-- <div class="form-group">
 										<label for="companyBusiness" class="col-sm-3 control-label">主营业务</label>
 										<div class="col-sm-9">
 											<input type="text" class="form-control" id="companyBusiness" name="companyBusiness" placeholder="请输入主营业务"  v-model="userInfo.companyBusiness">
 										</div>
-									</div>
-								<!-- 资质文件 -->
-									<div class="form-group">
+									</div> -->
+									<!-- 资质文件 -->
+									<!-- <div class="form-group">
 										<label for="aptitudeFile" class="col-sm-3 control-label">资质文件</label>
 										<div class="col-sm-9">
 											<input type="text" class="form-control" id="aptitudeFile" name="aptitudeFile" placeholder="请输入资质文件编码"   v-model="userInfo.aptitudeFile">
-										</div>
+										</div> -->
 										<!-- 文件上传模块 -->
-										<div class="col-sm-9 col-sm-offset-3 uploadfile text-center">
+										<!-- <div class="col-sm-9 col-sm-offset-3 uploadfile text-center">
 											<div>
 												<span class="uploadfile-title text-">
 
@@ -221,19 +287,19 @@
 												<br>
 												<button type="button" class="btn btn-success uploadfile-btn" id="aptitude-btn">
 													上传图片
-												</button>
+												</button> -->
 												<!-- <input type="file"> -->
-											</div>
+											<!-- </div>
 										</div>
-									</div>
-								<!-- 营业执照 -->
-									<div class="form-group">
+									</div> -->
+									<!-- 营业执照 -->
+									<!-- <div class="form-group">
 										<label for="license" class="col-sm-3 control-label">营业执照</label>
 										<div class="col-sm-9">
 											<input type="text" class="form-control" id="license" name="license" placeholder="请输入营业执照编码"  v-model="userInfo.license">
-										</div>
+										</div> -->
 										<!-- 文件上传模块 -->
-										<div class="col-sm-9 col-sm-offset-3 uploadfile text-center">
+										<!-- <div class="col-sm-9 col-sm-offset-3 uploadfile text-center">
 											<div>
 												<span class="uploadfile-title text-">
 
@@ -242,41 +308,41 @@
 												<br>
 												<button type="button" class="btn btn-success uploadfile-btn" id="business-btn">
 													上传图片
-												</button>
+												</button> -->
 												<!-- <input type="file"> -->
-											</div>
+											<!-- </div>
 										</div>
-									</div>
-								<!-- 法人代表 -->
-									<div class="form-group">
+									</div> -->
+									<!-- 法人代表 -->
+									<!-- <div class="form-group">
 										<label for="legalPerson" class="col-sm-3 control-label">法人代表</label>
 										<div class="col-sm-9">
 											<input type="text" class="form-control" id="legalPerson" name="legalPerson" placeholder="请输入企业法人代表" v-model="userInfo.legalPerson">
 										</div>
-									</div>
-								<!-- 联系电话 -->
-									<div class="form-group">
+									</div> -->
+									<!-- 联系电话 -->
+									<!-- <div class="form-group">
 										<label for="contactPhone" class="col-sm-3 control-label">联系电话</label>
 										<div class="col-sm-9">
 											<input type="text" class="form-control" id="contactPhone" name="contactPhone" placeholder="请输入企业联系电话" v-model="userInfo.contactPhone">
 										</div>
-									</div>
-								<!-- 地址 -->
-									<div class="form-group">
+									</div> -->
+									<!-- 地址 -->
+									<!-- <div class="form-group">
 										<label for="site" class="col-sm-3 control-label">地址</label>
 										<div class="col-sm-9">
 											<input type="text" class="form-control" id="site" name="site" placeholder="请输入企业地址"  v-model="userInfo.site">
 										</div>
-									</div>
-								<!-- 电子邮箱 -->
-									<div class="form-group">
+									</div> -->
+									<!-- 电子邮箱 -->
+									<!-- <div class="form-group">
 										<label for="email" class="col-sm-3 control-label">电子邮箱</label>
 										<div class="col-sm-9">
 											<input type="email" class="form-control" id="email" name="email" placeholder="请输入企业邮箱地址"  v-model="userInfo.email">
 										</div>
-									</div>
-								<!-- 注册按钮 -->
-									<div class="form-group">
+									</div> -->
+									<!-- 注册按钮 -->
+									<!-- <div class="form-group">
 										<button type="submit" class="btn btn-success btn-absolutely">
 											继续
 										</button>
@@ -285,7 +351,7 @@
 												跳过 &gt;&gt; 
 											</u>
 										</a>
-									</div>
+									</div> -->
 								</form>
 			                </div>
 	        			</div>
@@ -345,8 +411,23 @@
 			</div>
 		<script src="/js/register.js"></script>
 		<script>
-
-			
+			// 照片上传
+			$("#file-1").fileinput({
+		    	language: 'zh', //设置语言
+		        uploadUrl: '#', // you must set a valid URL here else you will get an error
+		        allowedFileExtensions : ['jpg', 'png','gif'],
+		        overwriteInitial: false,
+		        // maxFileSize: 1000,
+		        maxFileSize: 10000,
+		        maxFileCount: 2,
+		        minFilesNum: 2,
+		        maxFilesNum: 3,
+		        browseClass: "btn btn-primary", //按钮样式   
+		        slugCallback: function(filename) {
+		            return filename.replace('(', '_').replace(']', '_');
+		        }
+			});
+			$(".file-drop-zone-title").html("*拖拽照片到这里或者点击选择按钮*");
 		</script>
 	</body>
 </html>

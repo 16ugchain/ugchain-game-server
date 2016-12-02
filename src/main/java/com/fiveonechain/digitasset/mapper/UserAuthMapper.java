@@ -9,8 +9,9 @@ import org.apache.ibatis.annotations.*;
 
 @Mapper
 public interface UserAuthMapper {
-    final String columns = "user_id,real_name,identity,email,fixed_line,status";
-    final String entity = "#{userAuth.user_id},#{userAuth.real_name},#{userAuth.identity},#{userAuth.email},#{userAuth.fixed_line},#{userAuth.status}";
+    final String columns = "user_id,real_name,identity,identity_type,email,fixed_line,status";
+    final String entity = "#{userAuth.user_id},#{userAuth.real_name},#{userAuth.identity},#{userAuth.identity_type}," +
+            "#{userAuth.email},#{userAuth.fixed_line},#{userAuth.status}";
     @Select("SELECT exists (select user_id FROM user_auth WHERE identity = #{identity})")
     boolean isIdentityExists(String id);
 

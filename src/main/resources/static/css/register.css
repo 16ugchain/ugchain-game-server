@@ -106,6 +106,31 @@ body {
 	z-index: 1000000;
 	background: #fff;
 }
+.hand-down ,
+.kv-file-upload,
+.fileinput-remove-button,
+.fileinput-upload-button {
+	opacity: 0;
+	width: 1px;
+	height: 1px;
+}
+#tab-3 .col-sm-8{
+	padding-left: 0px;
+	padding-right: 0px; 
+
+}
+.file-drop-zone {
+	border: none;
+}
+.file-drop-zone-title {
+	padding: 30px 0;
+	font-size: 14px;
+}
+.btn-file:hover,
+.btn-file {
+	background: #449d44;
+	border-color: #398439;
+}
 /*注册 标题*/
 /*#tab-3 .label-title {
 	width: 50%;

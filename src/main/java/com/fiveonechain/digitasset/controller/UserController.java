@@ -68,7 +68,6 @@ public class UserController {
 
     StringBuilderHolder stringBuilderHolder = new StringBuilderHolder(0);
 
-
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public Result registUser(@RequestParam("user_name") String user_name,
                              @RequestParam("password") String password
@@ -106,7 +105,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/findUserName", method = RequestMethod.POST)
-    public String findUserName(@RequestParam("user_name") String user_name
+    public String findUserName(@RequestParam("username") String user_name
     ) {
 //        if (iUserService.isExistsUserName(user_name)) {
 //            Result result = ResultUtil.buildErrorResult(ErrorInfo.USER_NAME_EXITS);
@@ -263,6 +262,7 @@ public class UserController {
     public Result authenticate(@AuthenticationPrincipal UserContext userContext,
                                @RequestParam("real_name") String real_name,
                                @RequestParam("identity") String identity,
+                               @RequestParam("identity_type") int type,
                                @RequestParam(value = "email", required = false, defaultValue = "") String email,
                                @RequestParam(value = "fixed_line", required = false, defaultValue = "") String fixed_line
     ) {
@@ -280,6 +280,7 @@ public class UserController {
         UserAuth userAuth = new UserAuth();
         userAuth.setUser_id(userContext.getUserId());
         userAuth.setIdentity(identity);
+        userAuth.setIdentity_type(type);
         userAuth.setReal_name(real_name);
         userAuth.setEmail(email);
         userAuth.setFixed_line(fixed_line);
@@ -292,12 +293,13 @@ public class UserController {
         return result;
     }
 
-    @RequestMapping("/upload")
+    @RequestMapping(value="/upload",method = RequestMethod.POST)
     public Result upload(
-            @RequestParam("file") MultipartFile image,
+            @RequestParam("imageUrl") MultipartFile image,
             @RequestParam("type") int type,
             @AuthenticationPrincipal UserContext userContext
     ) {
+
         ImageTypeEnum imageTypeEnum = ImageTypeEnum.fromValue(type);
         if (imageTypeEnum == null) {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.IMAGETYPE_NOT_FOUND);
@@ -341,8 +343,7 @@ public class UserController {
             Result result = ResultUtil.buildErrorResult(errorInfo);
             return result;
         }
-        Object data = message;
-        Result result = ResultUtil.success(data);
+        Result result = ResultUtil.success(imageUrl.getImage_id());
         return result;
     }
 

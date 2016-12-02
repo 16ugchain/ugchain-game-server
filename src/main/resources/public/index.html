@@ -4,7 +4,7 @@
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<link rel="shortcut icon" type="image/x-icon" href="/static/images/favicon.ico">
+		<link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico">
 		<!-- 网站作者 -->
 		<meta name="author" content="51区块研发团队">
 		<!-- 网站关键词 -->
@@ -36,10 +36,70 @@
 
 		<!-- jquery.cookie.js -->
 		<script src="//cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.js"></script>
-
+		<script src="//cdn.bootcss.com/vue-router/0.7.10/vue-router.min.js"></script>
 	</head>
 	<body>
-	    <h1>首页</h1>
-	    <p>首页| 51区块</p>
+	    <style>
+	    	#app {
+	    		width: 300px;
+	    		height: 300px;
+	    	}
+	    </style>
+		<div id="app">
+			
+				<!-- <div class="list-group">
+				    <a class="list-group-item">Home</a>
+				    <a class="list-group-item">About</a>
+				</div> -->
+				<div class="btn-group login-type-tab">
+				  	<button type="button" class="btn btn-success col-xs-4" value="1" v-link="{ path: '/home'}">发行人</button>
+				  	<button type="button" class="btn btn-default col-xs-4" value="2" v-link="{ path: '/sofar'}">受让人</button>
+				  	<button type="button" class="btn btn-default col-xs-4" value="3" v-link="{ path: '/about'}">担保公司</button>
+				</div>
+				<router-view></router-view>
+			
+			
+		</div>
+	    <script>
+	    	// 首页组件
+	    	var Home = Vue.extend({
+			    template: '<div><h1>首页</h1><p>{{msg}}</p></div>',
+			    data: function() {
+			        return {
+			            msg: '什么是发行人呢~!'
+			        }
+			    }
+			})
+			var Sofar = Vue.extend({
+			    template: '<div><h1>Mr.Sofar</h1><p>什么是担保公司呢~！</p></div>'
+			})
+			// 关于我们组件 
+			var About = Vue.extend({
+			    
+			    template: '<div><h1>About</h1><p>{{msg}}</p></div>',
+			    data: function() {
+			        return {
+			            msg: '什么是受让人呢~!'
+			        }
+			    }
+			})
+			// 创建路由
+			var router = new VueRouter()
+			// 路由映射
+			router.map({
+			    '/home': { component: Home },
+			    '/sofar': { component: Sofar },
+			    '/about': { component: About },
+
+			})
+			// 启动路由
+			var App = Vue.extend({});
+			router.start(App, '#app');
+			// 重定向首页
+			router.redirect({
+			    '/': '/sofar'
+			})
+
+	    </script>
 	</body>
 </html>

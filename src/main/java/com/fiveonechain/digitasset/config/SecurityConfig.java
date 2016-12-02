@@ -28,13 +28,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         web.ignoring()
                 .antMatchers("/auth/**")
                 .antMatchers("/test_page")
-                .antMatchers("/index.html").antMatchers("/login.html")
+                .antMatchers("/login.html")
                 .antMatchers("/register.html")
                 .antMatchers("/js/*").antMatchers("/css/*")
                 .antMatchers("/images/*")
         ;
         web.ignoring()
-                .antMatchers("/user/regist").antMatchers("/user/sendVerification")
+                .antMatchers("/user/register").antMatchers("/user/sendVerification")
         ;
         web.ignoring()
                 .antMatchers("/user/login")
@@ -55,7 +55,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         AuthenticationEntryPoint entryPoint = new Http401AuthenticationEntryPoint("CHC");
 
         http
-                .authorizeRequests().antMatchers("/admin/**").hasRole("USER")
+                .authorizeRequests().antMatchers("/admin/**").hasRole("ADMIN")
                 .and()
                 .authorizeRequests().anyRequest().authenticated()
                 .and()
