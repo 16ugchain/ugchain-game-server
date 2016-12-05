@@ -12,6 +12,7 @@ import com.fiveonechain.digitasset.domain.result.Result;
 import com.fiveonechain.digitasset.exception.ImageUploadException;
 import com.fiveonechain.digitasset.exception.JsonSerializableException;
 import com.fiveonechain.digitasset.service.*;
+import com.fiveonechain.digitasset.util.HttpClientUtil;
 import com.fiveonechain.digitasset.util.RandomCharUtil;
 import com.fiveonechain.digitasset.util.ResultUtil;
 import com.fiveonechain.digitasset.util.StringBuilderHolder;
@@ -159,7 +160,11 @@ public class UserController {
         }
         // TODO: 接入短信接口发送验证码
         String num = RandomCharUtil.getRandomNumberChar(6);
-//        HttpClientUtil.SMS(telephone, num);
+        String code = HttpClientUtil.getResult(telephone,num);
+        if(Integer.valueOf(code) != 0){
+            Result result = ResultUtil.buildErrorResult(ErrorInfo.SERVER_ERROR);
+            return result;
+        }
         redisService.put(telephone, num);
         Result result = ResultUtil.success();
         return result;

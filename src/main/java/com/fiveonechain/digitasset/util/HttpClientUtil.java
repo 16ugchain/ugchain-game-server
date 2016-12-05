@@ -1,17 +1,16 @@
 package com.fiveonechain.digitasset.util;
 
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import org.xml.sax.helpers.DefaultHandler;
+
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
  * Created by fanjl on 2016/11/30.
  */
-public class HttpClientUtil {
+public class HttpClientUtil extends DefaultHandler {
 
     private static String postUrl = "http://cf.51welink.com/submitdata/Service.asmx/g_Submit";
     private static String sname = "DL-shanghq1";
@@ -58,6 +57,17 @@ public class HttpClientUtil {
         }
         return "";
     }
+    public static String getResult(String telephone,String verification){
+        return parseXml(SMS(telephone,verification));
+    }
 
+    public static void main(String[] args) {
+        System.out.println(parseXml(SMS("123333","12")));
+    }
 
+    public static String parseXml(String source){
+        String[] state = source.split("State");
+        String stateStr = state[2].replace(">","").replace("</","");
+        return stateStr;
+    }
 }
