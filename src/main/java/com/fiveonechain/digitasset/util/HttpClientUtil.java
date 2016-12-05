@@ -61,9 +61,6 @@ public class HttpClientUtil extends DefaultHandler {
         return parseXml(SMS(telephone,verification));
     }
 
-    public static void main(String[] args) {
-        System.out.println(parseXml(SMS("123333","12")));
-    }
 
     public static String parseXml(String source){
         String[] state = source.split("State");
