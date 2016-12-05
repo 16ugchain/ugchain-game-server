@@ -11,11 +11,11 @@ import org.apache.ibatis.annotations.*;
 public interface AssetMapper {
 
     String INSERT_COLUMN = "asset_id, user_id, guar_id, name, "
-            + "value, description, certificate, photos, cycle, "
+            + "value, eval_value, description, certificate, photos, cycle, "
             + "fee, status";
 
     String INSERT_PROPERTY = "#{assetId}, #{userId}, #{guarId}, #{name}, "
-            + "#{value}, #{description}, #{certificate}, #{photos}, #{cycle}, "
+            + "#{value}, #{evalValue}, #{description}, #{certificate}, #{photos}, #{cycle}, "
             + "#{fee}, #{status}";
 
     String ALL_COLUMN = "asset_id, user_id, guar_id, name, "

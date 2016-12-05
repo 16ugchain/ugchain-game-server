@@ -1,15 +1,15 @@
 package com.fiveonechain.digitasset.controller;
 
 import com.fiveonechain.digitasset.auth.UserContext;
-import com.fiveonechain.digitasset.domain.Asset;
-import com.fiveonechain.digitasset.domain.AssetStatus;
-import com.fiveonechain.digitasset.domain.ImageTypeEnum;
-import com.fiveonechain.digitasset.domain.UserRoleEnum;
+import com.fiveonechain.digitasset.domain.*;
+import com.fiveonechain.digitasset.domain.result.AssetDetail;
 import com.fiveonechain.digitasset.domain.result.ErrorInfo;
 import com.fiveonechain.digitasset.domain.result.Result;
 import com.fiveonechain.digitasset.exception.AssetNotFoundException;
 import com.fiveonechain.digitasset.exception.AssetStatusTransferException;
+import com.fiveonechain.digitasset.exception.ImageUrlNotFoundException;
 import com.fiveonechain.digitasset.service.AssetService;
+import com.fiveonechain.digitasset.service.GuaranteeCorpService;
 import com.fiveonechain.digitasset.service.ImageUrlService;
 import com.fiveonechain.digitasset.service.UserService;
 import com.fiveonechain.digitasset.util.ResultUtil;
@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by yuanshichao on 2016/11/16.
@@ -47,6 +48,9 @@ public class AssetController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private GuaranteeCorpService guarService;
 
     /**
      * 登记实物资产
@@ -119,6 +123,7 @@ public class AssetController {
         asset.setPhotos(photos);
         asset.setCycle(cycle);
         asset.setValue(value);
+        asset.setEvalValue(value);
         if (needGuar) {
             asset.setGuarId(guarId);
         }
@@ -152,11 +157,44 @@ public class AssetController {
             @AuthenticationPrincipal UserContext userContext,
             @PathVariable("assetId") int assetId) {
 
-        Asset asset = assetService.getAsset(assetId);
-        if (asset == null) {
+        Optional<Asset> assetOpt = assetService.getAssetOptional(assetId);
+        if (!assetOpt.isPresent()) {
             return ResultUtil.buildErrorResult(ErrorInfo.ASSET_NOT_FOUND);
         }
-        return ResultUtil.success(asset);
+
+        AssetDetail assetDetail = new AssetDetail();
+
+        Asset asset = assetOpt.get();
+        boolean isGuaranteed = assetService.isAssetGuaranteed(asset);
+        if (isGuaranteed) {
+            Optional<GuaranteeCorp> guarOpt = guarService.getGuarOptional(asset.getGuarId());
+            if (!guarOpt.isPresent()) {
+                LOGGER.error("{} guarId {} NOT FOUND", ErrorInfo.SERVER_ERROR, asset.getGuarId());
+                return ResultUtil.buildErrorResult(ErrorInfo.SERVER_ERROR);
+            }
+            assetDetail.setGuaranteed(true);
+            assetDetail.setGuarId(asset.getGuarId());
+            assetDetail.setGuarName(guarOpt.get().getCorp_name());
+            assetDetail.setValue(asset.getEvalValue());
+        } else {
+            assetDetail.setGuaranteed(false);
+            assetDetail.setValue(asset.getValue());
+        }
+        assetDetail.setName(asset.getName());
+        assetDetail.setDesc(asset.getDescription());
+
+        try {
+            List<String> certList = imageUrlService.getUrlListByImageIds(parsePictureList(asset.getCertificate()));
+            List<String> photoList = imageUrlService.getUrlListByImageIds(parsePictureList(asset.getPhotos()));
+
+            assetDetail.setCertList(certList);
+            assetDetail.setPhotoList(photoList);
+        } catch (ImageUrlNotFoundException e) {
+            LOGGER.error("{} {}", ErrorInfo.SERVER_ERROR, e.getMessage());
+            return ResultUtil.buildErrorResult(ErrorInfo.SERVER_ERROR);
+        }
+
+        return ResultUtil.success(assetDetail);
     }
 
     /**

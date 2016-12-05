@@ -5,6 +5,7 @@ import com.fiveonechain.digitasset.domain.Asset;
 import com.fiveonechain.digitasset.domain.AssetStatus;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by yuanshichao on 2016/11/16.
@@ -16,6 +17,8 @@ public interface AssetService {
     void createAsset(Asset asset, boolean needGuar);
 
     Asset getAsset(int assetId);
+
+    Optional<Asset> getAssetOptional(int assetId);
 
     List<Asset> getAssetListByOwner(int userId);
 
@@ -29,5 +32,6 @@ public interface AssetService {
 
     void issueAsset(int assetId, String payOrder);
 
+    boolean isAssetGuaranteed(Asset asset);
 }
 

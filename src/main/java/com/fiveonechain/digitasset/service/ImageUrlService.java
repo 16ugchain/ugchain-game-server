@@ -13,6 +13,8 @@ public interface ImageUrlService {
 
     ImageUrl findByImageId(int image_id);
 
+    List<String> getUrlListByImageIds(List<Integer> imageIds);
+
     ImageUrl getImageByImageIdAndUserId(int imageId, int userId);
 
     ImageUrl findByUserIdAndType(int user_id,int type);
