@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by yuanshichao on 2016/11/17.
@@ -76,6 +77,12 @@ public class AssetServiceImpl implements AssetService {
     @Override
     public Asset getAsset(int assetId) {
         return assetMapper.select(assetId);
+    }
+
+    @Override
+    public Optional<Asset> getAssetOptional(int assetId) {
+        Asset asset = assetMapper.select(assetId);
+        return Optional.ofNullable(asset);
     }
 
     @Override
@@ -178,6 +185,11 @@ public class AssetServiceImpl implements AssetService {
 
 
 
+    }
+
+    @Override
+    public boolean isAssetGuaranteed(Asset asset) {
+        return asset.getGuarId() != DUMMY_GUAR_ID;
     }
 }
 

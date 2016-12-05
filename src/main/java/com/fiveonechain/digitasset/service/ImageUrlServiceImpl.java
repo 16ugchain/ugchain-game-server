@@ -2,6 +2,7 @@ package com.fiveonechain.digitasset.service;
 
 import com.fiveonechain.digitasset.domain.ImageTypeEnum;
 import com.fiveonechain.digitasset.domain.ImageUrl;
+import com.fiveonechain.digitasset.exception.ImageUrlNotFoundException;
 import com.fiveonechain.digitasset.mapper.ImageUrlMapper;
 import com.fiveonechain.digitasset.mapper.SequenceMapper;
 import org.slf4j.Logger;
@@ -9,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -49,6 +52,22 @@ public class ImageUrlServiceImpl implements ImageUrlService {
         } else {
             return false;
         }
+    }
+
+    @Override
+    public List<String> getUrlListByImageIds(List<Integer> imageIds) {
+        if (imageIds.isEmpty()) {
+            return Collections.emptyList();
+        }
+        List<String> urlList = new LinkedList<>();
+        for (int imageId : imageIds) {
+            ImageUrl imageUrl = imageUrlMapper.getByImageId(imageId);
+            if (imageUrl == null) {
+                throw new ImageUrlNotFoundException(imageId);
+            }
+            urlList.add(imageUrl.getUrl());
+        }
+        return urlList;
     }
 
     @Override
