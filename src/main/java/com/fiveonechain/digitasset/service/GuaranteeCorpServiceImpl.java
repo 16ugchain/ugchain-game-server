@@ -24,20 +24,20 @@ public class GuaranteeCorpServiceImpl implements GuaranteeCorpService {
     }
 
     @Override
-    public boolean isExists(int user_id) {
-        return guaranteeCorpMapper.isExists(user_id);
+    public boolean isExists(int userId) {
+        return guaranteeCorpMapper.isExists(userId);
     }
 
     @Override
     public int insertCorp(GuaranteeCorp guaranteeCorp) {
-        int guaranteecorp_id = nextId();
-        guaranteeCorp.setGuaranteecorp_id(guaranteecorp_id);
+        int guaranteecorpId = nextId();
+        guaranteeCorp.setGuaranteecorpId(guaranteecorpId);
         return guaranteeCorpMapper.insertCorp(guaranteeCorp);
     }
 
     @Override
-    public GuaranteeCorp findByUserId(int user_id) {
-        return guaranteeCorpMapper.findByUserId(user_id);
+    public GuaranteeCorp findByUserId(int userId) {
+        return guaranteeCorpMapper.findByUserId(userId);
     }
 
     @Override

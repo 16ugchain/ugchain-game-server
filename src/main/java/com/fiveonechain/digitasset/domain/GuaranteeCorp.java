@@ -6,63 +6,16 @@ import java.util.Date;
  * Created by fanjl on 16/11/18.
  */
 public class GuaranteeCorp {
-    private int guaranteecorp_id;
-    private int user_id;
-    private String corp_name;
-    private String juristic_person;
-    private String main_business;
+    private int guaranteecorpId;
+    private int userId;
+    private String corpName;
+    private String juristicPerson;
+    private String mainBusiness;
     private byte[] pkcs12;
-    private Date create_time;
-    private Date update_time;
+    private Date createTime;
+    private Date updateTime;
     private int status;
 
-    public int getUser_id() {
-        return user_id;
-    }
-
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
-    }
-
-    public String getCorp_name() {
-        return corp_name;
-    }
-
-    public void setCorp_name(String corp_name) {
-        this.corp_name = corp_name;
-    }
-
-    public String getJuristic_person() {
-        return juristic_person;
-    }
-
-    public void setJuristic_person(String juristic_person) {
-        this.juristic_person = juristic_person;
-    }
-
-    public String getMain_business() {
-        return main_business;
-    }
-
-    public void setMain_business(String main_business) {
-        this.main_business = main_business;
-    }
-
-    public Date getCreate_time() {
-        return create_time;
-    }
-
-    public void setCreate_time(Date create_time) {
-        this.create_time = create_time;
-    }
-
-    public Date getUpdate_time() {
-        return update_time;
-    }
-
-    public void setUpdate_time(Date update_time) {
-        this.update_time = update_time;
-    }
 
     public int getStatus() {
         return status;
@@ -72,12 +25,60 @@ public class GuaranteeCorp {
         this.status = status;
     }
 
-    public int getGuaranteecorp_id() {
-        return guaranteecorp_id;
+    public int getGuaranteecorpId() {
+        return guaranteecorpId;
     }
 
-    public void setGuaranteecorp_id(int guaranteecorp_id) {
-        this.guaranteecorp_id = guaranteecorp_id;
+    public void setGuaranteecorpId(int guaranteecorpId) {
+        this.guaranteecorpId = guaranteecorpId;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public String getCorpName() {
+        return corpName;
+    }
+
+    public void setCorpName(String corpName) {
+        this.corpName = corpName;
+    }
+
+    public String getJuristicPerson() {
+        return juristicPerson;
+    }
+
+    public void setJuristicPerson(String juristicPerson) {
+        this.juristicPerson = juristicPerson;
+    }
+
+    public String getMainBusiness() {
+        return mainBusiness;
+    }
+
+    public void setMainBusiness(String mainBusiness) {
+        this.mainBusiness = mainBusiness;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 
     public byte[] getPkcs12() {

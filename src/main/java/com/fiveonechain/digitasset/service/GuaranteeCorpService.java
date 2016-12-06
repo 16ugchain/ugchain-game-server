@@ -10,11 +10,11 @@ import java.util.Optional;
 public interface GuaranteeCorpService {
     int nextId();
 
-    boolean isExists(int user_id);
+    boolean isExists(int userId);
 
     int insertCorp(GuaranteeCorp guaranteeCorp);
 
-    GuaranteeCorp findByUserId(int user_id);
+    GuaranteeCorp findByUserId(int userId);
 
     Optional<GuaranteeCorp> getGuarOptional(int userId);
 

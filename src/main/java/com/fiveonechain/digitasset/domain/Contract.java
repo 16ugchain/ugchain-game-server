@@ -6,24 +6,24 @@ import java.util.Date;
  * Created by fanjl on 2016/11/24.
  */
 public class Contract {
-    private int contract_id;
-    private Date create_time;
+    private int contractId;
+    private Date createTime;
     private byte[] content;
 
-    public int getContract_id() {
-        return contract_id;
+    public int getContractId() {
+        return contractId;
     }
 
-    public void setContract_id(int contract_id) {
-        this.contract_id = contract_id;
+    public void setContractId(int contractId) {
+        this.contractId = contractId;
     }
 
-    public Date getCreate_time() {
-        return create_time;
+    public Date getCreateTime() {
+        return createTime;
     }
 
-    public void setCreate_time(Date create_time) {
-        this.create_time = create_time;
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 
     public byte[] getContent() {

@@ -56,8 +56,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean isExistsUserName(String user_name) {
-        return userMapper.isExistsUserName(user_name);
+    public boolean isExistsUserName(String userName) {
+        return userMapper.isExistsUserName(userName);
     }
 
     @Override
@@ -66,13 +66,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserByUserName(String user_name) {
-        return userMapper.getUserByUserName(user_name);
+    public User getUserByUserName(String userName) {
+        return userMapper.getUserByUserName(userName);
     }
 
     @Override
-    public boolean checkUserLogin(String user_name, String password) {
-        User user = getUserByUserName(user_name);
+    public boolean checkUserLogin(String userName, String password) {
+        User user = getUserByUserName(userName);
         String pwd = user.getPassword();
         if(passwordEncoder.matches(password,pwd)){
             return true;

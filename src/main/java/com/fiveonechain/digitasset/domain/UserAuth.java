@@ -7,16 +7,16 @@ import java.util.Date;
  */
 public class UserAuth {
     private int id;
-    private int user_id;
-    private String real_name;
+    private int userId;
+    private String realName;
     private String identity;
-    private int identity_type;
-    private Date create_time;
-    private Date update_time;
-    private String credit_card_id;
-    private String credit_card_owner;
-    private String credit_card_bank;
-    private String fixed_line;
+    private int identityType;
+    private Date createTime;
+    private Date updateTime;
+    private String creditCardId;
+    private String creditCardOwner;
+    private String creditCardBank;
+    private String fixedLine;
     private String email;
     private int status;
 
@@ -29,19 +29,19 @@ public class UserAuth {
     }
 
     public int getUser_id() {
-        return user_id;
+        return userId;
     }
 
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
+    public void setUser_id(int userId) {
+        this.userId = userId;
     }
 
     public String getReal_name() {
-        return real_name;
+        return realName;
     }
 
-    public void setReal_name(String real_name) {
-        this.real_name = real_name;
+    public void setReal_name(String realName) {
+        this.realName = realName;
     }
 
     public String getIdentity() {
@@ -53,19 +53,19 @@ public class UserAuth {
     }
 
     public Date getCreate_time() {
-        return create_time;
+        return createTime;
     }
 
-    public void setCreate_time(Date create_time) {
-        this.create_time = create_time;
+    public void setCreate_time(Date createTime) {
+        this.createTime = createTime;
     }
 
     public Date getUpdate_time() {
-        return update_time;
+        return updateTime;
     }
 
-    public void setUpdate_time(Date update_time) {
-        this.update_time = update_time;
+    public void setUpdate_time(Date updateTime) {
+        this.updateTime = updateTime;
     }
 
     public int getStatus() {
@@ -77,11 +77,11 @@ public class UserAuth {
     }
 
     public String getFixed_line() {
-        return fixed_line;
+        return fixedLine;
     }
 
-    public void setFixed_line(String fixed_line) {
-        this.fixed_line = fixed_line;
+    public void setFixed_line(String fixedLine) {
+        this.fixedLine = fixedLine;
     }
 
     public String getEmail() {
@@ -93,35 +93,35 @@ public class UserAuth {
     }
 
     public String getCredit_card_id() {
-        return credit_card_id;
+        return creditCardId;
     }
 
-    public void setCredit_card_id(String credit_card_id) {
-        this.credit_card_id = credit_card_id;
+    public void setCredit_card_id(String creditCardId) {
+        this.creditCardId = creditCardId;
     }
 
     public String getCredit_card_owner() {
-        return credit_card_owner;
+        return creditCardOwner;
     }
 
-    public void setCredit_card_owner(String credit_card_owner) {
-        this.credit_card_owner = credit_card_owner;
+    public void setCredit_card_owner(String creditCardOwner) {
+        this.creditCardOwner = creditCardOwner;
     }
 
     public String getCredit_card_bank() {
-        return credit_card_bank;
+        return creditCardBank;
     }
 
-    public void setCredit_card_bank(String credit_card_bank) {
-        this.credit_card_bank = credit_card_bank;
+    public void setCredit_card_bank(String creditCardBank) {
+        this.creditCardBank = creditCardBank;
     }
 
     public int getIdentity_type() {
-        return identity_type;
+        return identityType;
     }
 
-    public void setIdentity_type(int identity_type) {
-        this.identity_type = identity_type;
+    public void setIdentity_type(int identityType) {
+        this.identityType = identityType;
     }
 
 
@@ -129,11 +129,11 @@ public class UserAuth {
     public String toString() {
         return "UserAuth{" +
                 "id=" + id +
-                ", user_id=" + user_id +
-                ", real_name='" + real_name + '\'' +
+                ", userId=" + userId +
+                ", realName='" + realName + '\'' +
                 ", identity='" + identity + '\'' +
-                ", create_time=" + create_time +
-                ", update_time=" + update_time +
+                ", createTime=" + createTime +
+                ", updateTime=" + updateTime +
                 ", status=" + status +
                 '}';
     }

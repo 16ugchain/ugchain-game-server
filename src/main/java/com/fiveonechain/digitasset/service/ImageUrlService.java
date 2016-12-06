@@ -11,15 +11,15 @@ import java.util.List;
 public interface ImageUrlService {
     int insertImageUrl(ImageUrl imageUrl);
 
-    ImageUrl findByImageId(int image_id);
+    ImageUrl findByImageId(int imageId);
 
     List<String> getUrlListByImageIds(List<Integer> imageIds);
 
     ImageUrl getImageByImageIdAndUserId(int imageId, int userId);
 
-    ImageUrl findByUserIdAndType(int user_id,int type);
+    ImageUrl findByUserIdAndType(int userId,int type);
 
-    boolean isExists(int user_id,int type);
+    boolean isExists(int userId,int type);
 
     int nextImageUrlId();
 

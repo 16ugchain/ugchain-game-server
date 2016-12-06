@@ -1,10 +1,7 @@
 package com.fiveonechain.digitasset.mapper;
 
 import com.fiveonechain.digitasset.domain.GuaranteeCorp;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 /**
  * Created by yuanshichao on 2016/11/14.
@@ -12,15 +9,25 @@ import org.apache.ibatis.annotations.Select;
 @Mapper
 public interface GuaranteeCorpMapper {
     final static String columns = "guaranteecorp_id,user_id,corp_name,juristic_person,main_business,pkcs12,status";
-    final static String entity = "#{guaranteeCorp.guaranteecorp_id},#{guaranteeCorp.user_id},#{guaranteeCorp.corp_name},#{guaranteeCorp.juristic_person},#{guaranteeCorp.main_business},#{guaranteeCorp.pkcs12},#{guaranteeCorp.status}";
+    final static String entity = "#{guaranteeCorp.guaranteecorpId},#{guaranteeCorp.userId},#{guaranteeCorp.corpName},#{guaranteeCorp.juristicPerson},#{guaranteeCorp.mainBusiness},#{guaranteeCorp.pkcs12},#{guaranteeCorp.status}";
     @Insert("insert into guarantee_corp ("+columns+") values("+entity+")")
     int insertCorp(@Param("guaranteeCorp") GuaranteeCorp guaranteeCorp);
 
-    @Select("select exists (select user_id from guarantee_corp where user_id=#{user_id})")
-    boolean isExists(@Param("user_id")int user_id);
-
-    @Select("select * from guarantee_corp where user_id=#{user_id}")
-    GuaranteeCorp findByUserId(@Param("user_id")int user_id);
+    @Select("select exists (select user_id from guarantee_corp where user_id=#{userId})")
+    boolean isExists(@Param("userId")int userId);
+    @Results(id = "GuaranteeCorp", value = {
+            @Result(property = "guaranteecorpId", column = "guaranteecorp_id"),
+            @Result(property = "userId", column = "user_id"),
+            @Result(property = "corpName", column = "corp_name"),
+            @Result(property = "juristicPerson", column = "juristic_person"),
+            @Result(property = "mainBusiness", column = "main_business"),
+            @Result(property = "createTime", column = "create_time"),
+            @Result(property = "updateTime", column = "update_time"),
+            @Result(property = "status", column = "status"),
+            @Result(property = "pkcs12", column = "pkcs12")
+    })
+    @Select("select * from guarantee_corp where user_id=#{userId}")
+    GuaranteeCorp findByUserId(@Param("userId")int userId);
 }
 
 

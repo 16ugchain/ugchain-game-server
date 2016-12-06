@@ -8,16 +8,16 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class User {
 
     private Integer id;
-    private Integer user_id;
-    private String user_name;
+    private Integer userId;
+    private String userName;
     @JsonIgnore
     private String password;
     private int role;
     @JsonIgnore
     private int status;
     private String telephone;
-    private String create_time;
-    private String update_time;
+    private String createTime;
+    private String updateTime;
 
     private String token;
 
@@ -38,19 +38,19 @@ public class User {
     }
 
     public Integer getUser_id() {
-        return user_id;
+        return userId;
     }
 
-    public void setUser_id(Integer user_id) {
-        this.user_id = user_id;
+    public void setUser_id(Integer userId) {
+        this.userId = userId;
     }
 
     public String getUser_name() {
-        return user_name;
+        return userName;
     }
 
-    public void setUser_name(String user_name) {
-        this.user_name = user_name;
+    public void setUser_name(String userName) {
+        this.userName = userName;
     }
 
     public String getPassword() {
@@ -78,19 +78,19 @@ public class User {
     }
 
     public String getCreate_time() {
-        return create_time;
+        return createTime;
     }
 
-    public void setCreate_time(String create_time) {
-        this.create_time = create_time;
+    public void setCreate_time(String createTime) {
+        this.createTime = createTime;
     }
 
     public String getUpdate_time() {
-        return update_time;
+        return updateTime;
     }
 
-    public void setUpdate_time(String update_time) {
-        this.update_time = update_time;
+    public void setUpdate_time(String updateTime) {
+        this.updateTime = updateTime;
     }
 
     public String getTelephone() {
@@ -106,13 +106,13 @@ public class User {
     public String toString() {
         return "User{" +
                 "id=" + id +
-                ", user_id=" + user_id +
-                ", user_name='" + user_name + '\'' +
+                ", userId=" + userId +
+                ", userName='" + userName + '\'' +
                 ", password='" + password + '\'' +
                 ", role=" + role +
                 ", status=" + status +
-                ", create_time='" + create_time + '\'' +
-                ", update_time='" + update_time + '\'' +
+                ", createTime='" + createTime + '\'' +
+                ", updateTime='" + updateTime + '\'' +
                 '}';
     }
 }

@@ -109,7 +109,7 @@ public class SignPDFServiceImpl implements SignPDFService {
     @Override
     public int insertSignContract(Contract contract) {
         int contractId = sequenceMapper.nextId(sequenceMapper.CONTRACT);
-        contract.setContract_id(contractId);
+        contract.setContractId(contractId);
         if (contractMapper.insert(contract) != 1) {
             return -1;
         } else {
@@ -118,8 +118,8 @@ public class SignPDFServiceImpl implements SignPDFService {
     }
 
     @Override
-    public Contract findContractById(int contract_id) {
-        return contractMapper.findByContractId(contract_id);
+    public Contract findContractById(int contractId) {
+        return contractMapper.findByContractId(contractId);
     }
 
 

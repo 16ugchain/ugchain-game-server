@@ -1,10 +1,7 @@
 package com.fiveonechain.digitasset.mapper;
 
 import com.fiveonechain.digitasset.domain.Contract;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 /**
  * Created by yuanshichao on 2016/11/14.
@@ -13,14 +10,18 @@ import org.apache.ibatis.annotations.Select;
 public interface ContractMapper {
     String INSERT_COLUMN = "contract_id, content";
 
-    String INSERT_PROPERTY = "#{contract.contract_id}, #{contract.content}";
+    String INSERT_PROPERTY = "#{contract.contractId}, #{contract.content}";
 
     String ALL_COLUMN = "contract_id, content, create_time";
     @Insert("INSERT INTO contract(" + INSERT_COLUMN + ") VALUES (" + INSERT_PROPERTY +")")
     int insert(@Param("contract") Contract contract);
 
-    @Select("select "+ALL_COLUMN+" from contract where contract_id=#{contract_id}")
-    Contract findByContractId(@Param("contract_id") int contract_id);
+    @Results(id = "contract", value = {
+            @Result(property = "contractId", column = "contract_id"),
+            @Result(property = "createTime", column = "create_time"),
+    })
+    @Select("select "+ALL_COLUMN+" from contract where contract_id=#{contractId}")
+    Contract findByContractId(@Param("contractId") int contractId);
 }
 
 /*

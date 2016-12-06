@@ -16,7 +16,7 @@ public class RedisService {
     private static final String PREFIX_NAME = "TELEPHONE:";
 
     // 过期时间设为0，表示永不过期。
-    private static final int EXPIRE_TIME = 0;
+    private static final int EXPIRE_TIME = 1;
 
     @Autowired
     private StringRedisTemplate template;
@@ -31,7 +31,7 @@ public class RedisService {
     // redis set <K,V>
     public void put(String key, String value) {
         template.boundValueOps(PREFIX_NAME + String.valueOf(key))
-             .set(value, 1, TimeUnit.MINUTES);
+             .set(value, EXPIRE_TIME, TimeUnit.MINUTES);
     }
 
     // redis get <K>

@@ -23,7 +23,7 @@ public class UserAuthServiceImpl implements UserAuthService{
     }
 
     @Override
-    public UserAuth getUserAuthByUserId(Long userId) {
+    public UserAuth getUserAuthByUserId(int userId) {
         return userAuthMapper.findAuthById(userId);
     }
 
@@ -33,7 +33,7 @@ public class UserAuthServiceImpl implements UserAuthService{
     }
 
     @Override
-    public boolean isExistsUserAuth(int user_id) {
-        return userAuthMapper.isExistsUserAuth(user_id);
+    public boolean isExistsUserAuth(int userId) {
+        return userAuthMapper.isExistsUserAuth(userId);
     }
 }

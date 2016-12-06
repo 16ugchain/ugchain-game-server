@@ -10,23 +10,33 @@ import org.apache.ibatis.annotations.*;
 @Mapper
 public interface UserAuthMapper {
     final String columns = "user_id,real_name,identity,identity_type,email,fixed_line,status";
-    final String entity = "#{userAuth.user_id},#{userAuth.real_name},#{userAuth.identity},#{userAuth.identity_type}," +
-            "#{userAuth.email},#{userAuth.fixed_line},#{userAuth.status}";
+    final String entity = "#{userAuth.userId},#{userAuth.realName},#{userAuth.identity},#{userAuth.identityType}," +
+            "#{userAuth.email},#{userAuth.fixedLine},#{userAuth.status}";
     @Select("SELECT exists (select user_id FROM user_auth WHERE identity = #{identity})")
     boolean isIdentityExists(String id);
 
-
-    @Select("SELECT * FROM user_auth WHERE user_id = #{user_id}")
-    UserAuth findAuthById(Long user_id);
+    @Results(id="userAuth",value={
+            @Result(property = "userId", column = "user_id"),
+            @Result(property = "realName", column = "real_name"),
+            @Result(property = "identityType", column = "identity_type"),
+            @Result(property = "fixedLine", column = "fixed_line"),
+            @Result(property = "createTime", column = "create_time"),
+            @Result(property = "updateTime", column = "update_time"),
+            @Result(property = "creditCardId", column = "credit_card_id"),
+            @Result(property = "creditCardOwner", column = "credit_card_owner"),
+            @Result(property = "creditCardBank", column = "credit_card_bank"),
+    })
+    @Select("SELECT * FROM user_auth WHERE user_id = #{userId}")
+    UserAuth findAuthById(int userId);
 
     @Insert("INSERT INTO user_auth("+columns+") VALUES("+entity+")")
     int insertUserAuth(@Param("userAuth") UserAuth userAuths);
 
-    @Select("SELECT exists (select user_id FROM user_auth WHERE user_id = #{user_id})")
-    boolean isExistsUserAuth(int user_id);
+    @Select("SELECT exists (select user_id FROM user_auth WHERE user_id = #{userId})")
+    boolean isExistsUserAuth(int userId);
 
-    @Update("update user_auth set credit_card_id=#{credit_card_id},credit_card_owner=#{credit_card_owner},credit_card_bank=#{credit_card_bank}" +
-            "where user_id = #{user_id}")
+    @Update("update user_auth set credit_card_id=#{creditCardId},credit_card_owner=#{creditCardOwner},credit_card_bank=#{creditCardBank}" +
+            "where user_id = #{userId}")
     boolean bindCreditCard(UserAuth userAuth);
 
 

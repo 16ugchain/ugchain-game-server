@@ -11,20 +11,24 @@ import org.apache.ibatis.annotations.*;
 public interface UserMapper {
 
     final String coloms = "user_id,user_name,password,role,status";
-    final String entity = "#{user.user_id}, #{user.user_name},#{user.password},#{user.role},#{user.status}";
+    final String entity = "#{user.userId}, #{user.userName},#{user.password},#{user.role},#{user.status},#{user.createTime},#{user.updateTime}";
 
-    @Results({
+    @Results(id = "user", value = {
             @Result(property = "id", column = "id"),
-            @Result(property = "user_name", column = "user_name")
+            @Result(property = "userId", column = "user_id"),
+            @Result(property = "userName", column = "user_name"),
+            @Result(property = "createTime", column = "create_time"),
+            @Result(property = "updateTime", column = "update_time")
     })
     @Select("SELECT * FROM user WHERE user_id = #{user_id}")
     User findByUserId(int user_id);
 
-    @Select("SELECT * FROM user WHERE user_name = #{user_name}")
-    User getUserByUserName(String user_name);
+    @ResultMap("user")
+    @Select("SELECT * FROM user WHERE user_name = #{userName}")
+    User getUserByUserName(String userName);
 
-    @Select("SELECT exists (select user_id FROM user WHERE user_name = #{user_name})")
-    boolean isExistsUserName(String user_name);
+    @Select("SELECT exists (select user_id FROM user WHERE user_name = #{userName})")
+    boolean isExistsUserName(String userName);
 
     @Select("SELECT exists (select telephone FROM user WHERE telephone = #{telephone})")
     boolean isExistsTelephone(String telephone);
@@ -32,10 +36,10 @@ public interface UserMapper {
     @Insert("INSERT INTO user(" + coloms + ") VALUES(" + entity + ")")
     int insertUser(@Param("user") User user);
 
-    @Update("UPDATE user SET name = #{name} WHERE id = #{id}")
+    @Update("UPDATE user SET user_name = #{userName} WHERE user_id = #{userId}")
     int updateUser(User user);
 
-    @Update("UPDATE user SET telephone = #{user.telephone} WHERE user_id = #{user.user_id}")
+    @Update("UPDATE user SET telephone = #{user.telephone} WHERE user_id = #{user.userId}")
     boolean updateMobile(@Param("user") User user);
 
 }

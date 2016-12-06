@@ -18,13 +18,13 @@ public interface UserService {
 
     public User getUserByUserId(int userId);
 
-    boolean isExistsUserName(String user_name);
+    boolean isExistsUserName(String userName);
 
     boolean isExistsTelephone(String telephone);
 
-    User getUserByUserName(String user_name);
+    User getUserByUserName(String userName);
 
-    boolean checkUserLogin(String user_name,String password);
+    boolean checkUserLogin(String userName,String password);
 
     boolean isUserValid(int userId, UserRoleEnum expectedRole);
 

@@ -8,11 +8,11 @@ import com.fiveonechain.digitasset.domain.UserAuth;
 public interface UserAuthService {
     boolean isExistsSameID(String idCard);
 
-    boolean isExistsUserAuth(int user_id);
+    boolean isExistsUserAuth(int userId);
 
     int insertAndGetUserAuth(UserAuth userAuth);
 
     boolean bindCreditCard(UserAuth userAuth);
 
-    UserAuth getUserAuthByUserId(Long userId);
+    UserAuth getUserAuthByUserId(int userId);
 }
