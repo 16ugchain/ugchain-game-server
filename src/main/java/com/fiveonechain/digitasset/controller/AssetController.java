@@ -3,15 +3,13 @@ package com.fiveonechain.digitasset.controller;
 import com.fiveonechain.digitasset.auth.UserContext;
 import com.fiveonechain.digitasset.domain.*;
 import com.fiveonechain.digitasset.domain.result.AssetDetail;
+import com.fiveonechain.digitasset.domain.result.AssetItem;
 import com.fiveonechain.digitasset.domain.result.ErrorInfo;
 import com.fiveonechain.digitasset.domain.result.Result;
 import com.fiveonechain.digitasset.exception.AssetNotFoundException;
 import com.fiveonechain.digitasset.exception.AssetStatusTransferException;
 import com.fiveonechain.digitasset.exception.ImageUrlNotFoundException;
-import com.fiveonechain.digitasset.service.AssetService;
-import com.fiveonechain.digitasset.service.GuaranteeCorpService;
-import com.fiveonechain.digitasset.service.ImageUrlService;
-import com.fiveonechain.digitasset.service.UserService;
+import com.fiveonechain.digitasset.service.*;
 import com.fiveonechain.digitasset.util.ResultUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,10 +18,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Created by yuanshichao on 2016/11/16.
@@ -51,6 +46,9 @@ public class AssetController {
 
     @Autowired
     private GuaranteeCorpService guarService;
+
+    @Autowired
+    private UserAssetService userAssetService;
 
     /**
      * 登记实物资产
@@ -195,6 +193,61 @@ public class AssetController {
         }
 
         return ResultUtil.success(assetDetail);
+    }
+
+    @RequestMapping(value = "assets/tradeassets", method = RequestMethod.GET)
+    public Result getAvailAssetList(
+            @AuthenticationPrincipal UserContext host) {
+
+        List<Asset> assetList = assetService.getAssetListByStatus(AssetStatus.ISSUE);
+        assetList = filterMaturityStatusAsset(assetList);
+
+        List<AssetItem> assetItemList = new LinkedList<>();
+        for (Asset asset : assetList) {
+
+            AssetItem item = new AssetItem();
+            item.setAssetId(asset.getAssetId());
+            item.setAssetName(asset.getName());
+            item.setEndTime(asset.getEndTime());
+
+            boolean isGuar = assetService.isAssetGuaranteed(asset);
+            item.setGuaranteed(isGuar);
+            if (isGuar) {
+                Optional<GuaranteeCorp> guarOpt = guarService.getGuarOptional(asset.getGuarId());
+                if (!guarOpt.isPresent()) {
+                    LOGGER.error("{} guarId {} NOT FOUND", ErrorInfo.SERVER_ERROR, asset.getGuarId());
+                    continue;
+                }
+                GuaranteeCorp guar = guarOpt.get();
+                item.setGuarId(asset.getGuarId());
+                item.setGuraName(guar.getCorp_name());
+                item.setValue(asset.getEvalValue());
+                item.setExpEarnings(asset.getExpEarnings());
+            } else {
+                item.setValue(asset.getValue());
+                item.setExpEarnings(asset.getExpEarnings());
+            }
+
+            int availShare = userAssetService.sumTradeBalanceByAsset(asset.getAssetId());
+            item.setAvailShare(availShare);
+            item.setPercent(availShare*100/asset.getEvalValue());
+
+            assetItemList.add(item);
+        }
+
+        return ResultUtil.success(assetItemList);
+    }
+
+    private List<Asset> filterMaturityStatusAsset(List<Asset> assetList) {
+        List<Asset> filteredAssetList = new LinkedList<>();
+        for (Asset asset : assetList) {
+            if (assetService.checkAssetMaturity(asset)) {
+                assetService.updateAssetStatusAsync(asset.getAssetId(), AssetStatus.MATURITY);
+            } else {
+                filteredAssetList.add(asset);
+            }
+        }
+        return filteredAssetList;
     }
 
     /**

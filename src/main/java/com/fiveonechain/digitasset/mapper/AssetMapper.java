@@ -3,6 +3,8 @@ package com.fiveonechain.digitasset.mapper;
 import com.fiveonechain.digitasset.domain.Asset;
 import org.apache.ibatis.annotations.*;
 
+import java.util.List;
+
 /**
  * Created by yuanshichao on 2016/11/14.
  */
@@ -26,7 +28,7 @@ public interface AssetMapper {
     @Insert("INSERT INTO asset(" + INSERT_COLUMN + ") VALUES (" + INSERT_PROPERTY +")")
     int insert(Asset asset);
 
-    @Results({
+    @Results(id = "asset", value = {
             @Result(property = "assetId", column = "asset_id"),
             @Result(property = "userId", column = "user_id"),
             @Result(property = "guarId", column = "guar_id"),
@@ -47,6 +49,9 @@ public interface AssetMapper {
     @Select("SELECT " + ALL_COLUMN + " FROM asset WHERE asset_id = #{assetId}")
     Asset select(@Param("assetId") int assetId);
 
+    @ResultMap("asset")
+    @Select("SELECT " + ALL_COLUMN + " FROM asset WHERE status = #{status} ORDER BY asset_id DESC")
+    List<Asset> selectByStatus(@Param("status") int status);
 
     @Select("SELECT status FROM asset WHERE asset_id = #{assetId} FOR UPDATE")
     Integer selectStatusForUpdate(@Param("assetId") int assetId);

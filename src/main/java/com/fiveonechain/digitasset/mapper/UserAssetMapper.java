@@ -32,7 +32,7 @@ public interface UserAssetMapper {
             @Result(property = "tradeBalance", column = "trade_balance"),
             @Result(property = "lockBalance", column = "lock_balance"),
     })
-    @Select("SELECT " + ALL_COLUMN + " FROM asset WHERE asset_id = #{assetId} AND user_id = #{userId}")
+    @Select("SELECT " + ALL_COLUMN + " FROM user_asset WHERE asset_id = #{assetId} AND user_id = #{userId}")
     UserAsset select(@Param("assetId") int assetId, @Param("userId") int userId);
 
     @Results({
@@ -43,7 +43,7 @@ public interface UserAssetMapper {
             @Result(property = "tradeBalance", column = "trade_balance"),
             @Result(property = "lockBalance", column = "lock_balance"),
     })
-    @Select("SELECT " + ALL_COLUMN + " FROM asset WHERE asset_id = #{assetId} AND user_id = #{userId} FOR UPDATE")
+    @Select("SELECT " + ALL_COLUMN + " FROM user_asset WHERE asset_id = #{assetId} AND user_id = #{userId} FOR UPDATE")
     UserAsset selectForUpdate(@Param("assetId") int assetId, @Param("userId") int userId);
 
     @Results({
@@ -54,7 +54,7 @@ public interface UserAssetMapper {
             @Result(property = "tradeBalance", column = "trade_balance"),
             @Result(property = "lockBalance", column = "lock_balance"),
     })
-    @Select("SELECT " + ALL_COLUMN + " FROM asset WHERE AND user_id = #{userId}")
+    @Select("SELECT " + ALL_COLUMN + " FROM user_asset WHERE user_id = #{userId}")
     List<UserAsset> selectByUserId(@Param("userId") int userId);
 
 
@@ -66,30 +66,63 @@ public interface UserAssetMapper {
             @Result(property = "tradeBalance", column = "trade_balance"),
             @Result(property = "lockBalance", column = "lock_balance"),
     })
-    @Select("SELECT " + ALL_COLUMN + " FROM asset WHERE AND asset_id = #{assetId}")
+    @Select("SELECT " + ALL_COLUMN + " FROM user_asset WHERE asset_id = #{assetId} AND trade_balance > 0 ORDER BY trade_balance DESC LIMIT #{start},#{limit}")
+    List<UserAsset> selectAvailByAssetIdOrderByTradePages(
+            @Param("assetId") int assetId,
+            @Param("start") int start,
+            @Param("limit") int limit);
+
+    @Results({
+            @Result(property = "assetId", column = "asset_id"),
+            @Result(property = "userId", column = "user_id"),
+            @Result(property = "contractId", column = "contract_id"),
+            @Result(property = "balance", column = "balance"),
+            @Result(property = "tradeBalance", column = "trade_balance"),
+            @Result(property = "lockBalance", column = "lock_balance"),
+    })
+    @Select("SELECT " + ALL_COLUMN + " FROM user_asset WHERE asset_id = #{assetId} AND trade_balance > 0 ORDER BY trade_balance DESC")
+    List<UserAsset> selectAvailByAssetIdOrderByTrade(
+            @Param("assetId") int assetId);
+
+    @Select("SELECT SUM(trade_balance) FROM user_asset WHERE asset_id = #{assetId}")
+    Integer sumTradeBalanceByAssetId(
+            @Param("assetId") int assetId);
+
+    @Select("SELECT count(1) FROM user_asset WHERE asset_id = #{assetId} AND trade_balance > 0")
+    int countAvailByAssetId(@Param("assetId") int assetId);
+
+    @Results({
+            @Result(property = "assetId", column = "asset_id"),
+            @Result(property = "userId", column = "user_id"),
+            @Result(property = "contractId", column = "contract_id"),
+            @Result(property = "balance", column = "balance"),
+            @Result(property = "tradeBalance", column = "trade_balance"),
+            @Result(property = "lockBalance", column = "lock_balance"),
+    })
+    @Select("SELECT " + ALL_COLUMN + " FROM user_asset WHERE AND asset_id = #{assetId}")
     List<UserAsset> selectByAssetId(@Param("assetId") int assetId);
 
-    @Update("UPDATE asset SET trade_balance = trade_balance - #{amount}, lock_balance = lock_balance + #{amount} "
+    @Update("UPDATE user_asset SET trade_balance = trade_balance - #{amount}, lock_balance = lock_balance + #{amount} "
             + " WHERE asset_id = #{assetId} AND user_id = #{userId}")
     int lockTradeBalance(
             @Param("amount") int amount,
             @Param("assetId") int assetId,
             @Param("userId") int userId);
 
-    @Update("UPDATE asset SET trade_balance = trade_balance + #{amount}, lock_balance = lock_balance - #{amount} "
+    @Update("UPDATE user_asset SET trade_balance = trade_balance + #{amount}, lock_balance = lock_balance - #{amount} "
             + " WHERE asset_id = #{assetId} AND user_id = #{userId}")
     int unLockTradeBalance(
             @Param("amount") int amount,
             @Param("assetId") int assetId,
             @Param("userId") int userId);
 
-    @Update("UPDATE asset SET trade_balance = #{tradeBalance} WHERE asset_id = #{assetId} AND user_id = #{userId}")
+    @Update("UPDATE user_asset SET trade_balance = #{tradeBalance} WHERE asset_id = #{assetId} AND user_id = #{userId}")
     int updateTradeBalance(
             @Param("tradeBalance") int tradeBalance,
             @Param("assetId") int assetId,
             @Param("userId") int userId);
 
-    @Update("UPDATE asset SET balance = balance - #{amount}, lock_balance = lock_balance - #{amount}, contract_id = #{contractId} "
+    @Update("UPDATE user_asset SET balance = balance - #{amount}, lock_balance = lock_balance - #{amount}, contract_id = #{contractId} "
             + " WHERE asset_id = #{assetId} AND user_id = #{userId}")
     int withdrawBalance(
             @Param("amount") int amount,
@@ -97,7 +130,7 @@ public interface UserAssetMapper {
             @Param("userId") int userId,
             @Param("contractId") int contractId);
 
-    @Update("UPDATE asset SET balance = balance + #{amount}, contract_id = #{contractId} "
+    @Update("UPDATE user_asset SET balance = balance + #{amount}, contract_id = #{contractId} "
             + " WHERE asset_id = #{assetId} AND user_id = #{userId}")
     int depositBalance(
             @Param("amount") int amount,

@@ -6,16 +6,21 @@ import com.fiveonechain.digitasset.domain.AssetRecord;
 import com.fiveonechain.digitasset.domain.AssetStatus;
 import com.fiveonechain.digitasset.exception.AssetNotFoundException;
 import com.fiveonechain.digitasset.exception.AssetStatusTransferException;
+import com.fiveonechain.digitasset.exception.UserOperatoinPermissionException;
 import com.fiveonechain.digitasset.mapper.AssetMapper;
 import com.fiveonechain.digitasset.mapper.AssetRecordMapper;
 import com.fiveonechain.digitasset.mapper.SequenceMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -41,6 +46,9 @@ public class AssetServiceImpl implements AssetService {
 
     @Autowired
     private AssetRecordMapper assetRecordMapper;
+
+    @Autowired
+    private UserService userService;
 
     @Override
     public int nextAssetId() {
@@ -141,7 +149,9 @@ public class AssetServiceImpl implements AssetService {
                 throw new AssetStatusTransferException(curStatus, newStatus);
             }
         } else if (newStatus == AssetStatus.MATURITY) {
-            // TODO check user role
+            if (!userService.isSystemUserContext(host)) {
+                throw new UserOperatoinPermissionException(host.getUserId(), "资产到期");
+            }
             if (curStatus != AssetStatus.ISSUE) {
                 throw new AssetStatusTransferException(curStatus, newStatus);
             }
@@ -150,7 +160,7 @@ public class AssetServiceImpl implements AssetService {
                 throw new AssetStatusTransferException(curStatus, newStatus);
             }
         } else if (newStatus == curStatus) {
-            //nothing
+            // nothing
             return;
         } else {
             throw new AssetStatusTransferException(curStatus, newStatus);
@@ -166,7 +176,7 @@ public class AssetServiceImpl implements AssetService {
 
     @Override
     public List<Asset> getAssetListByStatus(AssetStatus status) {
-        return null;
+        return assetMapper.selectByStatus(status.getCode());
     }
 
     @Override
@@ -190,6 +200,24 @@ public class AssetServiceImpl implements AssetService {
     @Override
     public boolean isAssetGuaranteed(Asset asset) {
         return asset.getGuarId() != DUMMY_GUAR_ID;
+    }
+
+    @Override
+    public boolean checkAssetMaturity(Asset asset) {
+        if (asset.getEndTime() == null) {
+            return false;
+        }
+
+        LocalDate today = LocalDate.now();
+        LocalDate endDay = LocalDateTime.ofInstant(
+                asset.getEndTime().toInstant(), ZoneId.systemDefault()).toLocalDate();
+        return today.isAfter(endDay);
+    }
+
+    @Override
+    @Async
+    public void updateAssetStatusAsync(int assetId, AssetStatus newStatus) {
+        updateAssetStatusStateMachine(userService.getSystemUserContext(), assetId, newStatus);
     }
 }
 

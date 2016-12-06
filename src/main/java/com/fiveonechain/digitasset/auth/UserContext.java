@@ -27,6 +27,11 @@ public class UserContext {
         return new UserContext(userId, userName, authorities);
     }
 
+    public static UserContext create(Integer userId) {
+        Assert.notNull(userId);
+        return new UserContext(userId, null, null);
+    }
+
     public int getUserId() {
         return userId;
     }

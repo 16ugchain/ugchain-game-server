@@ -33,5 +33,9 @@ public interface AssetService {
     void issueAsset(int assetId, String payOrder);
 
     boolean isAssetGuaranteed(Asset asset);
+
+    boolean checkAssetMaturity(Asset asset);
+
+    void updateAssetStatusAsync(int assetId, AssetStatus newStatus);
 }
 

@@ -29,4 +29,8 @@ public interface UserAssetService {
 
     List<UserAsset> getDigitAssetListByAsset(int assetId);
 
+    List<UserAsset> getAvailDigitAssetListByAsset(int assetId);
+
+    int sumTradeBalanceByAsset(int assetId);
+
 }

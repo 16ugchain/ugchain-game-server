@@ -4,6 +4,7 @@ import com.fiveonechain.digitasset.domain.Asset;
 import com.fiveonechain.digitasset.domain.UserAsset;
 import com.fiveonechain.digitasset.domain.UserAssetOperationEnum;
 import com.fiveonechain.digitasset.domain.UserAssetRecord;
+import com.fiveonechain.digitasset.domain.result.ErrorInfo;
 import com.fiveonechain.digitasset.exception.DigitAssetNotFoundException;
 import com.fiveonechain.digitasset.exception.DigitAssetTransferException;
 import com.fiveonechain.digitasset.exception.NoEnoughBalanceException;
@@ -171,6 +172,21 @@ public class UserAssetServiceImpl implements UserAssetService {
     @Override
     public List<UserAsset> getDigitAssetListByOwner(int ownerId) {
         return userAssetMapper.selectByUserId(ownerId);
+    }
+
+    @Override
+    public List<UserAsset> getAvailDigitAssetListByAsset(int assetId) {
+        return userAssetMapper.selectAvailByAssetIdOrderByTrade(assetId);
+    }
+
+    @Override
+    public int sumTradeBalanceByAsset(int assetId) {
+        Integer sum = userAssetMapper.sumTradeBalanceByAssetId(assetId);
+        if (sum == null) {
+            LOGGER.error("{} Asset {} NO Digit Asset",ErrorInfo.SERVER_ERROR, assetId);
+            sum = 0;
+        }
+        return sum;
     }
 
     @Override

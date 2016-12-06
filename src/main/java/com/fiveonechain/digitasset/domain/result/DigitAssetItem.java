@@ -3,7 +3,7 @@ package com.fiveonechain.digitasset.domain.result;
 /**
  * Created by yuanshichao on 2016/12/5.
  */
-public class DigitAssetShare {
+public class DigitAssetItem {
 
     private int assetId;
     private int ownerId;
