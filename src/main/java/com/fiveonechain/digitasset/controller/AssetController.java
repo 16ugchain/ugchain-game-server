@@ -172,7 +172,7 @@ public class AssetController {
             }
             assetDetail.setGuaranteed(true);
             assetDetail.setGuarId(asset.getGuarId());
-            assetDetail.setGuarName(guarOpt.get().getCorp_name());
+            assetDetail.setGuarName(guarOpt.get().getCorpName());
             assetDetail.setValue(asset.getEvalValue());
         } else {
             assetDetail.setGuaranteed(false);
@@ -233,7 +233,7 @@ public class AssetController {
                 }
                 GuaranteeCorp guar = guarOpt.get();
                 item.setGuarId(asset.getGuarId());
-                item.setGuraName(guar.getCorp_name());
+                item.setGuraName(guar.getCorpName());
                 item.setValue(asset.getEvalValue());
                 item.setExpEarnings(asset.getExpEarnings());
             } else {

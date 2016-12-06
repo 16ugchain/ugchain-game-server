@@ -30,7 +30,7 @@ public class ImageUrlServiceImpl implements ImageUrlService {
 
     @Override
     public int insertImageUrl(ImageUrl imageUrl) {
-        imageUrl.setImage_id(nextImageUrlId());
+        imageUrl.setImageId(nextImageUrlId());
         return imageUrlMapper.insertImageUrl(imageUrl);
     }
 

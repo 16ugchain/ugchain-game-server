@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public User insertAndGetUser(User user) {
         int userId = sequenceMapper.nextId(sequenceMapper.USER);
-        user.setUser_id(userId);
+        user.setUserId(userId);
         userMapper.insertUser(user);
         User userGet = userMapper.findByUserId(userId);
         return userGet;

@@ -85,7 +85,7 @@ public class UserAssetController {
                 LOGGER.error("{} user {} NOT FOUND", ErrorInfo.SERVER_ERROR, userAsset.getUserId());
                 return ResultUtil.buildErrorResult(ErrorInfo.SERVER_ERROR);
             }
-            share.setOwnerName(userOpt.get().getUser_name());
+            share.setOwnerName(userOpt.get().getUserName());
             shareList.add(share);
         }
         return ResultUtil.success(shareList);

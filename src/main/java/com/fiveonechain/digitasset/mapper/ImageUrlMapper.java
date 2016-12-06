@@ -33,7 +33,7 @@ public interface ImageUrlMapper {
     ImageUrl findByUserIdAndType(@Param("userId") int userId, @Param("type") int type);
 
     @ResultMap("imageUrl")
-    @Select("select exists (select " + allcolumns + " from image_url where user_id=#{userId} and type=#{type})")
+    @Select("select exists (select user_id from image_url where user_id=#{userId} and type=#{type})")
     boolean isExists(@Param("userId") int userId, @Param("type") int type);
 
 

@@ -1,6 +1,6 @@
 package com.fiveonechain.digitasset.service;
 
-import com.fiveonechain.digitasset.domain.UserAuth;
+import com.fiveonechain.digitasset.domain.UserInfo;
 
 /**
  * Created by fanjl on 16/11/17.
@@ -10,9 +10,9 @@ public interface UserInfoService {
 
     boolean isExistsUserAuth(int userId);
 
-    int insertAndGetUserAuth(UserAuth userAuth);
+    int insertAndGetUserAuth(UserInfo userInfo);
 
-    boolean bindCreditCard(UserAuth userAuth);
+    boolean bindCreditCard(UserInfo userInfo);
 
-    UserAuth getUserAuthByUserId(int userId);
+    UserInfo getUserAuthByUserId(int userId);
 }

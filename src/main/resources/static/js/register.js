@@ -151,6 +151,7 @@ $("#file-1").on("change", function () {
 function saveImg(){
     $("#upload").ajaxSubmit(function(message) {
         console.log(message);
+        register.userInfo.imageId = message;
     });
     return false;
 }
@@ -385,7 +386,9 @@ $(function () {
                 // 固话
                 fixed_line: register.userInfo.contactPhone,
                 // 邮箱
-                email: register.userInfo.email
+                email: register.userInfo.email,
+                //image_id
+                image_id: register.userInfo.imageId
             }, function (data) {
 
                 console.log("提交信息成功");

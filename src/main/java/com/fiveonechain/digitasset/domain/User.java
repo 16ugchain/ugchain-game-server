@@ -21,14 +21,6 @@ public class User {
 
     private String token;
 
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
     public Integer getId() {
         return id;
     }
@@ -37,19 +29,19 @@ public class User {
         this.id = id;
     }
 
-    public Integer getUser_id() {
+    public Integer getUserId() {
         return userId;
     }
 
-    public void setUser_id(Integer userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 
-    public String getUser_name() {
+    public String getUserName() {
         return userName;
     }
 
-    public void setUser_name(String userName) {
+    public void setUserName(String userName) {
         this.userName = userName;
     }
 
@@ -77,22 +69,6 @@ public class User {
         this.status = status;
     }
 
-    public String getCreate_time() {
-        return createTime;
-    }
-
-    public void setCreate_time(String createTime) {
-        this.createTime = createTime;
-    }
-
-    public String getUpdate_time() {
-        return updateTime;
-    }
-
-    public void setUpdate_time(String updateTime) {
-        this.updateTime = updateTime;
-    }
-
     public String getTelephone() {
         return telephone;
     }
@@ -101,18 +77,27 @@ public class User {
         this.telephone = telephone;
     }
 
+    public String getCreateTime() {
+        return createTime;
+    }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", userId=" + userId +
-                ", userName='" + userName + '\'' +
-                ", password='" + password + '\'' +
-                ", role=" + role +
-                ", status=" + status +
-                ", createTime='" + createTime + '\'' +
-                ", updateTime='" + updateTime + '\'' +
-                '}';
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(String updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

@@ -11,7 +11,7 @@ import org.apache.ibatis.annotations.*;
 public interface UserMapper {
 
     final String coloms = "user_id,user_name,password,role,status";
-    final String entity = "#{user.userId}, #{user.userName},#{user.password},#{user.role},#{user.status},#{user.createTime},#{user.updateTime}";
+    final String entity = "#{user.userId}, #{user.userName},#{user.password},#{user.role},#{user.status}";
 
     @Results(id = "user", value = {
             @Result(property = "id", column = "id"),

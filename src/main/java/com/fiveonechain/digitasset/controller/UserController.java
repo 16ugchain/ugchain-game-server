@@ -70,15 +70,15 @@ public class UserController {
     StringBuilderHolder stringBuilderHolder = new StringBuilderHolder(0);
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public Result registUser(@RequestParam("user_name") String user_name,
+    public Result registUser(@RequestParam("user_name") String userName,
                              @RequestParam("password") String password
     ) {
-        if (iUserService.isExistsUserName(user_name)) {
+        if (iUserService.isExistsUserName(userName)) {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.USER_NAME_EXITS);
             return result;
         }
         User user = new User();
-        user.setUser_name(user_name);
+        user.setUserName(userName);
         user.setRole(UserRoleEnum.USER_PUBLISHER.getId());
         user.setStatus(UserStatusEnum.ACTIVE.getId());
         String md5Pwd = passwordEncoder.encode(password);
@@ -88,10 +88,10 @@ public class UserController {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.SERVER_ERROR);
             return result;
         }
-        Claims claims = Jwts.claims().setSubject(user_name);
+        Claims claims = Jwts.claims().setSubject(userName);
         List<GrantedAuthority> authorities = Arrays.asList(new SimpleGrantedAuthority(UserRoleEnum.USER_PUBLISHER.name()));
         claims.put("scopes", authorities.stream().map(s -> s.toString()).collect(Collectors.toList()));
-        claims.put("id", userGet.getUser_id());
+        claims.put("id", userGet.getUserId());
         LocalDateTime currentTime = LocalDateTime.now();
         String token = Jwts.builder()
                 .setClaims(claims)
@@ -106,13 +106,13 @@ public class UserController {
     }
 
     @RequestMapping(value = "/findUserName", method = RequestMethod.POST)
-    public String findUserName(@RequestParam("username") String user_name
+    public String findUserName(@RequestParam("username") String userName
     ) {
-//        if (iUserService.isExistsUserName(user_name)) {
+//        if (iUserService.isExistsUserName(userName)) {
 //            Result result = ResultUtil.buildErrorResult(ErrorInfo.USER_NAME_EXITS);
 //            return result;
 //        }
-        boolean result = iUserService.isExistsUserName(user_name);
+        boolean result = iUserService.isExistsUserName(userName);
         Map<String, Boolean> map = new HashMap<>();
         map.put("valid", !result);
         ObjectMapper mapper = new ObjectMapper();
@@ -196,15 +196,15 @@ public class UserController {
                                  @RequestParam("creditCardBank") String creditCardBank,
                                  @AuthenticationPrincipal UserContext userContext
     ) {
-        UserAuth userAuth = iUserInfoService.getUserAuthByUserId((long) userContext.getUserId());
-        if(userAuth == null){
+        UserInfo userInfo = iUserInfoService.getUserAuthByUserId(userContext.getUserId());
+        if(userInfo == null){
             Result result = ResultUtil.buildErrorResult(ErrorInfo.SERVER_ERROR);
             return result;
         }
-        userAuth.setCredit_card_id(creditCardId);
-        userAuth.setCredit_card_owner(creditCardOwner);
-        userAuth.setCredit_card_bank(creditCardBank);
-        if (!iUserInfoService.bindCreditCard(userAuth)) {
+        userInfo.setCreditCardId(creditCardId);
+        userInfo.setCreditCardOwner(creditCardOwner);
+        userInfo.setCreditCardBank(creditCardBank);
+        if (!iUserInfoService.bindCreditCard(userInfo)) {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.SERVER_ERROR);
             return result;
         }
@@ -213,19 +213,20 @@ public class UserController {
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public Result login(@RequestParam("user_name") String user_name,
+    public Result login(@RequestParam("user_name") String userName,
                         @RequestParam("password") String password,
                         @RequestParam("role") int role,
                         @RequestParam(value = "auto_login", defaultValue = "false", required = false) boolean auto_login) {
-        if (!iUserService.isExistsUserName(user_name)) {
+        if (!iUserService.isExistsUserName(userName)) {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.USER_NOT_FOUND);
             return result;
         }
-        if (!iUserService.checkUserLogin(user_name, password)) {
+
+        if (!iUserService.checkUserLogin(userName, password)) {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.PASSWORD_ERROR);
             return result;
         }
-        User user = iUserService.getUserByUserName(user_name);
+        User user = iUserService.getUserByUserName(userName);
         if (role == UserRoleEnum.CORP.getId() && user.getRole() != UserRoleEnum.CORP.getId()) {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.USER_ROLE_NOT_MATCH);
             return result;
@@ -234,10 +235,10 @@ public class UserController {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.USER_STATUS_ERROR);
             return result;
         }
-        Claims claims = Jwts.claims().setSubject(user_name);
+        Claims claims = Jwts.claims().setSubject(userName);
         List<GrantedAuthority> authorities = Arrays.asList(new SimpleGrantedAuthority(UserRoleEnum.fromValue(user.getRole()).name()));
         claims.put("scopes", authorities.stream().map(s -> s.toString()).collect(Collectors.toList()));
-        claims.put("id", user.getUser_id());
+        claims.put("id", user.getUserId());
         LocalDateTime currentTime = LocalDateTime.now();
         if (auto_login) {
             String token = Jwts.builder()
@@ -268,6 +269,7 @@ public class UserController {
                                @RequestParam("real_name") String real_name,
                                @RequestParam("identity") String identity,
                                @RequestParam("identity_type") int type,
+                               @RequestParam("image_id") int imageId,
                                @RequestParam(value = "email", required = false, defaultValue = "") String email,
                                @RequestParam(value = "fixed_line", required = false, defaultValue = "") String fixed_line
     ) {
@@ -282,19 +284,22 @@ public class UserController {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.AUTHENTICATION);
             return result;
         }
-        UserAuth userAuth = new UserAuth();
-        userAuth.setUser_id(userContext.getUserId());
-        userAuth.setIdentity(identity);
-        userAuth.setIdentity_type(type);
-        userAuth.setReal_name(real_name);
-        userAuth.setEmail(email);
-        userAuth.setFixed_line(fixed_line);
-        userAuth.setStatus(UserAuthStatusEnum.SUCCESS.getId());
-        if (iUserInfoService.insertAndGetUserAuth(userAuth) != 1) {
+        List<String> imageIdStr = new ArrayList<String>();
+        imageIdStr.add(String.valueOf(imageId));
+        UserInfo userInfo = new UserInfo();
+        userInfo.setUserId(userContext.getUserId());
+        userInfo.setIdentity(identity);
+        userInfo.setIdentityType(type);
+        userInfo.setRealName(real_name);
+        userInfo.setEmail(email);
+        userInfo.setImageId(imageIdStr.toString());
+        userInfo.setFixedLine(fixed_line);
+        userInfo.setStatus(UserAuthStatusEnum.SUCCESS.getId());
+        if (iUserInfoService.insertAndGetUserAuth(userInfo) != 1) {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.SERVER_ERROR);
             return result;
         }
-        Result result = ResultUtil.success(userAuth);
+        Result result = ResultUtil.success(userInfo);
         return result;
     }
 
@@ -310,10 +315,10 @@ public class UserController {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.IMAGETYPE_NOT_FOUND);
             return result;
         }
-        if (imageUrlService.isExists(userContext.getUserId(), type)) {
-            Result result = ResultUtil.buildErrorResult(ErrorInfo.IMAGE_EXISTS);
-            return result;
-        }
+//        if (imageUrlService.isExists(userContext.getUserId(), type)) {
+//            Result result = ResultUtil.buildErrorResult(ErrorInfo.IMAGE_EXISTS);
+//            return result;
+//        }
         User user = iUserService.getUserByUserId(userContext.getUserId());
         if (user == null) {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.USER_NOT_FOUND);
@@ -328,7 +333,7 @@ public class UserController {
             byte[] imageByte = image.getBytes();
             message += imageUploadService.uploadQiNiu(imageByte);
         } catch (IOException e) {
-            throw new ImageUploadException(user.getUser_id(), type);
+            throw new ImageUploadException(user.getUserId(), type);
         }
 
         JsonObject jsonObject = new Gson().fromJson(message, JsonObject.class);
@@ -340,7 +345,7 @@ public class UserController {
             System.out.println(urlStrBuilder.toString());
         }
         ImageUrl imageUrl = new ImageUrl();
-        imageUrl.setUser_id(userContext.getUserId());
+        imageUrl.setUserId(userContext.getUserId());
         imageUrl.setType(type);
         imageUrl.setUrl(urlStrBuilder.toString());
         if (imageUrlService.insertImageUrl(imageUrl) != 1) {
@@ -348,7 +353,7 @@ public class UserController {
             Result result = ResultUtil.buildErrorResult(errorInfo);
             return result;
         }
-        Result result = ResultUtil.success(imageUrl.getImage_id());
+        Result result = ResultUtil.success(imageUrl.getImageId());
         return result;
     }
 
@@ -374,10 +379,10 @@ public class UserController {
         Certificate certificate = certificateService.signSelfCertificate(keyPair, corp_name);
         byte[] pkcs12 = certificateService.generatePKCS12(certificate, keyPair, corp_name, cerConfig.getPassword());
         GuaranteeCorp guaranteeCorp = new GuaranteeCorp();
-        guaranteeCorp.setCorp_name(corp_name);
-        guaranteeCorp.setJuristic_person(juristic_person);
-        guaranteeCorp.setMain_business(main_business);
-        guaranteeCorp.setUser_id(userContext.getUserId());
+        guaranteeCorp.setCorpName(corp_name);
+        guaranteeCorp.setJuristicPerson(juristic_person);
+        guaranteeCorp.setMainBusiness(main_business);
+        guaranteeCorp.setUserId(userContext.getUserId());
         guaranteeCorp.setStatus(UserStatusEnum.ACTIVE.getId());
         guaranteeCorp.setPkcs12(pkcs12);
         if (iGuaranteeCorpService.insertCorp(guaranteeCorp) != 1) {

@@ -1,7 +1,7 @@
 package com.fiveonechain.digitasset.service;
 
-import com.fiveonechain.digitasset.domain.UserAuth;
-import com.fiveonechain.digitasset.mapper.UserAuthMapper;
+import com.fiveonechain.digitasset.domain.UserInfo;
+import com.fiveonechain.digitasset.mapper.UserInfoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -11,29 +11,29 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserInfoServiceImpl implements UserInfoService {
     @Autowired
-    private UserAuthMapper userAuthMapper;
+    private UserInfoMapper userInfoMapper;
     @Override
-    public int insertAndGetUserAuth(UserAuth userAuth) {
-        return userAuthMapper.insertUserAuth(userAuth);
+    public int insertAndGetUserAuth(UserInfo userInfo) {
+        return userInfoMapper.insertUserAuth(userInfo);
     }
 
     @Override
-    public boolean bindCreditCard(UserAuth userAuth) {
-        return userAuthMapper.bindCreditCard(userAuth);
+    public boolean bindCreditCard(UserInfo userInfo) {
+        return userInfoMapper.bindCreditCard(userInfo);
     }
 
     @Override
-    public UserAuth getUserAuthByUserId(int userId) {
-        return userAuthMapper.findAuthById(userId);
+    public UserInfo getUserAuthByUserId(int userId) {
+        return userInfoMapper.findAuthById(userId);
     }
 
     @Override
     public boolean isExistsSameID(String identity) {
-        return userAuthMapper.isIdentityExists(identity);
+        return userInfoMapper.isIdentityExists(identity);
     }
 
     @Override
     public boolean isExistsUserAuth(int userId) {
-        return userAuthMapper.isExistsUserAuth(userId);
+        return userInfoMapper.isExistsUserAuth(userId);
     }
 }

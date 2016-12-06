@@ -32,19 +32,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/register.html")
                 .antMatchers("/js/*").antMatchers("/css/*")
                 .antMatchers("/images/*")
-        ;
-        web.ignoring()
-                .antMatchers("/user/register").antMatchers("/user/sendVerification")
-        ;
-        web.ignoring()
+                .antMatchers("/user/register")
+                .antMatchers("/user/sendVerification")
                 .antMatchers("/user/login")
-        ;
-
-
-        web.ignoring()
                 .antMatchers("/user/findUserName")
-        ;
-        web.ignoring()
                 .antMatchers("/user/findMobile")
         ;
     }

@@ -1,6 +1,6 @@
 package com.fiveonechain.digitasset.mapper;
 
-import com.fiveonechain.digitasset.domain.UserAuth;
+import com.fiveonechain.digitasset.domain.UserInfo;
 import org.apache.ibatis.annotations.*;
 
 /**
@@ -8,14 +8,14 @@ import org.apache.ibatis.annotations.*;
  */
 
 @Mapper
-public interface UserAuthMapper {
-    final String columns = "user_id,real_name,identity,identity_type,email,fixed_line,status";
-    final String entity = "#{userAuth.userId},#{userAuth.realName},#{userAuth.identity},#{userAuth.identityType}," +
-            "#{userAuth.email},#{userAuth.fixedLine},#{userAuth.status}";
-    @Select("SELECT exists (select user_id FROM user_auth WHERE identity = #{identity})")
+public interface UserInfoMapper {
+    final String columns = "user_id,real_name,identity,identity_type,email,fixed_line,status,image_id";
+    final String entity = "#{userInfo.userId},#{userInfo.realName},#{userInfo.identity},#{userInfo.identityType}," +
+            "#{userInfo.email},#{userInfo.fixedLine},#{userInfo.status},#{userInfo.imageId}";
+    @Select("SELECT exists (select user_id FROM user_info WHERE identity = #{identity})")
     boolean isIdentityExists(String id);
 
-    @Results(id="userAuth",value={
+    @Results(id="userInfo",value={
             @Result(property = "userId", column = "user_id"),
             @Result(property = "realName", column = "real_name"),
             @Result(property = "identityType", column = "identity_type"),
@@ -25,19 +25,20 @@ public interface UserAuthMapper {
             @Result(property = "creditCardId", column = "credit_card_id"),
             @Result(property = "creditCardOwner", column = "credit_card_owner"),
             @Result(property = "creditCardBank", column = "credit_card_bank"),
+            @Result(property = "imageId", column = "image_id" )
     })
-    @Select("SELECT * FROM user_auth WHERE user_id = #{userId}")
-    UserAuth findAuthById(int userId);
+    @Select("SELECT * FROM user_info WHERE user_id = #{userId}")
+    UserInfo findAuthById(int userId);
 
-    @Insert("INSERT INTO user_auth("+columns+") VALUES("+entity+")")
-    int insertUserAuth(@Param("userAuth") UserAuth userAuths);
+    @Insert("INSERT INTO user_info("+columns+") VALUES("+entity+")")
+    int insertUserAuth(@Param("userInfo") UserInfo userInfo);
 
-    @Select("SELECT exists (select user_id FROM user_auth WHERE user_id = #{userId})")
+    @Select("SELECT exists (select user_id FROM user_info WHERE user_id = #{userId})")
     boolean isExistsUserAuth(int userId);
 
-    @Update("update user_auth set credit_card_id=#{creditCardId},credit_card_owner=#{creditCardOwner},credit_card_bank=#{creditCardBank}" +
+    @Update("update user_info set credit_card_id=#{creditCardId},credit_card_owner=#{creditCardOwner},credit_card_bank=#{creditCardBank}" +
             "where user_id = #{userId}")
-    boolean bindCreditCard(UserAuth userAuth);
+    boolean bindCreditCard(UserInfo userInfo);
 
 
 }
@@ -47,7 +48,7 @@ public interface UserAuthMapper {
 
 /*
 
-CREATE TABLE `user_auth` (
+CREATE TABLE `user_info` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
   `real_name` varchar(5) NOT NULL,

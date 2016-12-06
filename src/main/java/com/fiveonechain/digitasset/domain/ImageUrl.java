@@ -9,19 +9,19 @@ public class ImageUrl {
     private String url;
     private int type;
 
-    public int getImage_id() {
+    public int getImageId() {
         return imageId;
     }
 
-    public void setImage_id(int imageId) {
+    public void setImageId(int imageId) {
         this.imageId = imageId;
     }
 
-    public int getUser_id() {
+    public int getUserId() {
         return userId;
     }
 
-    public void setUser_id(int userId) {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 

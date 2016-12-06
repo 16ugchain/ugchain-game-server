@@ -45,12 +45,12 @@ public class CorpContractController {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.CORP_NOT_FOUND);
             return result;
         }
-        Certificate certificate = certificateService.loadCertificate(guaranteeCorp.getPkcs12(), guaranteeCorp.getCorp_name(), cerConfig.getPassword());
+        Certificate certificate = certificateService.loadCertificate(guaranteeCorp.getPkcs12(), guaranteeCorp.getCorpName(), cerConfig.getPassword());
         if (certificate == null) {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.CORP_CERTIFICATE_NOT_FOUND);
             return result;
         }
-        KeyPair keyPair = certificateService.loadKeyPair(guaranteeCorp.getPkcs12(), guaranteeCorp.getCorp_name(), cerConfig.getPassword());
+        KeyPair keyPair = certificateService.loadKeyPair(guaranteeCorp.getPkcs12(), guaranteeCorp.getCorpName(), cerConfig.getPassword());
         if (certificate == null) {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.CORP_KEYPAIR_NOT_FOUND);
             return result;
