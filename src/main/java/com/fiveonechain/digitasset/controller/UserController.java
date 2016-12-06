@@ -46,7 +46,7 @@ public class UserController {
     @Autowired
     private UserService iUserService;
     @Autowired
-    private UserAuthService iUserAuthService;
+    private UserInfoService iUserInfoService;
     @Autowired
     private ImageUploadService imageUploadService;
     @Autowired
@@ -196,7 +196,7 @@ public class UserController {
                                  @RequestParam("creditCardBank") String creditCardBank,
                                  @AuthenticationPrincipal UserContext userContext
     ) {
-        UserAuth userAuth = iUserAuthService.getUserAuthByUserId((long) userContext.getUserId());
+        UserAuth userAuth = iUserInfoService.getUserAuthByUserId((long) userContext.getUserId());
         if(userAuth == null){
             Result result = ResultUtil.buildErrorResult(ErrorInfo.SERVER_ERROR);
             return result;
@@ -204,7 +204,7 @@ public class UserController {
         userAuth.setCredit_card_id(creditCardId);
         userAuth.setCredit_card_owner(creditCardOwner);
         userAuth.setCredit_card_bank(creditCardBank);
-        if (!iUserAuthService.bindCreditCard(userAuth)) {
+        if (!iUserInfoService.bindCreditCard(userAuth)) {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.SERVER_ERROR);
             return result;
         }
@@ -272,12 +272,12 @@ public class UserController {
                                @RequestParam(value = "fixed_line", required = false, defaultValue = "") String fixed_line
     ) {
         //验证identity后设置status
-        boolean isExists = iUserAuthService.isExistsSameID(identity);
+        boolean isExists = iUserInfoService.isExistsSameID(identity);
         if (isExists) {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.IDENTITY_EXISTS);
             return result;
         }
-        boolean isExistsUser = iUserAuthService.isExistsUserAuth(userContext.getUserId());
+        boolean isExistsUser = iUserInfoService.isExistsUserAuth(userContext.getUserId());
         if (isExistsUser) {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.AUTHENTICATION);
             return result;
@@ -290,7 +290,7 @@ public class UserController {
         userAuth.setEmail(email);
         userAuth.setFixed_line(fixed_line);
         userAuth.setStatus(UserAuthStatusEnum.SUCCESS.getId());
-        if (iUserAuthService.insertAndGetUserAuth(userAuth) != 1) {
+        if (iUserInfoService.insertAndGetUserAuth(userAuth) != 1) {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.SERVER_ERROR);
             return result;
         }

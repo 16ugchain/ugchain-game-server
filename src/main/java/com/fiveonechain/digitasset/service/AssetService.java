@@ -26,6 +26,8 @@ public interface AssetService {
 
     List<Asset> getAssetListByStatus(AssetStatus status);
 
+    List<Asset> getAssetListByGuarAndStatus(int guarId, AssetStatus status);
+
     void updateAssetStatusStateMachine(UserContext host, int assetId, AssetStatus newStatus);
 
     void updateAssetEvalInfo(Asset asset);

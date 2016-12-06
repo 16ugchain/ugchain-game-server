@@ -5,7 +5,7 @@ import com.fiveonechain.digitasset.domain.UserAuth;
 /**
  * Created by fanjl on 16/11/17.
  */
-public interface UserAuthService {
+public interface UserInfoService {
     boolean isExistsSameID(String idCard);
 
     boolean isExistsUserAuth(int user_id);

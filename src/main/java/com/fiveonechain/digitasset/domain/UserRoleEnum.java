@@ -28,6 +28,15 @@ public enum UserRoleEnum {
         return null;
     }
 
+    public static UserRoleEnum fromString(String str) {
+        for (UserRoleEnum role : UserRoleEnum.values()) {
+            if (role.name().equals(str)) {
+                return role;
+            }
+        }
+        throw new IllegalArgumentException(str);
+    }
+
 
 
 }
