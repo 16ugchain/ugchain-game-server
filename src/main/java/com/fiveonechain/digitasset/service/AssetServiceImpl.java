@@ -219,5 +219,10 @@ public class AssetServiceImpl implements AssetService {
     public void updateAssetStatusAsync(int assetId, AssetStatus newStatus) {
         updateAssetStatusStateMachine(userService.getSystemUserContext(), assetId, newStatus);
     }
+
+    @Override
+    public List<Asset> getAssetListByGuarAndStatus(int guarId, AssetStatus status) {
+        return assetMapper.selectByGuarIdAndStatus(guarId, status.getCode());
+    }
 }
 

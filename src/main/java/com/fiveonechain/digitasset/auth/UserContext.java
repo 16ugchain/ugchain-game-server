@@ -1,5 +1,6 @@
 package com.fiveonechain.digitasset.auth;
 
+import com.fiveonechain.digitasset.domain.UserRoleEnum;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
@@ -38,5 +39,14 @@ public class UserContext {
 
     public List<GrantedAuthority> getAuthorities() {
         return authorities;
+    }
+
+    public boolean hasRole(UserRoleEnum role) {
+        for (GrantedAuthority authority : authorities) {
+            if (authority.toString().equals(role.name())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

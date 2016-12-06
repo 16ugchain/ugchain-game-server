@@ -195,6 +195,19 @@ public class AssetController {
         return ResultUtil.success(assetDetail);
     }
 
+    @RequestMapping(value = "assets/waitevalassets", method = RequestMethod.GET)
+    public Result getWaitEvaluateAssetList(
+            @AuthenticationPrincipal UserContext host) {
+
+        if (!host.hasRole(UserRoleEnum.CORP)) {
+            return ResultUtil.buildErrorResult(ErrorInfo.USER_PERMISSION_DENIED);
+        }
+
+        List<Asset> assetList = assetService.getAssetListByGuarAndStatus(host.getUserId(), AssetStatus.WAIT_EVALUATE);
+
+        return null;
+    }
+
     @RequestMapping(value = "assets/tradeassets", method = RequestMethod.GET)
     public Result getAvailAssetList(
             @AuthenticationPrincipal UserContext host) {

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
  * Created by fanjl on 16/11/17.
  */
 @Component
-public class UserAuthServiceImpl implements UserAuthService{
+public class UserInfoServiceImpl implements UserInfoService {
     @Autowired
     private UserAuthMapper userAuthMapper;
     @Override
