@@ -9,7 +9,6 @@ public enum ErrorInfo {
     DIGIT_ASSET_NOT_FOUND(4005, "数字资产不存在"),
     USER_PERMISSION_DENIED(4006, "没有权限"),
     IMAGETYPE_NOT_FOUND(5001,"图片类型不存在"),
-    IMAGE_EXISTS(5002,"此类型图片已经上传过"),
     IMAGE_TOO_LARGE(5003,"图片太大"),
     IMAGE_UPLOAD_FAIL(5004,"图片上传失败"),
     USER_NOT_FOUND(6001,"用户不存在"),

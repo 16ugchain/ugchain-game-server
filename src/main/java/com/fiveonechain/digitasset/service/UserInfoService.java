@@ -14,5 +14,5 @@ public interface UserInfoService {
 
     boolean bindCreditCard(UserInfo userInfo);
 
-    UserInfo getUserAuthByUserId(int userId);
+    UserInfo getUserInfoByUserId(int userId);
 }

@@ -2,6 +2,9 @@ package com.fiveonechain.digitasset.service;
 
 import com.fiveonechain.digitasset.config.QiNiuConfig;
 import com.fiveonechain.digitasset.exception.ImageUploadException;
+import com.fiveonechain.digitasset.util.StringBuilderHolder;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.qiniu.common.QiniuException;
 import com.qiniu.common.Zone;
 import com.qiniu.http.Response;
@@ -20,8 +23,10 @@ public class ImageUploadService {
     @Autowired
     private QiNiuConfig qiNiuConfig;
 
-    public String uploadQiNiu(byte[] image) {
-        if(image == null){
+    StringBuilderHolder stringBuilderHolder = new StringBuilderHolder(0);
+
+    private String uploadQiNiu(byte[] image) {
+        if (image == null) {
             throw new ImageUploadException();
         }
         String imageName = DigestUtils.md5DigestAsHex(image);
@@ -48,5 +53,21 @@ public class ImageUploadService {
         //打印返回的信息
 
         return body;
+    }
+
+    public String uploadAndGetResult(byte[] image) {
+        String message = "";
+        message += uploadQiNiu(image);
+        JsonObject jsonObject = new Gson().fromJson(message, JsonObject.class);
+        StringBuilder urlStrBuilder = stringBuilderHolder.resetAndGet();
+        if (jsonObject.has("key")) {
+            String domain = qiNiuConfig.getDownloadUrl();
+            String domainStr = domain.replace("\"", "");
+            urlStrBuilder.append(domainStr).append(jsonObject.get("key").toString().replace("\"", ""));
+            System.out.println(urlStrBuilder.toString());
+        }else {
+            throw new ImageUploadException();
+        }
+        return urlStrBuilder.toString();
     }
 }

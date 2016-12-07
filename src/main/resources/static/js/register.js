@@ -52,13 +52,13 @@ var register = new Vue({
         api: {
             registerApi: "/user/register",
             telephoneApi: "/user/bindMobile",
-            bindCreditCard: "/user/bindCreditCard",
+            bindCreditCard: "/userInfo/bindCreditCard",
             findMobile: "/user/findMobile",
             findUserName: "/user/findUserName",
-            findIdentityId: "/user/findIdentityId",
+            findIdentityId: "/userInfo/findIdentityId",
             sendVerification: "/user/sendVerification",
-            upload: "/user/upload",
-            authenticate: "/user/authenticate"
+            upload: "/image/upload",
+            authenticate: "/userInfo/authenticate"
         }
     },
     methods: {
@@ -90,6 +90,13 @@ $("#verifyBtn").on('click', function (event) {
     } else {
         $(this).attr("value", num + 1);
         console.log("发送");
+        $.post(register.api.sendVerification, {
+            telephone: register.userInfo.telephone
+        }, function (data) {
+            if (data.meta.code === 200) {
+                console.log("已发送");
+            }
+        })
         var timer = null;
         var time = 60;
         that.addClass('disabled  active');
@@ -103,13 +110,7 @@ $("#verifyBtn").on('click', function (event) {
                 that.text(time + "秒后重新发送");
             }
         }, 1000);
-        $.post(register.api.sendVerification, {
-            telephone: register.userInfo.telephone
-        }, function (data) {
-            if (data.meta.code === 200) {
-                console.log("已发送");
-            }
-        })
+
     }
 });
 // 跳过按钮

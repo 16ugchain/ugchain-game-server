@@ -7,7 +7,7 @@ public class ImageUploadException extends RuntimeException {
     public ImageUploadException(){
         super();
     }
-    public ImageUploadException(long user_id,int type){
-        super("user [" + user_id + "］ upload image type [" + type + "] fail");
+    public ImageUploadException(long user_id){
+        super("user [" + user_id + "］ upload image  fail");
     }
 }
