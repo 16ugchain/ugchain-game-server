@@ -28,7 +28,7 @@ public interface UserInfoMapper {
             @Result(property = "imageId", column = "image_id" )
     })
     @Select("SELECT * FROM user_info WHERE user_id = #{userId}")
-    UserInfo findAuthById(int userId);
+    UserInfo findUserInfoByUserId(int userId);
 
     @Insert("INSERT INTO user_info("+columns+") VALUES("+entity+")")
     int insertUserAuth(@Param("userInfo") UserInfo userInfo);

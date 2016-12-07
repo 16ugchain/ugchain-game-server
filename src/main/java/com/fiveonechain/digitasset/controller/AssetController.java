@@ -2,10 +2,7 @@ package com.fiveonechain.digitasset.controller;
 
 import com.fiveonechain.digitasset.auth.UserContext;
 import com.fiveonechain.digitasset.domain.*;
-import com.fiveonechain.digitasset.domain.result.AssetDetail;
-import com.fiveonechain.digitasset.domain.result.AssetItem;
-import com.fiveonechain.digitasset.domain.result.ErrorInfo;
-import com.fiveonechain.digitasset.domain.result.Result;
+import com.fiveonechain.digitasset.domain.result.*;
 import com.fiveonechain.digitasset.exception.AssetNotFoundException;
 import com.fiveonechain.digitasset.exception.AssetStatusTransferException;
 import com.fiveonechain.digitasset.exception.ImageUrlNotFoundException;
@@ -49,6 +46,9 @@ public class AssetController {
 
     @Autowired
     private UserAssetService userAssetService;
+
+    @Autowired
+    private UserInfoService userInfoService;
 
     /**
      * 登记实物资产
@@ -195,7 +195,7 @@ public class AssetController {
         return ResultUtil.success(assetDetail);
     }
 
-    @RequestMapping(value = "assets/waitevalassets", method = RequestMethod.GET)
+    @RequestMapping(value = "assets/waitevaluate", method = RequestMethod.GET)
     public Result getWaitEvaluateAssetList(
             @AuthenticationPrincipal UserContext host) {
 
@@ -205,10 +205,59 @@ public class AssetController {
 
         List<Asset> assetList = assetService.getAssetListByGuarAndStatus(host.getUserId(), AssetStatus.WAIT_EVALUATE);
 
-        return null;
+        List<WaitEvaluateAssetItem> assetItemList = new LinkedList<>();
+        for (Asset asset : assetList) {
+            WaitEvaluateAssetItem assetItem = new WaitEvaluateAssetItem();
+            assetItem.setAssetId(asset.getAssetId());
+            assetItem.setAssetName(asset.getName());
+            assetItem.setCycle(asset.getCycle());
+            assetItem.setDesc(asset.getDescription());
+            assetItem.setIssuerId(asset.getUserId());
+
+            Optional<UserInfo> userInfoOpt = userInfoService.getUserInfoOptional(asset.getUserId());
+            if (!userInfoOpt.isPresent()) {
+                LOGGER.error("{} issuerId {} NOT FOUND", ErrorInfo.SERVER_ERROR, asset.getUserId());
+                continue;
+            }
+            assetItem.setIssuerName(userInfoOpt.get().getRealName());
+            assetItemList.add(assetItem);
+        }
+
+        return ResultUtil.success(assetItemList);
     }
 
-    @RequestMapping(value = "assets/tradeassets", method = RequestMethod.GET)
+    @RequestMapping(value = "assets/evaluated", method = RequestMethod.GET)
+    public Result getEvaluatedAssetList(
+            @AuthenticationPrincipal UserContext host) {
+
+        if (!host.hasRole(UserRoleEnum.CORP)) {
+            return ResultUtil.buildErrorResult(ErrorInfo.USER_PERMISSION_DENIED);
+        }
+
+        List<Asset> assetList = assetService.getAssetListByGuarExcludeStatus(host.getUserId(), AssetStatus.WAIT_EVALUATE);
+        List<EvaluatedAssetItem> assetItemList = new LinkedList<>();
+        for (Asset asset : assetList) {
+            AssetStatus status = AssetStatus.fromValue(asset.getStatus());
+
+            EvaluatedAssetItem assetItem = new EvaluatedAssetItem();
+            assetItem.setAssetId(asset.getAssetId());
+            assetItem.setAssetName(asset.getName());
+            assetItem.setDesc(asset.getDescription());
+            assetItem.setStatus(CodeMessagePair.of(status.getCode(), status.getMessage()));
+            assetItem.setUpdateTime(asset.getUpdateTime());
+
+            List<AssetOperation> operationList = assetService.getAvailableOperation(status, UserRoleEnum.CORP);
+            for (AssetOperation oper : operationList) {
+                assetItem.addOperation(CodeMessagePair.of(oper.getCode(), oper.getMessage()));
+            }
+
+            assetItemList.add(assetItem);
+        }
+
+        return ResultUtil.success(assetItemList);
+    }
+
+    @RequestMapping(value = "assets/trade", method = RequestMethod.GET)
     public Result getAvailAssetList(
             @AuthenticationPrincipal UserContext host) {
 

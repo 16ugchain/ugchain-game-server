@@ -61,6 +61,12 @@ public interface AssetMapper {
             @Param("guar_id") int guar_id,
             @Param("status") int status);
 
+    @ResultMap("asset")
+    @Select("SELECT " + ALL_COLUMN + " FROM asset WHERE guar_id = #{guarId} AND status != #{status} ORDER BY update_time DESC")
+    List<Asset> selectByGuarIdAndNotStatus(
+            @Param("guar_id") int guar_id,
+            @Param("status") int notStatus);
+
     @Select("SELECT status FROM asset WHERE asset_id = #{assetId} FOR UPDATE")
     Integer selectStatusForUpdate(@Param("assetId") int assetId);
 
