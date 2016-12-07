@@ -146,7 +146,7 @@ public class UserController {
     public Result sendVerification(@RequestParam("telephone") String telephone
     ) {
         String value = redisService.get(telephone);
-        if (value != null){
+        if (value != null) {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.VERIFY_FREQUENCY_ERROR);
             return result;
         }
@@ -160,8 +160,8 @@ public class UserController {
         }
         // TODO: 接入短信接口发送验证码
         String num = RandomCharUtil.getRandomNumberChar(6);
-        String code = HttpClientUtil.getResult(telephone,num);
-        if(Integer.valueOf(code) != 0){
+        String code = HttpClientUtil.getResult(telephone, num);
+        if (Integer.valueOf(code) != 0) {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.SERVER_ERROR);
             return result;
         }
@@ -197,7 +197,7 @@ public class UserController {
                                  @AuthenticationPrincipal UserContext userContext
     ) {
         UserInfo userInfo = iUserInfoService.getUserAuthByUserId(userContext.getUserId());
-        if(userInfo == null){
+        if (userInfo == null) {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.SERVER_ERROR);
             return result;
         }
@@ -264,6 +264,21 @@ public class UserController {
         return result;
     }
 
+    @RequestMapping(value = "/findIdentityId", method = RequestMethod.POST)
+    public String findIdentityId(@RequestParam("papersNum") String identityId) {
+        boolean result = iUserInfoService.isExistsSameID(identityId);
+        Map<String, Boolean> map = new HashMap<>();
+        map.put("valid", !result);
+        ObjectMapper mapper = new ObjectMapper();
+        String resultString = "";
+        try {
+            resultString = mapper.writeValueAsString(map);
+        } catch (JsonProcessingException e) {
+            throw new JsonSerializableException(e);
+        }
+        return resultString;
+    }
+
     @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
     public Result authenticate(@AuthenticationPrincipal UserContext userContext,
                                @RequestParam("real_name") String real_name,
@@ -303,7 +318,7 @@ public class UserController {
         return result;
     }
 
-    @RequestMapping(value="/upload",method = RequestMethod.POST)
+    @RequestMapping(value = "/upload", method = RequestMethod.POST)
     public Result upload(
             @RequestParam("imageUrl") MultipartFile image,
             @RequestParam("type") int type,

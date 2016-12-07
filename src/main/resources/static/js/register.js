@@ -55,6 +55,7 @@ var register = new Vue({
             bindCreditCard: "/user/bindCreditCard",
             findMobile: "/user/findMobile",
             findUserName: "/user/findUserName",
+            findIdentityId: "/user/findIdentityId",
             sendVerification: "/user/sendVerification",
             upload: "/user/upload",
             authenticate: "/user/authenticate"
@@ -151,7 +152,7 @@ $("#file-1").on("change", function () {
 function saveImg(){
     $("#upload").ajaxSubmit(function(message) {
         console.log(message);
-        register.userInfo.imageId = message;
+        register.userInfo.imageId = message.data;
     });
     return false;
 }
@@ -338,6 +339,12 @@ $(function () {
                     regexp: {
                         regexp: /(^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$)|(^[1-9]\d{5}\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}$)/,
                         message: '身份证件格式错误'
+                    },
+                    remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
+                        url: register.api.findIdentityId,//验证地址
+                        message: '身份证已被注册',//提示消息
+                        delay: 1000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+                        type: 'POST'//请求方式
                     }
                 }
             },
@@ -382,7 +389,6 @@ $(function () {
                 identity: register.userInfo.papersNum,
                 // 证件图片
                 // img:register.userInfo.papersImg,
-                imgId: register.userInfo.imageId,
                 // 固话
                 fixed_line: register.userInfo.contactPhone,
                 // 邮箱
