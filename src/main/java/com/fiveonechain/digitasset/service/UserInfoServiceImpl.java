@@ -5,6 +5,8 @@ import com.fiveonechain.digitasset.mapper.UserInfoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 /**
  * Created by fanjl on 16/11/17.
  */
@@ -24,12 +26,18 @@ public class UserInfoServiceImpl implements UserInfoService {
 
     @Override
     public UserInfo getUserAuthByUserId(int userId) {
-        return userInfoMapper.findAuthById(userId);
+        return userInfoMapper.findUserInfoByUserId(userId);
     }
 
     @Override
     public boolean isExistsSameID(String identity) {
         return userInfoMapper.isIdentityExists(identity);
+    }
+
+    @Override
+    public Optional<UserInfo> getUserInfoOptional(int userId) {
+        UserInfo userInfo = userInfoMapper.findUserInfoByUserId(userId);
+        return Optional.ofNullable(userInfo);
     }
 
     @Override

@@ -1,15 +1,14 @@
 package com.fiveonechain.digitasset.service;
 
 import com.fiveonechain.digitasset.auth.UserContext;
-import com.fiveonechain.digitasset.domain.Asset;
-import com.fiveonechain.digitasset.domain.AssetRecord;
-import com.fiveonechain.digitasset.domain.AssetStatus;
+import com.fiveonechain.digitasset.domain.*;
 import com.fiveonechain.digitasset.exception.AssetNotFoundException;
 import com.fiveonechain.digitasset.exception.AssetStatusTransferException;
 import com.fiveonechain.digitasset.exception.UserOperatoinPermissionException;
 import com.fiveonechain.digitasset.mapper.AssetMapper;
 import com.fiveonechain.digitasset.mapper.AssetRecordMapper;
 import com.fiveonechain.digitasset.mapper.SequenceMapper;
+import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +20,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -223,6 +223,52 @@ public class AssetServiceImpl implements AssetService {
     @Override
     public List<Asset> getAssetListByGuarAndStatus(int guarId, AssetStatus status) {
         return assetMapper.selectByGuarIdAndStatus(guarId, status.getCode());
+    }
+
+    @Override
+    public List<Asset> getAssetListByGuarExcludeStatus(int guarId, AssetStatus notStatus) {
+        return assetMapper.selectByGuarIdAndNotStatus(guarId, notStatus.getCode());
+    }
+
+    @Override
+    public List<AssetOperation> getAvailableOperation(AssetStatus status, UserRoleEnum role) {
+        List<AssetOperation> operationList = Collections.emptyList();
+        switch (status) {
+            case WAIT_EVALUATE:
+                if (role == UserRoleEnum.CORP) {
+                    operationList = Lists.newArrayList(AssetOperation.PASS_EVALUATE, AssetOperation.REJECT_EVALUATE);
+                }
+                break;
+            case PASS_EVALUATE:
+                if (role == UserRoleEnum.USER_PUBLISHER) {
+                    operationList = Lists.newArrayList(AssetOperation.ISSUE);
+                }
+                break;
+            case ISSUE:
+                if (role == UserRoleEnum.CORP) {
+                    operationList = Lists.newArrayList(AssetOperation.FREEZE);
+                } else if (role == UserRoleEnum.USER_PUBLISHER
+                        || role == UserRoleEnum.USER_ASSIGNEE) {
+                    operationList = Lists.newArrayList(AssetOperation.APPLY_DELIVERY);
+                }
+                break;
+            case FROZEN:
+                if (role == UserRoleEnum.CORP) {
+                    operationList = Lists.newArrayList(AssetOperation.UNFREEZE);
+                }
+                break;
+            case APPLY_DELIVERY:
+                if (role == UserRoleEnum.CORP) {
+                    operationList = Lists.newArrayList(AssetOperation.DELIVERY, AssetOperation.REJECT_DELIVERY);
+                }
+                break;
+            case MATURITY:
+                if (role == UserRoleEnum.CORP || role == UserRoleEnum.USER_PUBLISHER) {
+                    operationList = Lists.newArrayList(AssetOperation.CLEAR);
+                }
+                break;
+        }
+        return operationList;
     }
 }
 

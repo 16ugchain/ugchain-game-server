@@ -3,7 +3,6 @@ package com.fiveonechain.digitasset.auth;
 import com.fiveonechain.digitasset.domain.UserRoleEnum;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 
 import java.util.List;
 
