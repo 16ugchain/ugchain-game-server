@@ -27,6 +27,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         web.ignoring()
                 .antMatchers("/auth/**")
+                .antMatchers("/index")
                 .antMatchers("/test_page")
                 .antMatchers("/login.html")
                 .antMatchers("/register.html")
