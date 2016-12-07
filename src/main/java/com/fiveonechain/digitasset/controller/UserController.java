@@ -69,6 +69,13 @@ public class UserController {
 
     StringBuilderHolder stringBuilderHolder = new StringBuilderHolder(0);
 
+    @RequestMapping(value = "/index")
+    public Result index(@AuthenticationPrincipal UserContext userContext
+    ) {
+        User user = iUserService.getUserByUserId(userContext.getUserId());
+        return ResultUtil.success(user);
+    }
+
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public Result registUser(@RequestParam("user_name") String userName,
                              @RequestParam("password") String password
