@@ -17,9 +17,7 @@ public interface ImageUrlService {
 
     ImageUrl getImageByImageIdAndUserId(int imageId, int userId);
 
-    ImageUrl findByUserIdAndType(int userId,int type);
-
-    boolean isExists(int userId,int type);
+    ImageUrl findByUserId(int userId);
 
     int nextImageUrlId();
 

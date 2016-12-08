@@ -81,14 +81,10 @@ public class ImageUrlServiceImpl implements ImageUrlService {
     }
 
     @Override
-    public ImageUrl findByUserIdAndType(int userId, int type) {
-        return imageUrlMapper.findByUserIdAndType(userId,type);
+    public ImageUrl findByUserId(int userId) {
+        return imageUrlMapper.findByUserIdAndType(userId);
     }
 
-    @Override
-    public boolean isExists(int userId, int type) {
-        return imageUrlMapper.isExists(userId,type);
-    }
 
     @Override
     public int nextImageUrlId() {

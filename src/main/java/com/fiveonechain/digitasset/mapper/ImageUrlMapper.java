@@ -8,9 +8,9 @@ import org.apache.ibatis.annotations.*;
  */
 @Mapper
 public interface ImageUrlMapper {
-    static final String columns = "image_id,user_id,url,type";
-    static final String allcolumns = "id,image_id,user_id,url,type,create_time";
-    static final String entity = "#{imageUrl.imageId},#{imageUrl.userId},#{imageUrl.url},#{imageUrl.type}";
+    static final String columns = "image_id,user_id,url";
+    static final String allcolumns = "id,image_id,user_id,url,create_time";
+    static final String entity = "#{imageUrl.imageId},#{imageUrl.userId},#{imageUrl.url}";
 
     @Insert("insert into image_url (" + columns + ") values(" + entity + ")")
     int insertImageUrl(@Param("imageUrl") ImageUrl imageUrl);
@@ -29,13 +29,8 @@ public interface ImageUrlMapper {
             @Param("userId") int userId);
 
     @ResultMap("imageUrl")
-    @Select("select " + allcolumns + " from image_url where user_id=#{userId} and type=#{type}")
-    ImageUrl findByUserIdAndType(@Param("userId") int userId, @Param("type") int type);
-
-    @ResultMap("imageUrl")
-    @Select("select exists (select user_id from image_url where user_id=#{userId} and type=#{type})")
-    boolean isExists(@Param("userId") int userId, @Param("type") int type);
-
+    @Select("select " + allcolumns + " from image_url where user_id=#{userId}")
+    ImageUrl findByUserIdAndType(@Param("userId") int userId);
 
 }
 
