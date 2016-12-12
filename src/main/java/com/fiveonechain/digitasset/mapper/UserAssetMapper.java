@@ -24,7 +24,7 @@ public interface UserAssetMapper {
     @Insert("INSERT INTO user_asset(" + INSERT_COLUMN + ") VALUES (" + INSERT_PROPERTY +")")
     int insert(UserAsset userAsset);
 
-    @Results({
+    @Results(id = "userasset", value = {
             @Result(property = "assetId", column = "asset_id"),
             @Result(property = "userId", column = "user_id"),
             @Result(property = "contractId", column = "contract_id"),
@@ -35,51 +35,28 @@ public interface UserAssetMapper {
     @Select("SELECT " + ALL_COLUMN + " FROM user_asset WHERE asset_id = #{assetId} AND user_id = #{userId}")
     UserAsset select(@Param("assetId") int assetId, @Param("userId") int userId);
 
-    @Results({
-            @Result(property = "assetId", column = "asset_id"),
-            @Result(property = "userId", column = "user_id"),
-            @Result(property = "contractId", column = "contract_id"),
-            @Result(property = "balance", column = "balance"),
-            @Result(property = "tradeBalance", column = "trade_balance"),
-            @Result(property = "lockBalance", column = "lock_balance"),
-    })
+    @ResultMap("userasset")
     @Select("SELECT " + ALL_COLUMN + " FROM user_asset WHERE asset_id = #{assetId} AND user_id = #{userId} FOR UPDATE")
     UserAsset selectForUpdate(@Param("assetId") int assetId, @Param("userId") int userId);
 
-    @Results({
-            @Result(property = "assetId", column = "asset_id"),
-            @Result(property = "userId", column = "user_id"),
-            @Result(property = "contractId", column = "contract_id"),
-            @Result(property = "balance", column = "balance"),
-            @Result(property = "tradeBalance", column = "trade_balance"),
-            @Result(property = "lockBalance", column = "lock_balance"),
-    })
+    @ResultMap("userasset")
     @Select("SELECT " + ALL_COLUMN + " FROM user_asset WHERE user_id = #{userId}")
     List<UserAsset> selectByUserId(@Param("userId") int userId);
 
+    @ResultMap("userasset")
+    @Select("SELECT " + ALL_COLUMN + " FROM user_asset WHERE asset_id = #{assetId} AND balance = #{balance}")
+    UserAsset selectByAssetIdAndBalance(
+            @Param("assetId") int assetId,
+            @Param("balance") int balance);
 
-    @Results({
-            @Result(property = "assetId", column = "asset_id"),
-            @Result(property = "userId", column = "user_id"),
-            @Result(property = "contractId", column = "contract_id"),
-            @Result(property = "balance", column = "balance"),
-            @Result(property = "tradeBalance", column = "trade_balance"),
-            @Result(property = "lockBalance", column = "lock_balance"),
-    })
+    @ResultMap("userasset")
     @Select("SELECT " + ALL_COLUMN + " FROM user_asset WHERE asset_id = #{assetId} AND trade_balance > 0 ORDER BY trade_balance DESC LIMIT #{start},#{limit}")
     List<UserAsset> selectAvailByAssetIdOrderByTradePages(
             @Param("assetId") int assetId,
             @Param("start") int start,
             @Param("limit") int limit);
 
-    @Results({
-            @Result(property = "assetId", column = "asset_id"),
-            @Result(property = "userId", column = "user_id"),
-            @Result(property = "contractId", column = "contract_id"),
-            @Result(property = "balance", column = "balance"),
-            @Result(property = "tradeBalance", column = "trade_balance"),
-            @Result(property = "lockBalance", column = "lock_balance"),
-    })
+    @ResultMap("userasset")
     @Select("SELECT " + ALL_COLUMN + " FROM user_asset WHERE asset_id = #{assetId} AND trade_balance > 0 ORDER BY trade_balance DESC")
     List<UserAsset> selectAvailByAssetIdOrderByTrade(
             @Param("assetId") int assetId);

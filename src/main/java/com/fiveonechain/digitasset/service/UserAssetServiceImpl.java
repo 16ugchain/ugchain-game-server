@@ -193,4 +193,10 @@ public class UserAssetServiceImpl implements UserAssetService {
     public List<UserAsset> getDigitAssetListByAsset(int assetId) {
         return userAssetMapper.selectByAssetId(assetId);
     }
+
+    @Override
+    public Optional<UserAsset> getWhollyOwnerOfAsset(int assetId, int totalAmount) {
+        UserAsset userAsset = userAssetMapper.selectByAssetIdAndBalance(assetId, totalAmount);
+        return Optional.ofNullable(userAsset);
+    }
 }

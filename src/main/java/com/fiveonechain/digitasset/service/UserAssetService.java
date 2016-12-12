@@ -1,6 +1,7 @@
 package com.fiveonechain.digitasset.service;
 
 import com.fiveonechain.digitasset.domain.Asset;
+import com.fiveonechain.digitasset.domain.User;
 import com.fiveonechain.digitasset.domain.UserAsset;
 
 import java.util.List;
@@ -32,5 +33,7 @@ public interface UserAssetService {
     List<UserAsset> getAvailDigitAssetListByAsset(int assetId);
 
     int sumTradeBalanceByAsset(int assetId);
+
+    Optional<UserAsset> getWhollyOwnerOfAsset(int assetId, int totalAmount);
 
 }

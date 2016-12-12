@@ -1,6 +1,7 @@
 package com.fiveonechain.digitasset.mapper;
 
 import com.fiveonechain.digitasset.domain.Asset;
+import com.fiveonechain.digitasset.mapper.util.SimpleSelectInExtendedLanguageDriver;
 import org.apache.ibatis.annotations.*;
 import org.springframework.security.access.method.P;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -58,14 +59,27 @@ public interface AssetMapper {
     @ResultMap("asset")
     @Select("SELECT " + ALL_COLUMN + " FROM asset WHERE guar_id = #{guarId} AND status = #{status} ORDER BY asset_id DESC")
     List<Asset> selectByGuarIdAndStatus(
-            @Param("guar_id") int guar_id,
+            @Param("guarId") int guarId,
             @Param("status") int status);
 
     @ResultMap("asset")
     @Select("SELECT " + ALL_COLUMN + " FROM asset WHERE guar_id = #{guarId} AND status != #{status} ORDER BY update_time DESC")
     List<Asset> selectByGuarIdAndNotStatus(
-            @Param("guar_id") int guar_id,
+            @Param("guarId") int guarId,
             @Param("status") int notStatus);
+
+    @Lang(SimpleSelectInExtendedLanguageDriver.class)
+    @Select("SELECT " + ALL_COLUMN + " FROM asset WHERE guar_id = #{guarId} AND status IN (#{statusList}) ORDER BY update_time DESC")
+    List<Asset> selectByGuarIdAndStatusList(
+            @Param("guarId") int guarId,
+            @Param("statusList") List<Integer> statusList);
+
+    @Lang(SimpleSelectInExtendedLanguageDriver.class)
+    @Select("SELECT " + ALL_COLUMN + " FROM asset WHERE user_id = #{userId} AND status IN (#{statusList}) ORDER BY update_time DESC")
+    List<Asset> selectByGuarIdAndUserIdAndStatusList(
+            @Param("guarId") int guarId,
+            @Param("userId") int userId,
+            @Param("statusList") List<Integer> statusList);
 
     @Select("SELECT status FROM asset WHERE asset_id = #{assetId} FOR UPDATE")
     Integer selectStatusForUpdate(@Param("assetId") int assetId);
