@@ -30,6 +30,10 @@ public interface AssetService {
 
     List<Asset> getAssetListByGuarAndStatus(int guarId, AssetStatus status);
 
+    List<Asset> getAssetListByGuarAndStatusList(int guarId, List<AssetStatus> status);
+
+    List<Asset> getNoGuarAssetListByIssuerAndStatusList(int userId, List<AssetStatus> status);
+
     List<Asset> getAssetListByGuarExcludeStatus(int guarId, AssetStatus notStatus);
 
     void updateAssetStatusStateMachine(UserContext host, int assetId, AssetStatus newStatus);
@@ -46,4 +50,3 @@ public interface AssetService {
 
     List<AssetOperation> getAvailableOperation(AssetStatus status, UserRoleEnum role);
 }
-

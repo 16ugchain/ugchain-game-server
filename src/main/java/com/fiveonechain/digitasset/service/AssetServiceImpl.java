@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Created by yuanshichao on 2016/11/17.
@@ -228,6 +229,20 @@ public class AssetServiceImpl implements AssetService {
     @Override
     public List<Asset> getAssetListByGuarExcludeStatus(int guarId, AssetStatus notStatus) {
         return assetMapper.selectByGuarIdAndNotStatus(guarId, notStatus.getCode());
+    }
+
+    @Override
+    public List<Asset> getAssetListByGuarAndStatusList(int guarId, List<AssetStatus> statusList) {
+        return assetMapper.selectByGuarIdAndStatusList(guarId, mapStatusCode(statusList));
+    }
+
+    @Override
+    public List<Asset> getNoGuarAssetListByIssuerAndStatusList(int userId, List<AssetStatus> statusList) {
+        return assetMapper.selectByGuarIdAndUserIdAndStatusList(DUMMY_GUAR_ID, userId, mapStatusCode(statusList));
+    }
+
+    private List<Integer> mapStatusCode(List<AssetStatus> statusList) {
+        return statusList.stream().map(s -> s.getCode()).collect(Collectors.toList());
     }
 
     @Override

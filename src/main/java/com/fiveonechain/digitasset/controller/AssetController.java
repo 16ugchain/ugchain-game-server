@@ -8,6 +8,7 @@ import com.fiveonechain.digitasset.exception.AssetStatusTransferException;
 import com.fiveonechain.digitasset.exception.ImageUrlNotFoundException;
 import com.fiveonechain.digitasset.service.*;
 import com.fiveonechain.digitasset.util.ResultUtil;
+import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by yuanshichao on 2016/11/16.
@@ -31,6 +33,8 @@ public class AssetController {
     private static final int MAX_DESC_LENGTH = 200;
     private static final int MAX_CERT_SIZE = 3;
     private static final int MAX_PHOTO_SIZE = 6;
+
+    private final List<AssetStatus> maturityStatusList = Lists.newArrayList(AssetStatus.MATURITY, AssetStatus.CLEAR);
 
     @Autowired
     private AssetService assetService;
@@ -247,15 +251,118 @@ public class AssetController {
             assetItem.setUpdateTime(asset.getUpdateTime());
 
             List<AssetOperation> operationList = assetService.getAvailableOperation(status, UserRoleEnum.CORP);
-            for (AssetOperation oper : operationList) {
-                assetItem.addOperation(CodeMessagePair.of(oper.getCode(), oper.getMessage()));
-            }
+            assetItem.setOperations(mapCodeMessagePair(operationList));
 
             assetItemList.add(assetItem);
         }
 
         return ResultUtil.success(assetItemList);
     }
+
+    private List<CodeMessagePair> mapCodeMessagePair(List<AssetOperation> operationList) {
+        return operationList.stream()
+                .map(m -> CodeMessagePair.of(m.getCode(), m.getMessage()))
+                .collect(Collectors.toList());
+    }
+
+    @RequestMapping(value = "assets/maturity", method = RequestMethod.GET)
+    public Result getMaturityAssetList(
+            @AuthenticationPrincipal UserContext host) {
+
+        if ((!host.hasRole(UserRoleEnum.CORP))
+                && (!host.hasRole(UserRoleEnum.USER_PUBLISHER))) {
+            return ResultUtil.buildErrorResult(ErrorInfo.USER_PERMISSION_DENIED);
+        }
+
+        List<Asset> assetList;
+        UserRoleEnum role;
+        if (host.hasRole(UserRoleEnum.CORP)) {
+            assetList = assetService.getAssetListByGuarAndStatusList(host.getUserId(), maturityStatusList);
+            role = UserRoleEnum.CORP;
+        } else {
+            assetList = assetService.getNoGuarAssetListByIssuerAndStatusList(host.getUserId(), maturityStatusList);
+            role = UserRoleEnum.USER_PUBLISHER;
+        }
+
+        List<MaturityAssetItem> assetItemList = new LinkedList<>();
+        for (Asset asset : assetList) {
+            MaturityAssetItem assetItem = new MaturityAssetItem();
+            assetItem.setAssetId(asset.getAssetId());
+            assetItem.setAssetName(asset.getName());
+            assetItem.setIssuerId(asset.getUserId());
+
+            Optional<UserInfo> userInfoOpt = userInfoService.getUserInfoOptional(asset.getUserId());
+            if (!userInfoOpt.isPresent()) {
+                LOGGER.error("{} issuerId {} NOT FOUND", ErrorInfo.SERVER_ERROR, asset.getUserId());
+                continue;
+            }
+
+            assetItem.setIssuerName(userInfoOpt.get().getRealName());
+            assetItem.setEndTime(asset.getEndTime());
+            AssetStatus status = AssetStatus.fromValue(asset.getStatus());
+            assetItem.setStatus(CodeMessagePair.of(status.getCode(), status.getMessage()));
+            List<AssetOperation> operationList = assetService.getAvailableOperation(status, role);
+            assetItem.setOperations(mapCodeMessagePair(operationList));
+
+            assetItemList.add(assetItem);
+        }
+
+        return ResultUtil.success(assetItemList);
+    }
+
+    @RequestMapping(value = "assets/delivery", method = RequestMethod.GET)
+    public Result getDeliveryAssetList(
+            @AuthenticationPrincipal UserContext host) {
+
+        if (!host.hasRole(UserRoleEnum.CORP)) {
+            return ResultUtil.buildErrorResult(ErrorInfo.USER_PERMISSION_DENIED);
+        }
+
+        List<Asset> assetList = assetService.getAssetListByGuarAndStatus(host.getUserId(), AssetStatus.APPLY_DELIVERY);
+
+        List<DeliveryAssetItem> assetItemList = new LinkedList<>();
+        for (Asset asset : assetList) {
+            DeliveryAssetItem assetItem = new DeliveryAssetItem();
+
+            assetItem.setAssetId(asset.getAssetId());
+            assetItem.setAssetName(asset.getName());
+            AssetStatus status = AssetStatus.fromValue(asset.getStatus());
+            assetItem.setStatus(CodeMessagePair.of(status.getCode(), status.getMessage()));
+            assetItem.setIssuerId(asset.getUserId());
+
+            Optional<UserInfo> userInfoOpt = userInfoService.getUserInfoOptional(asset.getUserId());
+            if (!userInfoOpt.isPresent()) {
+                LOGGER.error("{} issuerId {} NOT FOUND", ErrorInfo.SERVER_ERROR, asset.getUserId());
+                continue;
+            }
+
+            assetItem.setIssuerName(userInfoOpt.get().getRealName());
+
+            Optional<UserAsset> userAssetOpt = userAssetService.getWhollyOwnerOfAsset(asset.getAssetId(), asset.getEvalValue());
+            if (!userAssetOpt.isPresent()) {
+                LOGGER.error("{} wholly-owner AssetId {} NOT FOUND", ErrorInfo.SERVER_ERROR, asset.getAssetId());
+                continue;
+            }
+
+            assetItem.setProposerId(userAssetOpt.get().getUserId());
+
+            userInfoOpt = userInfoService.getUserInfoOptional(assetItem.getProposerId());
+            if (!userInfoOpt.isPresent()) {
+                LOGGER.error("{} wholly-owner UserId {} NOT FOUND", ErrorInfo.SERVER_ERROR, assetItem.getProposerId());
+                continue;
+            }
+
+            assetItem.setProposerName(userInfoOpt.get().getRealName());
+
+            List<AssetOperation> operationList = assetService.getAvailableOperation(status, UserRoleEnum.CORP);
+            assetItem.setOperations(mapCodeMessagePair(operationList));
+
+            assetItemList.add(assetItem);
+        }
+
+        return ResultUtil.success(assetItemList);
+    }
+
 
     @RequestMapping(value = "assets/trade", method = RequestMethod.GET)
     public Result getAvailAssetList(
