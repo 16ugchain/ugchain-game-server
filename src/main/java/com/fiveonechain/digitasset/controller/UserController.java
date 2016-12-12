@@ -133,6 +133,22 @@ public class UserController {
 
     }
 
+    @RequestMapping(value = "/role", method = RequestMethod.POST)
+    public String findRole(@AuthenticationPrincipal UserContext userContext
+    ) {
+        Map<String, String> map = new HashMap<>();
+        map.put("role", UserRoleEnum.fromString(userContext.getAuthorities().get(0).toString()).getId()+"");
+        ObjectMapper mapper = new ObjectMapper();
+        String resultString = "";
+        try {
+            resultString = mapper.writeValueAsString(map);
+        } catch (JsonProcessingException e) {
+            throw new JsonSerializableException(e);
+        }
+        return resultString;
+
+    }
+
     @RequestMapping(value = "/sendVerification", method = RequestMethod.POST)
     public Result sendVerification(@RequestParam("telephone") String telephone
     ) {
@@ -207,7 +223,7 @@ public class UserController {
             return result;
         }
         Claims claims = Jwts.claims().setSubject(userName);
-        List<GrantedAuthority> authorities = Arrays.asList(new SimpleGrantedAuthority(UserRoleEnum.fromValue(user.getRole()).name()));
+        List<GrantedAuthority> authorities = Arrays.asList(new SimpleGrantedAuthority(UserRoleEnum.fromValue(role).name()));
         claims.put("scopes", authorities.stream().map(s -> s.toString()).collect(Collectors.toList()));
         claims.put("id", user.getUserId());
         LocalDateTime currentTime = LocalDateTime.now();

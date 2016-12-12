@@ -27,7 +27,7 @@ public class AssetOrderServiceImpl implements AssetOrderService {
     @Override
     public int createAssetOrder(AssetOrder assetOrder) {
         int id = nextOrderId();
-        assetOrder.setOrder_id(id);
+        assetOrder.setOrderId(id);
         return assetOrderMapper.insertOrder(assetOrder);
     }
 
@@ -39,6 +39,11 @@ public class AssetOrderServiceImpl implements AssetOrderService {
     @Override
     public List<AssetOrder> getAssetOrderListByOwner(int userId) {
         return assetOrderMapper.findListByUsreId(userId);
+    }
+
+    @Override
+    public List<AssetOrder> getAssetOrderListByBuyerId(int buyerId) {
+        return assetOrderMapper.getAssetOrderListByBuyerId(buyerId);
     }
 
     @Override
@@ -109,4 +114,5 @@ public class AssetOrderServiceImpl implements AssetOrderService {
 
         assetOrderMapper.updateStatusByOrderId(newStatus.getId(), orderId);
     }
+
 }

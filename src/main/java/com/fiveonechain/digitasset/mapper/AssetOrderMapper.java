@@ -12,28 +12,45 @@ import java.util.List;
 public interface AssetOrderMapper {
     final static String columns = "asset_id,order_id,user_id,amount,unit_prices,buyer_id,end_time,status";
     final static String all_columns = "asset_id,order_id,user_id,amount,unit_prices,buyer_id,status,create_time,update_time,end_time";
-    final static String entity = "#{assetOrder.asset_id},#{assetOrder.order_id},#{assetOrder.user_id}," +
-            "#{assetOrder.amount},#{assetOrder.unit_prices},#{assetOrder.buyer_id},#{assetOrder.end_time},#{assetOrder.status}";
-    @Insert("insert into asset_order ("+columns+") values("+entity+")")
+    final static String entity = "#{assetOrder.assetId},#{assetOrder.orderId},#{assetOrder.userId}," +
+            "#{assetOrder.amount},#{assetOrder.unitPrices},#{assetOrder.buyerId},#{assetOrder.endTime},#{assetOrder.status}";
+
+    @Insert("insert into asset_order (" + columns + ") values(" + entity + ")")
     int insertOrder(@Param("assetOrder") AssetOrder assetOrder);
 
-    @Select("select "+all_columns+" from asset_order where order_id=#{order_id}")
-    AssetOrder findByOrderId(@Param("order_id")int order_id);
+    @Results(id = "assetOrder", value = {
+            @Result(property = "assetId", column = "asset_id"),
+            @Result(property = "orderId", column = "order_id"),
+            @Result(property = "userId", column = "user_id"),
+            @Result(property = "unitPrices", column = "unit_prices"),
+            @Result(property = "buyerId", column = "buyer_id"),
+            @Result(property = "endTime", column = "end_time")
+    })
+    @Select("select " + all_columns + " from asset_order where order_id=#{orderId}")
+    AssetOrder findByOrderId(@Param("orderId") int orderId);
 
-    @Select("select "+all_columns+" from asset_order where user_id=#{user_id}")
-    List<AssetOrder> findListByUsreId(@Param("user_id")int user_id);
+    @ResultMap("assetOrder")
+    @Select("select " + all_columns + " from asset_order where user_id=#{userId}")
+    List<AssetOrder> findListByUsreId(@Param("userId") int userId);
 
-    @Select("select "+all_columns+" from asset_order where asset_id=#{asset_id}")
-    List<AssetOrder> findListByAssetId(@Param("asset_id")int asset_id);
+    @ResultMap("assetOrder")
+    @Select("select " + all_columns + " from asset_order where buyer_id=#{userId}")
+    List<AssetOrder> getAssetOrderListByBuyerId(@Param("userId") int userId);
 
-    @Select("select "+all_columns+" from asset_order where status=#{status}")
-    List<AssetOrder> findListByStatus(@Param("status")int status);
+    @ResultMap("assetOrder")
+    @Select("select " + all_columns + " from asset_order where asset_id=#{assetId}")
+    List<AssetOrder> findListByAssetId(@Param("assetId") int assetId);
 
-    @Select("SELECT status FROM asset_order WHERE order_id = #{order_id} FOR UPDATE")
-    Integer selectStatusForUpdate(@Param("order_id") int order_id);
+    @ResultMap("assetOrder")
+    @Select("select " + all_columns + " from asset_order where status=#{status}")
+    List<AssetOrder> findListByStatus(@Param("status") int status);
 
-    @Update("UPDATE asset_order SET status = #{status} WHERE order_id = #{order_id}")
-    int updateStatusByOrderId(@Param("status") int status, @Param("order_id") int order_id);
+    @ResultMap("assetOrder")
+    @Select("SELECT status FROM asset_order WHERE order_id = #{orderId} FOR UPDATE")
+    Integer selectStatusForUpdate(@Param("orderId") int orderId);
+
+    @Update("UPDATE asset_order SET status = #{status} WHERE order_id = #{orderId}")
+    int updateStatusByOrderId(@Param("status") int status, @Param("orderId") int orderId);
 }
 
 

@@ -1,6 +1,7 @@
 package com.fiveonechain.digitasset.domain.result;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fiveonechain.digitasset.controller.cmd.DigitalAssetCmd;
 
 import java.util.List;
 
@@ -17,6 +18,7 @@ public class AssetDetail {
     private boolean isGuaranteed;
     private Integer guarId;
     private String guarName;
+    private List<DigitalAssetCmd> digitalAssetCmds;
 
     private List<String> certList;
     private List<String> photoList;
@@ -83,5 +85,13 @@ public class AssetDetail {
 
     public void setGuaranteed(boolean guaranteed) {
         isGuaranteed = guaranteed;
+    }
+
+    public List<DigitalAssetCmd> getDigitalAssetCmds() {
+        return digitalAssetCmds;
+    }
+
+    public void setDigitalAssetCmds(List<DigitalAssetCmd> digitalAssetCmds) {
+        this.digitalAssetCmds = digitalAssetCmds;
     }
 }

@@ -3,6 +3,7 @@ package com.fiveonechain.digitasset.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fiveonechain.digitasset.auth.UserContext;
+import com.fiveonechain.digitasset.controller.cmd.UserInfoCmd;
 import com.fiveonechain.digitasset.domain.User;
 import com.fiveonechain.digitasset.domain.UserAuthStatusEnum;
 import com.fiveonechain.digitasset.domain.UserInfo;
@@ -16,9 +17,11 @@ import com.fiveonechain.digitasset.service.UserService;
 import com.fiveonechain.digitasset.util.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,7 +30,7 @@ import java.util.Map;
 /**
  * Created by fanjl on 2016/12/7.
  */
-@RestController
+@Controller
 @RequestMapping("/userInfo")
 public class UserInfoController {
     @Autowired
@@ -43,13 +46,30 @@ public class UserInfoController {
     public String index(@AuthenticationPrincipal UserContext userContext,
                         Model model
     ) {
+        return "my-info";
+    }
+    @ResponseBody
+    @RequestMapping(value = "/info")
+    public Result userInfoDetail(@AuthenticationPrincipal UserContext userContext,
+                        Model model
+    ) {
         UserInfo userInfo = userInfoService.getUserInfoByUserId(userContext.getUserId());
         User user = userService.getUserByUserId(userContext.getUserId());
-        model.addAttribute("user", user);
-        model.addAttribute("userInfo", userInfo);
-        return "index";
+        ObjectMapper mapper = new ObjectMapper();
+        List<Integer> imageIds = null;
+        try {
+            imageIds = mapper.readValue(userInfo.getImageId(),List.class);
+        } catch (IOException e) {
+            return ResultUtil.buildErrorResult(ErrorInfo.SERVER_ERROR);
+        }
+        List<String> imageUrls = imageUrlService.getUrlListByImageIds(imageIds);
+        UserInfoCmd userInfoCmd = new UserInfoCmd();
+        userInfoCmd.setUser(user);
+        userInfoCmd.setUserInfo(userInfo);
+        userInfoCmd.setImageUrl(imageUrls);
+        return ResultUtil.success(userInfoCmd);
     }
-
+    @ResponseBody
     @RequestMapping(value = "/bindCreditCard", method = RequestMethod.POST)
     public Result bindCreditCard(@RequestParam("creditCardId") String creditCardId,
                                  @RequestParam("creditCardOwner") String creditCardOwner,
@@ -71,7 +91,7 @@ public class UserInfoController {
         Result result = ResultUtil.success();
         return result;
     }
-
+    @ResponseBody
     @RequestMapping(value = "/updateUserInfo")
     public Result updateUserInfo(@AuthenticationPrincipal UserContext userContext,
                                  @RequestParam("real_name") String realName
@@ -81,7 +101,7 @@ public class UserInfoController {
         Result result = ResultUtil.success();
         return result;
     }
-
+    @ResponseBody
     @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
     public Result authenticate(@AuthenticationPrincipal UserContext userContext,
                                @RequestParam("real_name") String real_name,
@@ -102,15 +122,15 @@ public class UserInfoController {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.AUTHENTICATION);
             return result;
         }
-        List<String> imageIdStr = new ArrayList<String>();
-        imageIdStr.add(String.valueOf(imageId));
+        List<String> imageIds = new ArrayList<String>();
+        imageIds.add(String.valueOf(imageId));
         UserInfo userInfo = new UserInfo();
         userInfo.setUserId(userContext.getUserId());
         userInfo.setIdentity(identity);
         userInfo.setIdentityType(type);
         userInfo.setRealName(real_name);
         userInfo.setEmail(email);
-        userInfo.setImageId(imageIdStr.toString());
+        userInfo.setImageId(imageIds.toString());
         userInfo.setFixedLine(fixed_line);
         userInfo.setStatus(UserAuthStatusEnum.SUCCESS.getId());
         if (userInfoService.insertAndGetUserAuth(userInfo) != 1) {
@@ -120,7 +140,7 @@ public class UserInfoController {
         Result result = ResultUtil.success(userInfo);
         return result;
     }
-
+    @ResponseBody
     @RequestMapping(value = "/findIdentityId", method = RequestMethod.POST)
     public String findIdentityId(@RequestParam("papersNum") String identityId) {
         boolean result = userInfoService.isExistsSameID(identityId);
