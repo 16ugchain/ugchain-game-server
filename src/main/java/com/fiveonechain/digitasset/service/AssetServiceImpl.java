@@ -8,6 +8,7 @@ import com.fiveonechain.digitasset.exception.UserOperatoinPermissionException;
 import com.fiveonechain.digitasset.mapper.AssetMapper;
 import com.fiveonechain.digitasset.mapper.AssetRecordMapper;
 import com.fiveonechain.digitasset.mapper.SequenceMapper;
+import com.fiveonechain.digitasset.util.DateUtil;
 import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -186,21 +187,27 @@ public class AssetServiceImpl implements AssetService {
     }
 
     @Override
-    public void issueAsset(int assetId, String payOrder) {
-        Asset asset = getAsset(assetId);
-        if (asset == null) {
-            throw new AssetNotFoundException(assetId);
-        }
+    public void updateAssetIssueInfo(Asset asset) {
+
+    }
+
+    @Override
+    public void issueAsset(UserContext host, Asset asset, String payOrder) {
 
         // TODO check pay order
 
-
-
+        assetMapper.updateAssetIssueInfoByAssetId(asset);
+        updateAssetStatusStateMachine(host, asset.getAssetId(), AssetStatus.ISSUE);
     }
 
     @Override
     public boolean isAssetGuaranteed(Asset asset) {
         return asset.getGuarId() != DUMMY_GUAR_ID;
+    }
+
+    @Override
+    public boolean isAssetGuaranteed(Asset asset, int guarId) {
+        return isAssetGuaranteed(asset) && (guarId == asset.getGuarId());
     }
 
     @Override
@@ -210,8 +217,7 @@ public class AssetServiceImpl implements AssetService {
         }
 
         LocalDate today = LocalDate.now();
-        LocalDate endDay = LocalDateTime.ofInstant(
-                asset.getEndTime().toInstant(), ZoneId.systemDefault()).toLocalDate();
+        LocalDate endDay = DateUtil.toLocalDateTime(asset.getEndTime()).toLocalDate();
         return today.isAfter(endDay);
     }
 
