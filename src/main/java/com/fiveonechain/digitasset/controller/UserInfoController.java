@@ -3,7 +3,7 @@ package com.fiveonechain.digitasset.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fiveonechain.digitasset.auth.UserContext;
-import com.fiveonechain.digitasset.controller.cmd.UserInfoCmd;
+import com.fiveonechain.digitasset.domain.result.UserInfoCmd;
 import com.fiveonechain.digitasset.domain.User;
 import com.fiveonechain.digitasset.domain.UserAuthStatusEnum;
 import com.fiveonechain.digitasset.domain.UserInfo;

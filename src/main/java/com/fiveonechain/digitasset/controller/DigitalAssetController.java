@@ -1,7 +1,7 @@
 package com.fiveonechain.digitasset.controller;
 
 import com.fiveonechain.digitasset.auth.UserContext;
-import com.fiveonechain.digitasset.controller.cmd.DigitalAssetCmd;
+import com.fiveonechain.digitasset.domain.result.DigitalAssetCmd;
 import com.fiveonechain.digitasset.domain.*;
 import com.fiveonechain.digitasset.service.AssetService;
 import com.fiveonechain.digitasset.service.GuaranteeCorpService;

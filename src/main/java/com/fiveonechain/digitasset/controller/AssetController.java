@@ -1,7 +1,6 @@
 package com.fiveonechain.digitasset.controller;
 
 import com.fiveonechain.digitasset.auth.UserContext;
-import com.fiveonechain.digitasset.controller.cmd.DigitalAssetCmd;
 import com.fiveonechain.digitasset.domain.*;
 import com.fiveonechain.digitasset.domain.result.*;
 import com.fiveonechain.digitasset.exception.AssetNotFoundException;
@@ -17,7 +16,10 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -168,20 +170,7 @@ public class AssetController {
 
 
         Asset asset = assetOpt.get();
-        List<DigitalAssetCmd> digitalAssetCmds = new LinkedList<DigitalAssetCmd>();
 
-        List<UserAsset> userAssets = userAssetService.getAvailDigitAssetListByAsset(asset.getAssetId());
-
-
-        for(UserAsset userAsset : userAssets){
-            UserInfo userInfo = userInfoService.getUserInfoByUserId(userAsset.getUserId());
-            DigitalAssetCmd digitalAssetCmd = new DigitalAssetCmd();
-            digitalAssetCmd.setHolderName(userInfo.getRealName());
-            digitalAssetCmd.setTradeShare(userAsset.getTradeBalance());
-            digitalAssetCmd.setPercent(String.valueOf(userAsset.getTradeBalance()*100/asset.getEvalValue()));
-            digitalAssetCmds.add(digitalAssetCmd);
-        }
-        assetDetail.setDigitalAssetCmds(digitalAssetCmds);
         boolean isGuaranteed = assetService.isAssetGuaranteed(asset);
         if (isGuaranteed) {
             Optional<GuaranteeCorp> guarOpt = guarService.getGuarOptional(asset.getGuarId());
@@ -213,6 +202,49 @@ public class AssetController {
 
         return ResultUtil.success(assetDetail);
     }
+
+    /**
+     * 资产列表
+     *
+     * @param userContext
+     *
+     */
+    @RequestMapping(value = "assets/assetsList", method = RequestMethod.GET)
+    public Result getAssetDetail(
+            @AuthenticationPrincipal UserContext userContext
+           ) {
+
+        List<Asset> assets = assetService.getAssetListByOwner(userContext.getUserId());
+        List<AssetDetail> assetDetails = new LinkedList<>();
+        if(assets!=null && assets.size()>0){
+            for (Asset asset : assets){
+                AssetDetail assetDetail = new AssetDetail();
+                assetDetail.setName(asset.getName());
+                assetDetail.setStartTime(asset.getStartTime());
+                assetDetail.setEndTime(asset.getEndTime());
+                assetDetail.setTradeShare(asset.getCycle());
+                boolean isGuaranteed = assetService.isAssetGuaranteed(asset);
+                if (isGuaranteed) {
+                    Optional<GuaranteeCorp> guarOpt = guarService.getGuarOptional(asset.getGuarId());
+                    if (!guarOpt.isPresent()) {
+                        LOGGER.error("{} guarId {} NOT FOUND", ErrorInfo.SERVER_ERROR, asset.getGuarId());
+                        return ResultUtil.buildErrorResult(ErrorInfo.SERVER_ERROR);
+                    }
+                    assetDetail.setGuaranteed(true);
+                    assetDetail.setGuarId(asset.getGuarId());
+                    assetDetail.setValue(asset.getValue());
+                    assetDetail.setGuarName(guarOpt.get().getCorpName());
+                } else {
+                    assetDetail.setGuaranteed(false);
+                }
+                assetDetails.add(assetDetail);
+            }
+        }
+
+
+        return ResultUtil.success(assetDetails);
+    }
+
 
     @RequestMapping(value = "assets/waitevaluate", method = RequestMethod.GET)
     public Result getWaitEvaluateAssetList(

@@ -35,6 +35,19 @@
 
 		<!-- jquery.cookie.js -->
 		<script src="//cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
+		<!-- bootstrapValidator.js 表单验证-->
+		<script src="//cdn.bootcss.com/bootstrap-validator/0.5.3/js/bootstrapValidator.min.js"></script>
+		<script src="http://malsup.github.com/jquery.form.js"></script>
+		
+
+		<link href="/css/animate.css" rel="stylesheet">
+	    <!-- <link href="/css/style.css?v=4.1.0" rel="stylesheet"> -->
+		
+		<!-- 上传照片 -->
+		<link rel="stylesheet" href="//cdn.bootcss.com/bootstrap-fileinput/4.3.5/css/fileinput.min.css">	
+		<script src="//cdn.bootcss.com/bootstrap-fileinput/4.3.5/js/fileinput.js"></script>
+		<script src="//cdn.bootcss.com/bootstrap-fileinput/4.3.5/js/locales/zh.min.js"></script>
 		<style>
 			.bs-callout-success {
 	    		border-left: 3px solid #20b062;
@@ -42,6 +55,19 @@
 	    		font-weight: bold;
 	    		font-size: 18px;
 	    	}
+	    	.btn-primary {
+	    		background: #20b062
+	    	}
+	    	.hand-down ,
+			.kv-file-upload,
+			.fileinput-remove-button,
+			.fileinput-upload-button {
+				opacity: 0;
+				width: 0px;
+				height: 1px;
+				padding: 0px;
+				margin: 0px;
+			}
 		</style>
 	</head>
 	<body class="gray-bg">
@@ -55,72 +81,87 @@
 	                	<a href="" class="text-success">实物资产</a>&nbsp;>&nbsp;资产登记
 		            </h3>
 	            </div>
-	            	
 	        </div>
 	        <div class="col-sm-12" style="background: #fff;border:1px solid #aaa;border-radius:3px;">
-	        	<div class="col-sm-4 col-sm-offset-4" style="padding: 20px;">
-	        		<form class="form-horizontal" role="form">
+	        	<div class="col-sm-8 col-sm-offset-1 col-md-6 col-md-offset-2" style="padding: 20px;">
+	        		<form class="form-horizontal" role="form" id="asset">
 						<!-- 资产名称 -->
 						<div class="form-group">
-							<label for="registerNmae" class="col-sm-4 control-label">资产名称</label>
+							<label for="asset_name" class="col-sm-4 control-label">资产名称</label>
 							<div class="col-sm-8">
-								<input type="text" class="form-control" id="registerNmae" name="registerNmae" placeholder="请输入资产名称" v-model="userInfo.registerNmae">
+								<input type="text" class="form-control" id="asset_name" name="asset_name" placeholder="请输入资产名称" v-model="assetData.assetName">
 							</div>
 						</div>
 						<!-- 发行周期 -->
 						<div class="form-group">
-							<label for="registerNmae" class="col-sm-4 control-label">发行周期</label>
+							<label for="asset_cycle" class="col-sm-4 control-label">发行周期</label>
 							<div class="col-sm-8">
-								<input type="text" class="form-control" id="registerNmae" name="registerNmae" placeholder="请输入发行周期" v-model="userInfo.registerNmae">
+								<div class="input-group">
+								    <input type="text" class="form-control" id="asset_cycle" placeholder="请输入发行周期" name="asset_cycle" v-model="assetData.assetCycle">
+								    <span class="input-group-btn" >
+								        <button class="btn btn-default" type="button" id="verifyBtn" value="0" style="z-index: 10000">月</button>
+								    </span>
+							    </div>
 							</div>
 						</div>
 						<!-- 资产描述 -->
 						<div class="form-group">
-							<label for="registerNmae" class="col-sm-4 control-label">资产描述</label>
+							<label for="asset_description" class="col-sm-4 control-label">资产描述</label>
 							<div class="col-sm-8">
-								<input type="text" class="form-control" id="registerNmae" name="registerNmae" placeholder="请输入资产描述" v-model="userInfo.registerNmae">
+								<textarea type="text" class="form-control" id="asset_description" name="asset_description" placeholder="请输入资产描述" v-model="assetData.assetDescription" style="resize:none"></textarea>
 							</div>
 						</div>
 						<!-- 产权证明 -->
 						<div class="form-group">
-							<label for="registerNmae" class="col-sm-4 control-label">产权证明</label>
+							<label for="file-1" class="col-sm-4 control-label">产权证明</label>
 							<div class="col-sm-8">
-								<input type="text" class="form-control" id="registerNmae" name="registerNmae" placeholder="请输入注册人真实姓名" v-model="userInfo.registerNmae">
+								<form enctype="multipart/form-data" id="asset_prove" onsubmit="return saveImg()" action="/image/upload" method="post">
+								<input id="file-1" name="imageUrl" type="file" multiple class="file" data-overwrite-initial="false" data-min-file-count="1">
+								</form>
+									<div class="text-muted">*请上传相关产权证明扫描图片*</div>
 							</div>
 						</div>
 						<!-- 实物照片 -->
 						<div class="form-group">
-							<label for="registerNmae" class="col-sm-4 control-label">实物照片</label>
+							<label for="file-2" class="col-sm-4 control-label">实物照片</label>
 							<div class="col-sm-8">
-								<input type="text" class="form-control" id="registerNmae" name="registerNmae" placeholder="请输入注册人真实姓名" v-model="userInfo.registerNmae">
+								<input id="file-2" name="imageUrl" type="file" multiple class="file" data-overwrite-initial="false" data-min-file-count="2" >
+								<div class="text-muted">*请上传资产实物照片不少于2张,不多于6张*</div>
 							</div>
 						</div>
 						<!-- 资产估值 -->
 						<div class="form-group">
-							<label for="registerNmae" class="col-sm-4 control-label">资产估值</label>
+							<label for="asset_appraisement" class="col-sm-4 control-label">资产估值</label>
 							<div class="col-sm-8">
-								<input type="text" class="form-control" id="registerNmae" name="registerNmae" placeholder="请输入资产估值" v-model="userInfo.registerNmae">
+								<input type="text" class="form-control" id="asset_appraisement" name="asset_appraisement" placeholder="请输入资产估值" v-model="assetData.assetAppraisement">
 							</div>
 						</div>
 						<!-- 延压担保 -->
 						<div class="form-group">
-							<label for="registerType" class="col-sm-4 control-label">
+							<label for="optionsRadios1" class="col-sm-4 control-label">
 								延压担保
 							</label>
 							<div class="col-sm-8">
 								<label>
-									<input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" v-model="userInfo.registerType" checked> 有
+									<input type="radio" name="asset_guarantee" id="optionsRadios1" value="option1" v-model="assetData.assetGuarantee" checked> 有
 								</label>
 								<label>
-									<input type="radio" name="optionsRadios" id="optionsRadios2" value="option2" v-model="userInfo.registerType"> 无
+									<input type="radio" name="asset_guarantee" id="optionsRadios2" value="option2" v-model="assetData.assetGuarantee"> 无
 								</label>
 							</div>
 						</div>
 						<!-- 担保公司 -->
 						<div class="form-group">
-							<label for="registerNmae" class="col-sm-4 control-label">担保公司</label>
+							<label for="guarantee_company" class="col-sm-4 control-label">担保公司</label>
 							<div class="col-sm-8">
-								<input type="text" class="form-control" id="registerNmae" name="registerNmae" placeholder="请输入担保公司" v-model="userInfo.registerNmae">
+								<input type="text" class="form-control" id="guarantee_company" name="guarantee_company" placeholder="请输入担保公司" v-model="assetData.guaranteeCompany">
+							</div>
+						</div>
+						<!-- 提交按钮 -->
+						<div class="form-group">
+							<label for="registerNmae" class="col-sm-4 control-label"></label>
+							<div class="col-sm-8">
+								<button type="submit" class='btn btn-success form-control' >完成</button>
 							</div>
 						</div>
 					</form>
@@ -128,5 +169,6 @@
 	        </div>
 	        
 	    </div>
+		<script src="../js/checkIn.js"></script>
 	</body>
 </html>

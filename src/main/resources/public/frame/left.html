@@ -37,13 +37,12 @@
         success: function(data){
             var data2 = JSON.parse(data);
             console.log(data2.role);
-            roleNum = data2.role - 1;
+            roleNum = data2.role ;
         },
         error:function(){
             alert("请重新登录");
         }
     })
-
 
     // 左侧菜单栏
     var roleNavber = [
@@ -84,13 +83,13 @@
                 title: "交易中心",
                 icon: "&#xe61f;",
                 active: false,
-                link: "/deal-center.html"
+                link: "/tradeCenter/index"
             },
             {
                 title: "订单中心",
                 icon: "&#xe604;",
                 active: false,
-                link: "/indent-center.html"
+                link: "/orderCenter/index"
             },
             {
                 title: "赎回兑付",
@@ -102,13 +101,13 @@
                 title: "数字资产",
                 icon: "&#xe61b;",
                 active: false,
-                link: "/digital-property.html"
+                link: "/digitalCenter/index"
             },
             {
                 title: "我的信息",
                 icon: "&#xe64f;",
                 active: false,
-                link: "/my-info.html"
+                link: "/userInfo/index"
             },
         ],[
             {

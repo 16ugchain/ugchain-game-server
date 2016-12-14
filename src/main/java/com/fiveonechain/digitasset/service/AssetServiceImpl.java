@@ -227,6 +227,11 @@ public class AssetServiceImpl implements AssetService {
     }
 
     @Override
+    public List<Asset> getAssetListByUserIdAndStatus(int userId, AssetStatus status) {
+        return assetMapper.selectByUserIdAndStatus(userId, status.getCode());
+    }
+
+    @Override
     public List<Asset> getAssetListByGuarExcludeStatus(int guarId, AssetStatus notStatus) {
         return assetMapper.selectByGuarIdAndNotStatus(guarId, notStatus.getCode());
     }

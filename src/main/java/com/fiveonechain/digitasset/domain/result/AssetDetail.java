@@ -1,8 +1,8 @@
 package com.fiveonechain.digitasset.domain.result;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fiveonechain.digitasset.controller.cmd.DigitalAssetCmd;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -14,7 +14,7 @@ public class AssetDetail {
 
     private String name;
     private String desc;
-    private int value;
+    private int value;//资产估值
     private boolean isGuaranteed;
     private Integer guarId;
     private String guarName;
@@ -22,6 +22,10 @@ public class AssetDetail {
 
     private List<String> certList;
     private List<String> photoList;
+
+    private int tradeShare;//流通份额
+    private Date startTime;//发行时间
+    private Date endTime;//到期时间
 
     public String getName() {
         return name;
@@ -93,5 +97,29 @@ public class AssetDetail {
 
     public void setDigitalAssetCmds(List<DigitalAssetCmd> digitalAssetCmds) {
         this.digitalAssetCmds = digitalAssetCmds;
+    }
+
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
+    }
+
+    public int getTradeShare() {
+        return tradeShare;
+    }
+
+    public void setTradeShare(int tradeShare) {
+        this.tradeShare = tradeShare;
     }
 }

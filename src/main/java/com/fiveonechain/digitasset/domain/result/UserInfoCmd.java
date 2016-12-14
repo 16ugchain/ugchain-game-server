@@ -1,4 +1,4 @@
-package com.fiveonechain.digitasset.controller.cmd;
+package com.fiveonechain.digitasset.domain.result;
 
 import com.fiveonechain.digitasset.domain.User;
 import com.fiveonechain.digitasset.domain.UserInfo;

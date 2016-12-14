@@ -90,6 +90,7 @@
 	        </div>
 	    </div>
 	    <script>
+
 	    	var data = [
 			    {	
 			    	"name":"<a href='asset-details.html'>Mr.Sofar</a>",
@@ -113,17 +114,22 @@
 			    },
 			];
 			// 表格嵌入数据
-			// $.post('/',{id:""},function(data){
-				// //成功返回表格数据
-				// for (var i = 0; i <data.length; i++) {
-				// 	// 点击资产名称跳连接
-				// 	data[i].name = "<a href=" + "/连接" + ">" + data[i].name + "</a>";
-				// }
-				$("#table2").bootstrapTable({
-		            data:data
-		        });
-			// })
+			 $.get('/assets/assetsList',function(result) {
+				 //成功返回表格数据
+				 console.log(result);
+//				 for (var i = 0; i < data.length; i++) {
+//					 // 点击资产名称跳连接
+//					 data[i].name = "<a href=" + "/连接" + ">" + data[i].name + "</a>";
+//				 }
+
+			 })
+			$("#table2").bootstrapTable({
+				data:data
+			});
 			// 插入登记按钮
-			$(".fixed-table-toolbar").append('<a  class="btn btn-success" href="check-in.html">+ 登记资产</a>')
+			$(".fixed-table-toolbar").append('<a  class="btn btn-success" href="check-in.html">+ 登记资产</a>');
+
+			// })
+
 	    </script>
 </html>

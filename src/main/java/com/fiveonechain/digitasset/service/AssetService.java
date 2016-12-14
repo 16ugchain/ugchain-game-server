@@ -30,6 +30,8 @@ public interface AssetService {
 
     List<Asset> getAssetListByGuarAndStatus(int guarId, AssetStatus status);
 
+    List<Asset> getAssetListByUserIdAndStatus(int userId, AssetStatus status);
+
     List<Asset> getAssetListByGuarAndStatusList(int guarId, List<AssetStatus> status);
 
     List<Asset> getNoGuarAssetListByIssuerAndStatusList(int userId, List<AssetStatus> status);
