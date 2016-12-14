@@ -217,6 +217,28 @@ public class AssetController {
         return ResultUtil.success(assetDetail);
     }
 
+
+    @RequestMapping(value = "assets/{assetId}/status", method = RequestMethod.GET)
+    public Result getAssetStatusList(
+            @AuthenticationPrincipal UserContext host,
+            @PathVariable("assetId") int assetId) {
+
+        if (!host.hasRole(UserRoleEnum.USER_PUBLISHER)) {
+            return ResultUtil.buildErrorResult(ErrorInfo.USER_PERMISSION_DENIED);
+        }
+
+        Optional<Asset> assetOpt = assetService.getAssetOptional(assetId);
+        if (!assetOpt.isPresent()) {
+            return ResultUtil.buildErrorResult(ErrorInfo.ASSET_NOT_FOUND);
+        }
+        Asset asset = assetOpt.get();
+        if (asset.getUserId() != host.getUserId()) {
+            return ResultUtil.buildErrorResult(ErrorInfo.USER_PERMISSION_DENIED);
+        }
+
+        return ResultUtil.success();
+    }
+
     @RequestMapping(value = "assets/waitevaluate", method = RequestMethod.GET)
     public Result getWaitEvaluateAssetList(
             @AuthenticationPrincipal UserContext host) {
@@ -507,7 +529,7 @@ public class AssetController {
             return ResultUtil.buildErrorResult(ErrorInfo.ASSET_NOT_FOUND);
         }
         Asset asset = assetOpt.get();
-        if (asset.getUserId() != assetId) {
+        if (asset.getUserId() != host.getUserId()) {
             return ResultUtil.buildErrorResult(ErrorInfo.USER_PERMISSION_DENIED);
         }
 
