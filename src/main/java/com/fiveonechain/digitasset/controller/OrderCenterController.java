@@ -1,7 +1,7 @@
 package com.fiveonechain.digitasset.controller;
 
 import com.fiveonechain.digitasset.auth.UserContext;
-import com.fiveonechain.digitasset.controller.cmd.OrderCenterCmd;
+import com.fiveonechain.digitasset.domain.result.OrderCenterCmd;
 import com.fiveonechain.digitasset.domain.*;
 import com.fiveonechain.digitasset.service.*;
 import org.springframework.beans.factory.annotation.Autowired;

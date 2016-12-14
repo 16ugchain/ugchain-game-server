@@ -1,4 +1,4 @@
-package com.fiveonechain.digitasset.controller.cmd;
+package com.fiveonechain.digitasset.domain.result;
 
 import java.util.Date;
 

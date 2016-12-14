@@ -3,8 +3,6 @@ package com.fiveonechain.digitasset.mapper;
 import com.fiveonechain.digitasset.domain.Asset;
 import com.fiveonechain.digitasset.mapper.util.SimpleSelectInExtendedLanguageDriver;
 import org.apache.ibatis.annotations.*;
-import org.springframework.security.access.method.P;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
@@ -61,6 +59,13 @@ public interface AssetMapper {
     List<Asset> selectByGuarIdAndStatus(
             @Param("guarId") int guarId,
             @Param("status") int status);
+
+    @ResultMap("asset")
+    @Select("SELECT " + ALL_COLUMN + " FROM asset WHERE user_id = #{userId} AND status = #{status} ORDER BY asset_id DESC")
+    List<Asset> selectByUserIdAndStatus(
+            @Param("userId") int userId,
+            @Param("status") int status);
+
 
     @ResultMap("asset")
     @Select("SELECT " + ALL_COLUMN + " FROM asset WHERE guar_id = #{guarId} AND status != #{status} ORDER BY update_time DESC")
