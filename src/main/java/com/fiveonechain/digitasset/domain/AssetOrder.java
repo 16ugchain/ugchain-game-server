@@ -7,39 +7,39 @@ import java.util.Date;
  * Created by fanjl on 16/11/21.
  */
 public class AssetOrder {
-    private int order_id;
-    private int asset_id;
-    private int user_id;
+    private int orderId;
+    private int assetId;
+    private int userId;
     private int amount;
-    private BigDecimal unit_prices;
-    private int buyer_id;
-    private Date end_time;
-    private Date create_time;
-    private Date update_time;
+    private BigDecimal unitPrices;
+    private int buyerId;
+    private Date endTime;
+    private Date createTime;
+    private Date updateTime;
     private int status;
 
-    public int getOrder_id() {
-        return order_id;
+    public int getOrderId() {
+        return orderId;
     }
 
-    public void setOrder_id(int order_id) {
-        this.order_id = order_id;
+    public void setOrderId(int orderId) {
+        this.orderId = orderId;
     }
 
-    public int getAsset_id() {
-        return asset_id;
+    public int getAssetId() {
+        return assetId;
     }
 
-    public void setAsset_id(int asset_id) {
-        this.asset_id = asset_id;
+    public void setAssetId(int assetId) {
+        this.assetId = assetId;
     }
 
-    public int getUser_id() {
-        return user_id;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public int getAmount() {
@@ -50,44 +50,44 @@ public class AssetOrder {
         this.amount = amount;
     }
 
-    public int getBuyer_id() {
-        return buyer_id;
+    public BigDecimal getUnitPrices() {
+        return unitPrices;
     }
 
-    public void setBuyer_id(int buyer_id) {
-        this.buyer_id = buyer_id;
+    public void setUnitPrices(BigDecimal unitPrices) {
+        this.unitPrices = unitPrices;
     }
 
-    public Date getCreate_time() {
-        return create_time;
+    public int getBuyerId() {
+        return buyerId;
     }
 
-    public void setCreate_time(Date create_time) {
-        this.create_time = create_time;
+    public void setBuyerId(int buyerId) {
+        this.buyerId = buyerId;
     }
 
-    public Date getUpdate_time() {
-        return update_time;
+    public Date getEndTime() {
+        return endTime;
     }
 
-    public void setUpdate_time(Date update_time) {
-        this.update_time = update_time;
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
     }
 
-    public Date getEnd_time() {
-        return end_time;
+    public Date getCreateTime() {
+        return createTime;
     }
 
-    public void setEnd_time(Date end_time) {
-        this.end_time = end_time;
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 
-    public BigDecimal getUnit_prices() {
-        return unit_prices;
+    public Date getUpdateTime() {
+        return updateTime;
     }
 
-    public void setUnit_prices(BigDecimal unit_prices) {
-        this.unit_prices = unit_prices;
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 
     public int getStatus() {

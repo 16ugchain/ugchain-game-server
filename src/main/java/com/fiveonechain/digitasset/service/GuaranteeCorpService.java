@@ -18,4 +18,6 @@ public interface GuaranteeCorpService {
 
     Optional<GuaranteeCorp> getGuarOptional(int userId);
 
+    Optional<GuaranteeCorp> getGuarOptByGuarId(int guarId);
+
 }

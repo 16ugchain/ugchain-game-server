@@ -45,4 +45,10 @@ public class GuaranteeCorpServiceImpl implements GuaranteeCorpService {
         GuaranteeCorp guar = guaranteeCorpMapper.findByUserId(userId);
         return Optional.ofNullable(guar);
     }
+
+    @Override
+    public Optional<GuaranteeCorp> getGuarOptByGuarId(int guarId) {
+        GuaranteeCorp guar = guaranteeCorpMapper.findByGuarId(guarId);
+        return Optional.ofNullable(guar);
+    }
 }

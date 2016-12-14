@@ -28,6 +28,10 @@ public interface GuaranteeCorpMapper {
     })
     @Select("select * from guarantee_corp where user_id=#{userId}")
     GuaranteeCorp findByUserId(@Param("userId")int userId);
+
+    @ResultMap("GuaranteeCorp")
+    @Select("select * from guarantee_corp where guaranteecorp_id=#{guarId}")
+    GuaranteeCorp findByGuarId(@Param("guarId")int guarId);
 }
 
 

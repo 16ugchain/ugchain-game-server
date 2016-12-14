@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico">
+		<!-- 网站作者 -->
+		<meta name="author" content="51区块研发团队">
+		<!-- 网站关键词 -->
+		<meta name="keywords" content="51区块,数字资产">
+		<!-- 网站描述 -->
+		<meta name="description" content="51区块">
+
+		<title>交易中心| 51区块</title>
+
+		<!-- Bootstrap.css -->
+		<link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
+
+		<!-- bootstrapValidator.css -->
+		<link rel="stylesheet" href="//cdn.bootcss.com/bootstrap-validator/0.5.3/css/bootstrapValidator.min.css">
+
+		<!-- public.css -->
+		<link rel="stylesheet" href="/css/public.css">
+
+		<!-- jQuery.js 1.11.1-->
+		<script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+
+		<!-- Bootstrap.js -->
+		<script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+
+		<!-- vue.js -->
+		<script src="//cdn.bootcss.com/vue/1.0.24/vue.js"></script>
+		<script src="//cdn.bootcss.com/vue-router/0.7.10/vue-router.min.js"></script>
+
+		<!-- jquery.cookie.js -->
+		<script src="//cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+		<style>
+			.bs-callout-success {
+	    		border-left: 3px solid #20b062;
+	    		padding-left: 5px;
+	    		font-weight: bold;
+	    		font-size: 18px;
+	    	}
+		</style>
+	</head>
+	<body class="gray-bg">
+	    <div class="wrapper wrapper-content animated fadeIn container-fluid">
+	        <div class="row">
+	            <div class="col-sm-12">
+	                 <!-- <h3 class="">
+	                	
+	                </h3> -->
+	                <h3 class="bs-callout-success ">
+	                	<a href="" class="text-success">实物资产</a>&nbsp;>&nbsp;资产登记
+		            </h3>
+	            </div>
+	            	
+	        </div>
+	        <div class="col-sm-12" style="background: #fff;border:1px solid #aaa;border-radius:3px;">
+	        	<div class="col-sm-4 col-sm-offset-4" style="padding: 20px;">
+	        		<form class="form-horizontal" role="form">
+						<!-- 资产名称 -->
+						<div class="form-group">
+							<label for="registerNmae" class="col-sm-4 control-label">资产名称</label>
+							<div class="col-sm-8">
+								<input type="text" class="form-control" id="registerNmae" name="registerNmae" placeholder="请输入资产名称" v-model="userInfo.registerNmae">
+							</div>
+						</div>
+						<!-- 发行周期 -->
+						<div class="form-group">
+							<label for="registerNmae" class="col-sm-4 control-label">发行周期</label>
+							<div class="col-sm-8">
+								<input type="text" class="form-control" id="registerNmae" name="registerNmae" placeholder="请输入发行周期" v-model="userInfo.registerNmae">
+							</div>
+						</div>
+						<!-- 资产描述 -->
+						<div class="form-group">
+							<label for="registerNmae" class="col-sm-4 control-label">资产描述</label>
+							<div class="col-sm-8">
+								<input type="text" class="form-control" id="registerNmae" name="registerNmae" placeholder="请输入资产描述" v-model="userInfo.registerNmae">
+							</div>
+						</div>
+						<!-- 产权证明 -->
+						<div class="form-group">
+							<label for="registerNmae" class="col-sm-4 control-label">产权证明</label>
+							<div class="col-sm-8">
+								<input type="text" class="form-control" id="registerNmae" name="registerNmae" placeholder="请输入注册人真实姓名" v-model="userInfo.registerNmae">
+							</div>
+						</div>
+						<!-- 实物照片 -->
+						<div class="form-group">
+							<label for="registerNmae" class="col-sm-4 control-label">实物照片</label>
+							<div class="col-sm-8">
+								<input type="text" class="form-control" id="registerNmae" name="registerNmae" placeholder="请输入注册人真实姓名" v-model="userInfo.registerNmae">
+							</div>
+						</div>
+						<!-- 资产估值 -->
+						<div class="form-group">
+							<label for="registerNmae" class="col-sm-4 control-label">资产估值</label>
+							<div class="col-sm-8">
+								<input type="text" class="form-control" id="registerNmae" name="registerNmae" placeholder="请输入资产估值" v-model="userInfo.registerNmae">
+							</div>
+						</div>
+						<!-- 延压担保 -->
+						<div class="form-group">
+							<label for="registerType" class="col-sm-4 control-label">
+								延压担保
+							</label>
+							<div class="col-sm-8">
+								<label>
+									<input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" v-model="userInfo.registerType" checked> 有
+								</label>
+								<label>
+									<input type="radio" name="optionsRadios" id="optionsRadios2" value="option2" v-model="userInfo.registerType"> 无
+								</label>
+							</div>
+						</div>
+						<!-- 担保公司 -->
+						<div class="form-group">
+							<label for="registerNmae" class="col-sm-4 control-label">担保公司</label>
+							<div class="col-sm-8">
+								<input type="text" class="form-control" id="registerNmae" name="registerNmae" placeholder="请输入担保公司" v-model="userInfo.registerNmae">
+							</div>
+						</div>
+					</form>
+	        	</div>
+	        </div>
+	        
+	    </div>
+	</body>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>上传</title>
+
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico">
+		<!-- 网站作者 -->
+		<meta name="author" content="51区块研发团队">
+		<!-- 网站关键词 -->
+		<meta name="keywords" content="51区块,数字资产">
+		<!-- 网站描述 -->
+		<meta name="description" content="51区块">
+		<title>首页| 51区块</title>
+		<!-- Bootstrap.css -->
+		<link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
+
+		<!-- public.css -->
+		<link rel="stylesheet" href="/css/public.css">
+
+		<!-- jQuery.js 1.11.1-->
+		<script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+
+		<!-- Bootstrap.js -->
+		<script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+		<!-- vue.js -->
+		<script src="//cdn.bootcss.com/vue/1.0.24/vue.js"></script>
+
+		<!-- jquery.cookie.js -->
+		<script src="//cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+		<script src="//cdn.bootcss.com/vue-router/0.7.10/vue-router.min.js"></script>
+
+		<link rel="stylesheet" href="/css/upload.css" />
+		<script type="text/javascript" src="/js/upload.js"></script>
+</head>
+<body>
+
+<div class="container">
+  <div class="imageBox">
+    <div class="thumbBox"></div>
+    <div class="spinner" style="display: none">Loading...</div>
+  </div>
+  <div class="action"> 
+    <!-- <input type="file" id="file" style=" width: 200px">-->
+    <div class="new-contentarea tc"> <a href="javascript:void(0)" class="upload-img">
+      <label for="upload-file">上传图像</label>
+      </a>
+      <input type="file" class="" name="upload-file" id="upload-file" />
+    </div>
+    <input type="button" id="btnCrop"  class="Btnsty_peyton" value="裁切">
+    <input type="button" id="btnZoomIn" class="Btnsty_peyton" value="+"  >
+    <input type="button" id="btnZoomOut" class="Btnsty_peyton" value="-" >
+  </div>
+  <div class="cropped"></div>
+</div>
+
+<script type="text/javascript">
+$(window).load(function() {
+	var options =
+	{
+		thumbBox: '.thumbBox',
+		spinner: '.spinner',
+		imgSrc: '/images/1.jpg'
+	}
+	var cropper = $('.imageBox').cropbox(options);
+	$('#upload-file').on('change', function(){
+		var reader = new FileReader();
+		reader.onload = function(e) {
+			options.imgSrc = e.target.result;
+			cropper = $('.imageBox').cropbox(options);
+		}
+		console.log(this.files);
+		try{
+			reader.readAsDataURL(this.files[0]);
+			this.files = [];
+			return;
+		}catch(e) {
+			alert("格式错误");
+			this.files = [];
+		}
+	})
+	$('#btnCrop').on('click', function(){
+		var img = cropper.getDataURL();
+		$('.cropped').html('');
+		$('.cropped').append('<img src="'+img+'" align="absmiddle" style="width:64px;margin-top:4px;border-radius:64px;box-shadow:0px 0px 12px #7E7E7E;" ><p>64px*64px</p>');
+		$('.cropped').append('<img src="'+img+'" align="absmiddle" style="width:128px;margin-top:4px;border-radius:128px;box-shadow:0px 0px 12px #7E7E7E;"><p>128px*128px</p>');
+		$('.cropped').append('<img src="'+img+'" align="absmiddle" style="width:180px;margin-top:4px;border-radius:180px;box-shadow:0px 0px 12px #7E7E7E;"><p>180px*180px</p>');
+	})
+	$('#btnZoomIn').on('click', function(){
+		cropper.zoomIn();
+		console.log("afasdf");
+	})
+	$('#btnZoomOut').on('click', function(){
+		cropper.zoomOut();
+	})
+});
+</script>
+<div style="text-align:center;">
+</div>
+</body>
+</html>

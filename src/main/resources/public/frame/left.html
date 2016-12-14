@@ -1,0 +1,157 @@
+<nav class="navbar-default navbar-static-side" role="navigation">
+    <div class="nav-close"><i class="fa fa-times-circle"></i>
+    </div>
+    <div class="sidebar-collapse">
+        <ul class="nav" id="side-menu">
+            <!-- logo -->
+            <li class="nav-header">
+                <div class="dropdown profile-element">
+                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                        <img src="/images/logo2.png" alt="">
+                    </a>
+                </div>
+                <div class="logo-element">
+                    <img src="/images/logo2.png" alt="" class="img-responsive">
+                </div>
+            </li>
+            <!-- 左侧菜单 -->
+            <li v-for="i in userRole" :class="{'active': i.active}">
+                <a class="J_menuItem text-center" href={{i.link}} data-value={{$index}}>
+                    <i class="icon iconfont center-block menu-icon">
+                        {{{i.icon}}}
+                        <span v-if="$index==1" class="badge">3</span>
+                    </i>
+                    <span class="nav-label">{{i.title}}</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>
+<script>
+    // 默认受让人
+    var roleNum = 0;
+    $.ajax({
+        url : "/user/role",
+        type : "post",
+        async: false,
+        success: function(data){
+            var data2 = JSON.parse(data);
+            console.log(data2.role);
+            roleNum = data2.role - 1;
+        },
+        error:function(){
+            alert("请重新登录");
+        }
+    })
+
+
+    // 左侧菜单栏
+    var roleNavber = [
+        [
+            {
+                title: "交易中心",
+                icon: "&#xe61f;",
+                active: true,
+                link: "/tradeCenter/index"
+            },
+            {
+                title: "订单中心",
+                icon: "&#xe604;",
+                active: false,
+                link: "/orderCenter/index"
+//                    indent-center.html
+            },
+            {
+                title: "数字资产",
+                icon: "&#xe61b;",
+                active: false,
+                link: "/digitalCenter/index"
+            },
+            {
+                title: "我的信息",
+                icon: "&#xe64f;",
+                active: false,
+                link: "/userInfo/index"
+            },
+        ],[
+            {
+                title: "实物资产",
+                icon: "&#xe60f;",
+                active: true,
+                link: "/physical-assets.html"
+            },
+            {
+                title: "交易中心",
+                icon: "&#xe61f;",
+                active: false,
+                link: "/deal-center.html"
+            },
+            {
+                title: "订单中心",
+                icon: "&#xe604;",
+                active: false,
+                link: "/indent-center.html"
+            },
+            {
+                title: "赎回兑付",
+                icon: "&#xe679;",
+                active: false,
+                link: "/redemption-payment.html"
+            },
+            {
+                title: "数字资产",
+                icon: "&#xe61b;",
+                active: false,
+                link: "/digital-property.html"
+            },
+            {
+                title: "我的信息",
+                icon: "&#xe64f;",
+                active: false,
+                link: "/my-info.html"
+            },
+        ],[
+            {
+                title: "资产评估",
+                icon: "&#xe61b;",
+                active: true,
+                link: "/assessment.html"
+            },
+            {
+                title: "订单中心",
+                icon: "&#xe604;",
+                active: false,
+                link: "/indent-center.html"
+            },
+            {
+                title: "赎回兑付",
+                icon: "&#xe679;",
+                active: false,
+                link: "/redemption-payment.html"
+            },
+            {
+                title: "结算交割",
+                icon: "&#xe62f;",
+                active: false,
+                link: "/settlement.html"
+            },
+            {
+                title: "我的信息",
+                icon: "&#xe64f;",
+                active: false,
+                link: "/guarantee-info.html"
+            }
+        ]
+    ];
+    console.log(roleNum);
+    var indexPage = new Vue({
+        el: "#side-menu",
+        data: {
+            userRole: roleNavber[roleNum]
+        }
+    });
+    // 获取当前菜单所选页面
+//    $("#J_iframe").attr("src",$("#side-menu li.active a").attr("href"));
+</script>
+
+</script>

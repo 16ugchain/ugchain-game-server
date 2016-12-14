@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico">
+	<!-- 网站作者 -->
+	<meta name="author" content="51区块研发团队">
+	<!-- 网站关键词 -->
+	<meta name="keywords" content="51区块,数字资产">
+	<!-- 网站描述 -->
+	<meta name="description" content="51区块">
+
+	<title>订单中心| 51区块</title>
+
+	<!-- Bootstrap.css -->
+	<link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
+
+	<!-- bootstrapValidator.css -->
+	<link rel="stylesheet" href="//cdn.bootcss.com/bootstrap-validator/0.5.3/css/bootstrapValidator.min.css">
+
+	
+
+	<!-- jQuery.js 1.11.1-->
+	<script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+
+	<!-- Bootstrap.js -->
+	<script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+
+	
+
+	<!-- vue.js -->
+	<script src="//cdn.bootcss.com/vue/1.0.24/vue.js"></script>
+
+	<!-- jquery.cookie.js -->
+	<script src="//cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+	<script src="//cdn.bootcss.com/vue-router/0.7.10/vue-router.min.js"></script>
+
+    <!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+	<!-- <link href="/css/font-awesome.min.css?v=4.4.0" rel="stylesheet"> -->
+    <link href="/css/animate.css" rel="stylesheet">
+    <link href="/css/style.css?v=4.1.0" rel="stylesheet">
+
+    <!-- 表格 -->
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.css">
+	<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/locale/bootstrap-table-zh-CN.min.js"></script>
+	<!-- 上传照片 -->
+	<link rel="stylesheet" href="//cdn.bootcss.com/bootstrap-fileinput/4.3.5/css/fileinput.min.css">	
+	<script src="//cdn.bootcss.com/bootstrap-fileinput/4.3.5/js/fileinput.js"></script>
+	<script src="//cdn.bootcss.com/bootstrap-fileinput/4.3.5/js/locales/zh.min.js"></script>
+	<!-- 表单检验 -->
+
+	<script src="//cdn.bootcss.com/bootstrap-validator/0.5.3/js/bootstrapValidator.min.js"></script>
+	<!-- public.css -->
+	<link rel="stylesheet" href="../css/public.css">
+	<style>
+
+		.bs-callout-success {
+    		border-left: 3px solid #20b062;
+    		padding-left: 5px;
+    		font-weight: bold;
+    		font-size: 18px;
+    	}
+    	.tab-content {
+    	    margin-top: 10px;
+    		padding: 30px 40px;
+    	}
+    	.nav-tabs {
+    		margin-top: 20px;
+    	}
+    	.nav-tabs > li.active > a, 
+    	.nav-tabs > li.active > a:hover, 
+    	.nav-tabs > li.active > a:focus {
+    		color: #20b062;
+    	}
+    	.layui-layer-input {
+    		width: 260px!important;
+    		height: 90px!important;
+			resize: none;
+    	}
+    	.modal-dialog {
+    		z-index: 10000!important;
+    	}
+	</style>
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeIn container-fluid">
+        <div class="row">
+    		<!-- 标题 -->
+            <div class="col-sm-12">
+                 <h3 class="bs-callout-success">
+                	订单中心
+                </h3>
+            </div>
+
+       		<!-- 动态 -->
+
+	        <div class="col-sm-12">
+	        	<i class="iconfont text-success">&#xe60e;</i><span>您的订单有<i class="text-success">2</i>条新动态</span>
+	        </div>
+
+        	<!-- 内容区 -->
+
+        	<div class="col-sm-12">
+        		<ul id="myTab" class="nav nav-tabs" role="tablist">
+					<li role="presentation" class="active">
+						<a href="#tab1" id="" data-toggle="tab" aria-expanded="true">
+							我发起的
+						</a>
+					</li>
+					<li role="presentation" class="">
+						<a href="#tab2" id="" data-toggle="tab" aria-expanded="false">
+							我收到的
+						</a>
+					</li>
+				</ul>
+				<div id="myTabContent" class="tab-content panel panel-default">
+					<!-- 我发行 -->
+					<div  class="tab-pane fade active in" id="tab1" >
+						<div class="row">
+						 	<!-- <div class="col-sm-12"> -->
+						 		<table id="table1" data-toggle="table" data-pagination="true" data-search="true" data-use-row-attr-func="true" data-reorderable-rows="true">
+									<thead>
+										<tr>
+											<th data-field="name" data-sortable="true">
+												资产名称
+											</th>
+											<th data-field="id" data-sortable="true">
+												资产编号
+											</th>
+											<th data-field="share" data-sortable="true">
+												申购份额
+											</th>
+											<th data-field="possession" data-sortable="true">
+												占资比例
+											</th>
+											<th data-field="last_time" data-sortable="true">
+												到期时间
+											</th>
+											<th data-field="guarantee" data-sortable="true">
+												担保公司
+											</th>
+											<th data-field="holder" data-sortable="true">
+												持有人
+											</th>
+											<th data-field="start_time" data-sortable="true">
+												发起时间
+											</th>
+											<th data-field="status" data-sortable="true">
+												状态
+											</th>
+											<th data-field="operation" data-sortable="true">
+												操作
+											</th>
+										</tr>
+									</thead>
+									<tr>
+										<#list orderCenterCmds as orderCenterCmd>
+											<td>${orderCenterCmd.assetName}</td>
+											<td>${orderCenterCmd.assetId}</td>
+											<td>${orderCenterCmd.ApplicationShare}</td>
+											<td>${orderCenterCmd.percent}</td>
+											<td>${orderCenterCmd.endTime?date}</td>
+											<td>${orderCenterCmd.guarName}</td>
+											<td>${orderCenterCmd.holderName}</td>
+											<td>${orderCenterCmd.startTime}</td>
+											<td>${orderCenterCmd.statusStr}</td>
+											<td id="operation" value="${orderCenterCmd.status}">${orderCenterCmd.operation!"查看"}</td>
+										</#list>
+
+									</tr>
+								</table>
+						 	<!-- </div> -->
+						</div>
+						
+					</div>
+					<!-- 我收到 -->
+					<div  class="tab-pane fade" id="tab2" >
+						<div class="row">
+						 	<!-- <div class="col-sm-12"> -->
+						 		<table id="table2" data-toggle="table" data-pagination="true" data-search="true" data-use-row-attr-func="true" data-reorderable-rows="true">
+									<thead>
+										<tr>
+											<th data-field="name" data-sortable="true">
+												资产名称
+											</th>
+											<th data-field="id" data-sortable="true">
+												资产编号
+											</th>
+											<th data-field="share" data-sortable="true">
+												申购份额
+											</th>
+											<th data-field="possession" data-sortable="true">
+												占资比例
+											</th>
+											<th data-field="last_time" data-sortable="true">
+												到期时间
+											</th>
+											<th data-field="guarantee" data-sortable="true">
+												担保公司
+											</th>
+											<th data-field="earnings" data-sortable="true">
+												预期收益
+											</th>
+											<th data-field="purchaser" data-sortable="true">
+												申购人
+											</th>
+											<th data-field="unit" data-sortable="true">
+												申购单位
+											</th>
+											<th data-field="status" data-sortable="true">
+												状态
+											</th>
+											<th data-field="operation" data-sortable="true">
+												操作
+											</th>
+											
+										</tr>
+									</thead>
+									<tr>
+										<#list orderCenterCmdsAssign as orderCenterCmdAssign>
+											<td>${orderCenterCmdAssign.assetName}</td>
+											<td>${orderCenterCmdAssign.assetId}</td>
+											<td>${orderCenterCmdAssign.ApplicationShare}</td>
+											<td>${orderCenterCmdAssign.percent}</td>
+											<td>${orderCenterCmdAssign.endTime?date}</td>
+											<td>${orderCenterCmdAssign.guarName}</td>
+											<td>${orderCenterCmdAssign.expEarning}</td>
+											<td>${orderCenterCmdAssign.buyerName}</td>
+											<td>${orderCenterCmdAssign.buyerCorp}</td>
+											<td>${orderCenterCmdAssign.statusStr}</td>
+											<td id="assignOperation" value="${orderCenterCmd.status}">${orderCenterCmdAssign.operation!"查看"}</td>
+										</#list>
+
+									</tr>
+								</table>
+						 	<!-- </div> -->
+						</div>
+					</div>
+					
+				</div>
+        	</div>
+        </div>
+        <!-- 支付凭证图片提交 -->
+        <div class="modal inmodal" id="myModal2" tabindex="1" role="dialog" aria-hidden="true" z-index=1000000>
+            <div class="modal-dialog">
+                <div class="modal-content animated flipInX">
+                    <!-- <div class="modal-header"> -->
+                        <!-- <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title">窗口标题</h4> -->
+
+                        <h3 class="font-bold row text-center">上传支付凭证图片</h3>
+                    <!-- </div> -->
+                    <div class="modal-body">
+                       <input id="file-1" type="file" multiple class="file" data-overwrite-initial="false" data-min-file-count="2">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                        <button type="button" class="btn btn-success" id="payImage">提交</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+		<!-- 申诉 -->
+		<div class="modal inmodal" id="myModal1" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content animated flipInX">
+                     <!-- <div class="modal-header"> -->
+                        <!-- <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title">窗口标题</h4> -->
+
+                        <h3 class="font-bold row text-center">申诉窗口</h3>
+                    <!-- </div> -->
+                    <div class="modal-body">
+                    	<form class="form-horizontal" role="form">
+                    		<div class="form-group">
+                        		<textarea name="telephone" id="complaintContent" rows="10" placeholder="请输入申诉内容" style="width:100%;resize:none;padding: 15px;"></textarea>
+                        	</div>
+                    	</form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                        <button type="submit" class="btn btn-success">提交</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 全局js -->
+    <script src="../js/plugins/jquery.metisMenu.js"></script>
+    <!-- 滚动条 -->
+    <script src="../js/plugins/jquery.slimscroll.min.js"></script>
+    <!-- 公共js文件 -->
+    <script src="../js/public.js"></script>
+    <!-- 第三方插件 -->
+    <script src="../js/plugins/pace.min.js"></script>
+    <script>
+
+//    	var table1 = [
+//			    {
+//			    	"name":"Mr.Sofar",
+//			        "id": 0,
+//			        "share":"100股",
+//			        "possession":"10%",
+//			        "last_time": "2016-10-11",
+//			        "guarantee":"北京点触",
+//			        "holder":"Mr.Sofar",
+//			        "start_time":"2016-10-31",
+//			        "status":"申购中",
+//			        "operation":"<a><u>查看</u></a>"
+//			    },
+//			    {
+//			    	"name":"Mr.Sofar",
+//			        "id": 0,
+//			        "share":"100股",
+//			        "possession":"10%",
+//			        "last_time": "2016-10-11",
+//			        "guarantee":"北京点触",
+//			        "holder":"Mr.Sofar",
+//			        "start_time":"2016-10-31",
+//			        "status":"<span class='text-success'>待支付</span>",
+//			        "operation":'<button type="button" class="btn btn-success btn-upload" data-toggle="modal" data-target="#myModal2">支付</button>'
+//			    },
+//			    {
+//			    	"name":"Mr.Sofar",
+//			        "id": 0,
+//			        "share":"100股",
+//			        "possession":"10%",
+//			        "last_time": "2016-10-11",
+//			        "guarantee":"北京点触",
+//			        "holder":"Mr.Sofar",
+//			        "start_time":"2016-10-31",
+//			        "status":"<span class='text-danger'>订单异常</span>",
+//			        "operation":'<button type="button" class="btn btn-danger complaint-btn" data-toggle="modal" data-target="#myModal1">申诉</button>'
+//			    }
+//			];
+//			// 我发起的
+//    		$("#table1").bootstrapTable({
+//                data:table1
+//            });
+//           	// 我收到的
+//            var table2 = [
+//			    {
+//			    	"name":"Mr.Sofar",
+//			        "id": 0,
+//			        "share":"100股",
+//			        "possession":"10%",
+//			        "last_time": "2016-10-11",
+//			        "guarantee":"北京点触",
+//			        "earnings":"36%",
+//			        "purchaser":"Mr.Sofar",
+//			        "unit":"北京点触",
+//			        "status":"<span class=''>申购中</span>",
+//			        "operation":'<a href="" class="text-success">同意</a>'
+//			    },
+//			    {
+//			    	"name":"Mr.Sofar",
+//			        "id": 0,
+//			        "share":"100股",
+//			        "possession":"10%",
+//			        "last_time": "2016-10-11",
+//			        "guarantee":"北京点触",
+//			        "earnings":"36%",
+//			        "purchaser":"Mr.Sofar",
+//			        "unit":"北京点触",
+//			        "status":"<span class=''>申购中</span>",
+//			        "operation":'<a href="" class="text-success">同意</a><a href="" class="text-danger">驳回</a>'
+//			    },
+//			    {
+//			    	"name":"Mr.Sofar",
+//			        "id": 0,
+//			        "share":"100股",
+//			        "possession":"10%",
+//			        "last_time": "2016-10-11",
+//			        "guarantee":"北京点触",
+//			        "earnings":"36%",
+//			        "purchaser":"Mr.Sofar",
+//			        "unit":"北京点触",
+//			        "status":"<span class=''>申购中</span>",
+//			        "operation":'<a href="" class="text-success">同意</a>'
+//			    }
+//			];
+//    		$("#table2").bootstrapTable({
+//                data:table2
+//            });
+            // 上传照片
+            $("#file-1").fileinput({
+		    	language: 'zh', //设置语言
+		        uploadUrl: '#', // you must set a valid URL here else you will get an error
+		        allowedFileExtensions : ['jpg', 'png','gif'],
+		        overwriteInitial: false,
+		        // maxFileSize: 1000,
+		        maxFileSize: 10000,
+		        maxFileCount: 2,
+		        minFilesNum: 1,
+		        maxFilesNum: 3,
+		        browseClass: "btn btn-primary", //按钮样式   
+		        slugCallback: function(filename) {
+		            return filename.replace('(', '_').replace(']', '_');
+		        }
+			});
+			// 表单检验&提交
+			$('#myModal1').bootstrapValidator({
+		        message: 'This value is not valid',
+		        feedbackIcons: {
+		            valid: 'glyphicon glyphicon-ok',
+		            invalid: 'glyphicon glyphicon-remove',
+		            validating: 'glyphicon glyphicon-refresh'
+		        },
+		        fields: {
+		            telephone: {
+		                validators: {
+		                    notEmpty: {
+		                        message: '申诉内容不能为空'
+		                    }
+		                }
+		            },
+		        }
+		    }).on('success.form.bv', function(e) {
+				e.preventDefault();
+				// 注册事件
+				// 申诉内容： $("#complaintContent").val()
+				// ajax 提交
+			});
+            // 支付图片上传事件
+            $("#payImage").on('click', function(event) {
+            	event.preventDefault();
+            	/* Act on the event */
+            	if($(".kv-preview-data").length>0){
+            		// 上传事件
+            	}else{
+            		alert("请上传图片");
+            	}
+
+            });
+    </script>
+</body>
+</html>

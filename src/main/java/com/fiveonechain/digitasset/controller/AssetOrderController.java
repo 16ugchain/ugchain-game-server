@@ -44,12 +44,12 @@ public class AssetOrderController {
         Date endTime = Date.from(currentTime.plusDays(cycle).atZone(ZoneId.systemDefault()).toInstant());
 
         AssetOrder assetOrder = new AssetOrder();
-        assetOrder.setUser_id(userId);
-        assetOrder.setAsset_id(assetId);
-        assetOrder.setBuyer_id(buyerId);
+        assetOrder.setUserId(userId);
+        assetOrder.setAssetId(assetId);
+        assetOrder.setBuyerId(buyerId);
         assetOrder.setAmount(amount);
-        assetOrder.setUnit_prices(BigDecimal.valueOf(unitPrice));
-        assetOrder.setEnd_time(endTime);
+        assetOrder.setUnitPrices(BigDecimal.valueOf(unitPrice));
+        assetOrder.setEndTime(endTime);
         assetOrder.setStatus(AssetOrderStatusEnum.APPLY.getId());
 
 
@@ -90,7 +90,7 @@ public class AssetOrderController {
         // TODO: 同意后需要锁死份额 
         LocalDateTime currentTime = LocalDateTime.now();
         Date startTime = Date.from(currentTime.atZone(ZoneId.systemDefault()).toInstant());
-        if(assetOrder.getEnd_time().before(startTime)){
+        if(assetOrder.getEndTime().before(startTime)){
             iAssetOrderService.updateAssetOrderStatus(assetOrderId,AssetOrderStatusEnum.APPLY_OUT_TIME);
             return ResultUtil.buildErrorResult(ErrorInfo.ORDER_APPLY_OUTTIME);
         }
@@ -116,7 +116,7 @@ public class AssetOrderController {
         AssetOrder assetOrder = iAssetOrderService.getAssetOrder(assetOrderId);
         LocalDateTime currentTime = LocalDateTime.now();
         Date startTime = Date.from(currentTime.atZone(ZoneId.systemDefault()).toInstant());
-        if(assetOrder.getEnd_time().before(startTime)){
+        if(assetOrder.getEndTime().before(startTime)){
             iAssetOrderService.updateAssetOrderStatus(assetOrderId,AssetOrderStatusEnum.OBLIGATIONS_OUT_TIME);
             return ResultUtil.buildErrorResult(ErrorInfo.ORDER_OBLIGATION_OUTTIME);
         }
@@ -140,7 +140,7 @@ public class AssetOrderController {
         AssetOrder assetOrder = iAssetOrderService.getAssetOrder(assetOrderId);
         LocalDateTime currentTime = LocalDateTime.now();
         Date startTime = Date.from(currentTime.atZone(ZoneId.systemDefault()).toInstant());
-        if(assetOrder.getEnd_time().before(startTime)){
+        if(assetOrder.getEndTime().before(startTime)){
             iAssetOrderService.updateAssetOrderStatus(assetOrderId,AssetOrderStatusEnum.COMPLETE_OUT_TIME);
             return ResultUtil.buildErrorResult(ErrorInfo.ORDER_COMEPLETE_OUTTIME);
         }

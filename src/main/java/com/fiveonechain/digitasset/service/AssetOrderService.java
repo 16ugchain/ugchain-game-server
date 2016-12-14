@@ -17,9 +17,12 @@ public interface AssetOrderService {
 
     List<AssetOrder> getAssetOrderListByOwner(int userId);
 
+    List<AssetOrder> getAssetOrderListByBuyerId(int buyerId);
+
     List<AssetOrder> getAssetOrderListByAssetId(int assetId);
 
     List<AssetOrder> getAssetOrderListByStatus(AssetOrderStatusEnum status);
 
     void updateAssetOrderStatus(int orderId,AssetOrderStatusEnum assetOrderStatusEnum);
+
 }

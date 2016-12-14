@@ -1,6 +1,7 @@
 package com.fiveonechain.digitasset.controller;
 
 import com.fiveonechain.digitasset.auth.UserContext;
+import com.fiveonechain.digitasset.controller.cmd.DigitalAssetCmd;
 import com.fiveonechain.digitasset.domain.*;
 import com.fiveonechain.digitasset.domain.result.*;
 import com.fiveonechain.digitasset.exception.AssetNotFoundException;
@@ -150,7 +151,6 @@ public class AssetController {
         return idList;
     }
 
-
     /**
      * 获取实物资产详情
      *
@@ -169,7 +169,22 @@ public class AssetController {
 
         AssetDetail assetDetail = new AssetDetail();
 
+
         Asset asset = assetOpt.get();
+        List<DigitalAssetCmd> digitalAssetCmds = new LinkedList<DigitalAssetCmd>();
+
+        List<UserAsset> userAssets = userAssetService.getAvailDigitAssetListByAsset(asset.getAssetId());
+
+
+        for(UserAsset userAsset : userAssets){
+            UserInfo userInfo = userInfoService.getUserInfoByUserId(userAsset.getUserId());
+            DigitalAssetCmd digitalAssetCmd = new DigitalAssetCmd();
+            digitalAssetCmd.setHolderName(userInfo.getRealName());
+            digitalAssetCmd.setTradeShare(userAsset.getTradeBalance());
+            digitalAssetCmd.setPercent(String.valueOf(userAsset.getTradeBalance()*100/asset.getEvalValue()));
+            digitalAssetCmds.add(digitalAssetCmd);
+        }
+        assetDetail.setDigitalAssetCmds(digitalAssetCmds);
         boolean isGuaranteed = assetService.isAssetGuaranteed(asset);
         if (isGuaranteed) {
             Optional<GuaranteeCorp> guarOpt = guarService.getGuarOptional(asset.getGuarId());

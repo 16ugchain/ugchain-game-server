@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico">
+	<!-- 网站作者 -->
+	<meta name="author" content="51区块研发团队">
+	<!-- 网站关键词 -->
+	<meta name="keywords" content="51区块,数字资产">
+	<!-- 网站描述 -->
+	<meta name="description" content="51区块">
+
+	<title>数字资产| 51区块</title>
+
+	<!-- Bootstrap.css -->
+	<link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
+
+	<!-- bootstrapValidator.css -->
+	<link rel="stylesheet" href="//cdn.bootcss.com/bootstrap-validator/0.5.3/css/bootstrapValidator.min.css">
+
+	<!-- public.css -->
+	<link rel="stylesheet" href="/css/public.css">
+
+	<!-- jQuery.js 1.11.1-->
+	<script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+
+	<!-- Bootstrap.js -->
+	<script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+
+	
+
+	<!-- vue.js -->
+	<script src="//cdn.bootcss.com/vue/1.0.24/vue.js"></script>
+
+	<!-- jquery.cookie.js -->
+	<script src="//cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+	<script src="//cdn.bootcss.com/vue-router/0.7.10/vue-router.min.js"></script>
+	<!-- 表格 -->
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.css">
+	<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/locale/bootstrap-table-zh-CN.min.js"></script>
+	<style>
+		.bs-callout-success {
+    		border-left: 3px solid #20b062;
+    		padding-left: 5px;
+    		font-weight: bold;
+    		font-size: 18px;
+    	}
+	</style>
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeIn container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                 <h3 class="bs-callout-success">
+                	数字资产
+                </h3>
+            </div>
+        </div>    
+        <table id="table" data-toggle="table" data-pagination="true" data-search="true" data-use-row-attr-func="true" data-reorderable-rows="true">
+        <!-- <table id="table" data-toggle="table" data-pagination="true" data-search="true" data-use-row-attr-func="true" data-reorderable-rows="true" data-url="/js/a.json"> -->
+			<thead>
+				<tr>
+					<th data-field="name" data-sortable="true">
+						资产名称
+					</th>
+					<th data-field="id" data-sortable="true">
+						资产编号
+					</th>
+					<th data-field="publisher" data-sortable="true">
+						发行人
+					</th>
+					<th data-field="share" data-sortable="true">
+						持有份额
+					</th>
+					<th data-field="time" data-sortable="true">
+						到期时间
+					</th>
+					<th data-field="guarantee" data-sortable="true">
+						担保公司
+					</th>
+					<th data-field="status" data-sortable="true">
+						状态
+					</th>
+					<th data-field="operation" data-sortable="true">
+						操作
+					</th>
+					<th data-field="contract" data-sortable="true">
+						电子合同
+					</th>
+				</tr>
+			</thead>
+				<#list digitalAssetCmds as digitalAssetCmd>
+					<td>${digitalAssetCmd.name!""}</td>
+					<td>${digitalAssetCmd.assetId!""}</td>
+					<td>${digitalAssetCmd.publishName!""}</td>
+					<td>${digitalAssetCmd.holdShare!""}</td>
+					<td>${digitalAssetCmd.endTime?date!""}</td>
+					<td>${digitalAssetCmd.guarName!""}</td>
+					<td>${digitalAssetCmd.statusStr!""}</td>
+				</#list>
+		</table>
+       	<script>
+//       		var aaa = [
+//			    {
+//			    	"name":"Mr.Sofar",
+//			        "id": 0,
+//			        "publisher":"张先生",
+//			        "share":"100%",
+//			        "time": "2016-10-11",
+//			        "guarantee":"北京点触",
+//			        "status":"发行中",
+//			        "operation":'<label><input type="checkbox" name="" value="">申请认购</label>',
+//			        "contract":"<a><u>下载</u></a>"
+//			    },
+//			    {
+//			    	"name":"Mr.Sofar",
+//			        "id": 0,
+//			        "publisher":"张先生",
+//			        "share":"100%",
+//			        "time": "2016-10-11",
+//			        "guarantee":"北京点触",
+//			        "status":"发行中",
+//			        "operation":'<label><input type="checkbox" name="" value="">申请认购</label>',
+//			        "contract":"<a><u>下载</u></a>"
+//			    },
+//
+//			    {
+//			    	"name":"Mr.Sofar",
+//			        "id": 0,
+//			        "publisher":"张先生",
+//			        "share":"100%",
+//			        "time": "2016-10-11",
+//			        "guarantee":"北京点触",
+//			        "status":"发行中",
+//			        "operation":'<label><input type="checkbox" name="" value="">申请认购</label>',
+//			        "contract":"<a><u>下载</u></a>"
+//			    },
+//			    {
+//			    	"name":"Mr.Sofar",
+//			        "id": 0,
+//			        "publisher":"张先生",
+//			        "share":"100%",
+//			        "time": "2016-10-11",
+//			        "guarantee":"北京点触",
+//			        "status":"发行中",
+//			        "operation":'<label><input type="checkbox" name="" value="">申请认购</label>',
+//			        "contract":"<a><u>下载</u></a>"
+//			    },
+//			    {
+//			    	"name":"Mr.Sofar",
+//			        "id": 0,
+//			        "publisher":"张先生",
+//			        "share":"100%",
+//			        "time": "2016-10-11",
+//			        "guarantee":"北京点触",
+//			        "status":"发行中",
+//			        "operation":'<label><input type="checkbox" name="" value="">申请认购</label>',
+//			        "contract":"<a><u>下载</u></a>"
+//			    },
+//			];
+//    		$("#table").bootstrapTable({
+//                data:aaa
+//            });
+       	</script>
+        
+    </div>
+</body>
+</html>
