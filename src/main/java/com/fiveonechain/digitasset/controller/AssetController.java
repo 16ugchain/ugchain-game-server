@@ -7,6 +7,7 @@ import com.fiveonechain.digitasset.exception.AssetNotFoundException;
 import com.fiveonechain.digitasset.exception.AssetStatusTransferException;
 import com.fiveonechain.digitasset.exception.ImageUrlNotFoundException;
 import com.fiveonechain.digitasset.service.*;
+import com.fiveonechain.digitasset.util.DateUtil;
 import com.fiveonechain.digitasset.util.ResultUtil;
 import com.google.common.collect.Lists;
 import org.slf4j.Logger;
@@ -20,6 +21,9 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -469,7 +473,7 @@ public class AssetController {
     /**
      * 评估资产
      *
-     * @param userContext ROLE_GUAR
+     * @param host ROLE_GUAR
      * @param result
      * @param conclusion
      * @param value
@@ -478,7 +482,7 @@ public class AssetController {
      */
     @RequestMapping(value = "assets/{assetId}/evaluate", method = RequestMethod.POST)
     public Result evaluateAsset(
-            @AuthenticationPrincipal UserContext userContext,
+            @AuthenticationPrincipal UserContext host,
             @PathVariable("assetId") int assetId,
             @RequestParam("result") boolean result,
             @RequestParam(value = "conclusion", required = false) String conclusion,
@@ -486,18 +490,30 @@ public class AssetController {
             @RequestParam(value = "fee", required = false) Integer fee,
             @RequestParam(value = "earnings", required = false) Integer earnings) {
 
+        if (!host.hasRole(UserRoleEnum.CORP)) {
+            return ResultUtil.buildErrorResult(ErrorInfo.USER_PERMISSION_DENIED);
+        }
+
+        Optional<Asset> assetOpt = assetService.getAssetOptional(assetId);
+        if (!assetOpt.isPresent()) {
+            return ResultUtil.buildErrorResult(ErrorInfo.ASSET_NOT_FOUND);
+        }
+        Asset asset = assetOpt.get();
+
+        if (!assetService.isAssetGuaranteed(asset, host.getUserId())) {
+            return ResultUtil.buildErrorResult(ErrorInfo.USER_PERMISSION_DENIED);
+        }
+
         if (result) {
-            assetService.updateAssetStatusStateMachine(userContext, assetId, AssetStatus.REJECT_EVALUATE);
+            assetService.updateAssetStatusStateMachine(host, assetId, AssetStatus.REJECT_EVALUATE);
         } else {
-            Asset asset = new Asset();
-            asset.setAssetId(assetId);
             asset.setEvalConclusion(conclusion);
             asset.setEvalValue(value);
             asset.setFee(fee);
             asset.setExpEarnings(earnings);
 
             assetService.updateAssetEvalInfo(asset);
-            assetService.updateAssetStatusStateMachine(userContext, assetId, AssetStatus.PASS_EVALUATE);
+            assetService.updateAssetStatusStateMachine(host, assetId, AssetStatus.PASS_EVALUATE);
         }
 
         return ResultUtil.success();
@@ -506,18 +522,38 @@ public class AssetController {
     /**
      * 发行资产
      *
-     * @param userContext
+     * @param host
      * @param assetId
      */
     @RequestMapping(value = "assets/{assetId}/issue", method = RequestMethod.POST)
     public Result issueAsset(
-            @AuthenticationPrincipal UserContext userContext,
-            @PathVariable("assetId") int assetId) {
+            @AuthenticationPrincipal UserContext host,
+            @PathVariable("assetId") int assetId,
+            @RequestParam("payOrder") String order) {
+
+        if (!host.hasRole(UserRoleEnum.USER_PUBLISHER)) {
+            return ResultUtil.buildErrorResult(ErrorInfo.USER_PERMISSION_DENIED);
+        }
+
+        Optional<Asset> assetOpt = assetService.getAssetOptional(assetId);
+        if (!assetOpt.isPresent()) {
+            return ResultUtil.buildErrorResult(ErrorInfo.ASSET_NOT_FOUND);
+        }
+        Asset asset = assetOpt.get();
+        if (asset.getUserId() != assetId) {
+            return ResultUtil.buildErrorResult(ErrorInfo.USER_PERMISSION_DENIED);
+        }
 
         // TODO check pay order
-        // TODO check assetId
 
-        assetService.updateAssetStatusStateMachine(userContext, assetId, AssetStatus.ISSUE);
+        LocalDateTime now = LocalDateTime.now();
+        Date startTime = DateUtil.toDate(now);
+        Date endTime = DateUtil.toDate(now.plusMonths(asset.getCycle()));
+
+        asset.setStartTime(startTime);
+        asset.setEndTime(endTime);
+
+        assetService.updateAssetStatusStateMachine(host, assetId, AssetStatus.ISSUE);
         return ResultUtil.success();
     }
 

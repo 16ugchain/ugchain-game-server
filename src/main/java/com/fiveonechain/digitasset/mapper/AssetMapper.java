@@ -94,6 +94,9 @@ public interface AssetMapper {
 
     @Update("UPDATE asset SET eval_conclusion = #{evalConclusion}, eval_value = #{evalValue}, fee = #{fee}, exp_earnings = #{expEarnings} WHERE asset_id = #{assetId}")
     int updateAssetEvalInfoByAssetId(Asset asset);
+
+    @Update("UPDATE asset SET start_time = #{startTime}, end_time = #{endTime} WHERE asset_id = #{assetId}")
+    int updateAssetIssueInfoByAssetId(Asset asset);
 }
 
 /*
