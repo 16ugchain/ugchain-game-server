@@ -20,13 +20,11 @@ public interface AssetService {
 
     Asset getAsset(int assetId);
 
-    void issueAsset(UserContext host, Asset asset, String payOrder);
+    void issueAsset(UserContext host, Asset asset);
 
     Optional<Asset> getAssetOptional(int assetId);
 
     List<Asset> getAssetListByOwner(int userId);
-
-    List<Asset> getAssetListByGuarantee(int guarId);
 
     List<Asset> getAssetListByStatus(AssetStatus status);
 
@@ -50,9 +48,15 @@ public interface AssetService {
 
     boolean isAssetGuaranteed(Asset asset, int guarId);
 
+    boolean isAssetIssuedByUser(Asset asset, int userId);
+
     boolean checkAssetMaturity(Asset asset);
+
+    boolean checkAssetExpireToIssue(Asset asset);
 
     void updateAssetStatusAsync(int assetId, AssetStatus newStatus);
 
     List<AssetOperation> getAvailableOperation(AssetStatus status, UserRoleEnum role);
+
+    void applyAssetDelivery(UserContext host, Asset asset);
 }

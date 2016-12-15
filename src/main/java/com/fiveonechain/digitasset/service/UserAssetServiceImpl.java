@@ -1,9 +1,7 @@
 package com.fiveonechain.digitasset.service;
 
-import com.fiveonechain.digitasset.domain.Asset;
-import com.fiveonechain.digitasset.domain.UserAsset;
-import com.fiveonechain.digitasset.domain.UserAssetOperationEnum;
-import com.fiveonechain.digitasset.domain.UserAssetRecord;
+import com.fiveonechain.digitasset.auth.UserContext;
+import com.fiveonechain.digitasset.domain.*;
 import com.fiveonechain.digitasset.domain.result.ErrorInfo;
 import com.fiveonechain.digitasset.exception.DigitAssetNotFoundException;
 import com.fiveonechain.digitasset.exception.DigitAssetTransferException;
@@ -199,4 +197,20 @@ public class UserAssetServiceImpl implements UserAssetService {
         UserAsset userAsset = userAssetMapper.selectByAssetIdAndBalance(assetId, totalAmount);
         return Optional.ofNullable(userAsset);
     }
+
+    @Override
+    public boolean hasEnoughDigitAsset(int ownerId, int assetId, int needAmount) {
+        UserAsset digitAsset = userAssetMapper.select(assetId, ownerId);
+        return hasEnoughDigitAsset(digitAsset, needAmount);
+    }
+
+    @Override
+    public boolean hasEnoughDigitAsset(UserAsset digitAsset, int needAmount) {
+        if (digitAsset.getBalance() - digitAsset.getLockBalance() >= needAmount) {
+            return true;
+        }
+        return false;
+    }
+
+
 }

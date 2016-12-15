@@ -1,5 +1,6 @@
 package com.fiveonechain.digitasset.service;
 
+import com.fiveonechain.digitasset.auth.UserContext;
 import com.fiveonechain.digitasset.domain.Asset;
 import com.fiveonechain.digitasset.domain.User;
 import com.fiveonechain.digitasset.domain.UserAsset;
@@ -35,5 +36,9 @@ public interface UserAssetService {
     int sumTradeBalanceByAsset(int assetId);
 
     Optional<UserAsset> getWhollyOwnerOfAsset(int assetId, int totalAmount);
+
+    boolean hasEnoughDigitAsset(int ownerId, int assetId, int needAmount);
+
+    boolean hasEnoughDigitAsset(UserAsset digitAsset, int needAmount);
 
 }

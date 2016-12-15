@@ -6,6 +6,7 @@ import com.fiveonechain.digitasset.domain.result.*;
 import com.fiveonechain.digitasset.exception.AssetNotFoundException;
 import com.fiveonechain.digitasset.exception.AssetStatusTransferException;
 import com.fiveonechain.digitasset.exception.ImageUrlNotFoundException;
+import com.fiveonechain.digitasset.exception.NoEnoughDigitAssetException;
 import com.fiveonechain.digitasset.service.*;
 import com.fiveonechain.digitasset.util.DateUtil;
 import com.fiveonechain.digitasset.util.ResultUtil;
@@ -22,7 +23,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -564,47 +564,136 @@ public class AssetController {
             return ResultUtil.buildErrorResult(ErrorInfo.USER_PERMISSION_DENIED);
         }
 
+        if (assetService.checkAssetExpireToIssue(asset)) {
+            assetService.updateAssetStatusStateMachine(userService.getSystemUserContext(),
+                    assetId, AssetStatus.EXPIRE_TO_ISSUE);
+            return ResultUtil.buildErrorResult(ErrorInfo.ASSET_EXPIRE_TO_ISSUE);
+        }
+
         // TODO check pay order
 
-        LocalDateTime now = LocalDateTime.now();
-        Date startTime = DateUtil.toDate(now);
-        Date endTime = DateUtil.toDate(now.plusMonths(asset.getCycle()));
+        assetService.issueAsset(host, asset);
 
-        asset.setStartTime(startTime);
-        asset.setEndTime(endTime);
-
-        assetService.updateAssetStatusStateMachine(host, assetId, AssetStatus.ISSUE);
         return ResultUtil.success();
     }
 
     /**
      * 冻结资产
      *
-     * @param userContext ROLE_GUAR
+     * @param host ROLE_GUAR
      * @param assetId
      */
     @RequestMapping(value = "assets/{assetId}/freeze", method = RequestMethod.POST)
     public Result freezeAsset(
-            @AuthenticationPrincipal UserContext userContext,
+            @AuthenticationPrincipal UserContext host,
             @PathVariable("assetId") int assetId) {
 
-        // TODO check assetId
+        if (!host.hasRole(UserRoleEnum.CORP)) {
+            return ResultUtil.buildErrorResult(ErrorInfo.USER_PERMISSION_DENIED);
+        }
 
-        assetService.updateAssetStatusStateMachine(userContext, assetId, AssetStatus.FROZEN);
+        Optional<Asset> assetOpt = assetService.getAssetOptional(assetId);
+        if (!assetOpt.isPresent()) {
+            return ResultUtil.buildErrorResult(ErrorInfo.ASSET_NOT_FOUND);
+        }
+        Asset asset = assetOpt.get();
+        if (!assetService.isAssetGuaranteed(asset, host.getUserId())) {
+            return ResultUtil.buildErrorResult(ErrorInfo.USER_PERMISSION_DENIED);
+        }
+
+        assetService.updateAssetStatusStateMachine(host, assetId, AssetStatus.FROZEN);
         return ResultUtil.success();
     }
 
     /**
      * 解冻资产
      *
-     * @param userContext ROLE_GUAR
+     * @param host ROLE_GUAR
      * @param assetId
      */
     @RequestMapping(value = "assets/{assetId}/unfreeze", method = RequestMethod.POST)
-    public void unfreezeAsset(
-        @AuthenticationPrincipal UserContext userContext,
+    public Result unfreezeAsset(
+        @AuthenticationPrincipal UserContext host,
         @PathVariable("assetId") int assetId) {
 
+        if (!host.hasRole(UserRoleEnum.CORP)) {
+            return ResultUtil.buildErrorResult(ErrorInfo.USER_PERMISSION_DENIED);
+        }
+
+        Optional<Asset> assetOpt = assetService.getAssetOptional(assetId);
+        if (!assetOpt.isPresent()) {
+            return ResultUtil.buildErrorResult(ErrorInfo.ASSET_NOT_FOUND);
+        }
+        Asset asset = assetOpt.get();
+        if (!assetService.isAssetGuaranteed(asset, host.getUserId())) {
+            return ResultUtil.buildErrorResult(ErrorInfo.USER_PERMISSION_DENIED);
+        }
+
+        assetService.updateAssetStatusStateMachine(host, assetId, AssetStatus.ISSUE);
+
+        if (assetService.checkAssetMaturity(asset)) {
+            assetService.updateAssetStatusStateMachine(userService.getSystemUserContext(),
+                    assetId, AssetStatus.MATURITY);
+        }
+
+        return ResultUtil.success();
+    }
+
+    @RequestMapping(value = "assets/{assetId}/clear", method = RequestMethod.POST)
+    public Result clearAsset(
+            @AuthenticationPrincipal UserContext host,
+            @PathVariable("assetId") int assetId) {
+
+        UserRoleEnum role;
+        if (host.hasRole(UserRoleEnum.CORP)) {
+            role = UserRoleEnum.CORP;
+        } else if (host.hasRole(UserRoleEnum.USER_PUBLISHER)) {
+            role = UserRoleEnum.USER_PUBLISHER;
+        } else {
+            return ResultUtil.buildErrorResult(ErrorInfo.USER_PERMISSION_DENIED);
+        }
+
+        Optional<Asset> assetOpt = assetService.getAssetOptional(assetId);
+        if (!assetOpt.isPresent()) {
+            return ResultUtil.buildErrorResult(ErrorInfo.ASSET_NOT_FOUND);
+        }
+        Asset asset = assetOpt.get();
+
+        if (role == UserRoleEnum.CORP) {
+            if (!assetService.isAssetGuaranteed(asset, host.getUserId())) {
+                return ResultUtil.buildErrorResult(ErrorInfo.USER_PERMISSION_DENIED);
+            }
+        } else {
+            if (!assetService.isAssetIssuedByUser(asset, host.getUserId())) {
+                return ResultUtil.buildErrorResult(ErrorInfo.USER_PERMISSION_DENIED);
+            }
+        }
+
+        assetService.updateAssetStatusStateMachine(host, assetId, AssetStatus.CLEAR);
+
+        return ResultUtil.success();
+    }
+
+    @RequestMapping(value = "assets/{assetId}/applydelivery", method = RequestMethod.POST)
+    public Result applyDelivery(
+            @AuthenticationPrincipal UserContext host,
+            @PathVariable("assetId") int assetId) {
+
+        Optional<Asset> assetOpt = assetService.getAssetOptional(assetId);
+        if (!assetOpt.isPresent()) {
+            return ResultUtil.buildErrorResult(ErrorInfo.ASSET_NOT_FOUND);
+        }
+        Asset asset = assetOpt.get();
+        if (!assetService.isAssetGuaranteed(asset)) {
+            return ResultUtil.buildErrorResult(ErrorInfo.USER_PERMISSION_DENIED);
+        }
+
+        if (!userAssetService.hasEnoughDigitAsset(host.getUserId(), assetId, asset.getEvalValue())) {
+            return ResultUtil.buildErrorResult(ErrorInfo.DIGIT_ASSET_NOT_ENOUGH);
+        }
+        assetService.applyAssetDelivery(host, asset);
+
+        return ResultUtil.success();
     }
 
     @ExceptionHandler(AssetStatusTransferException.class)
@@ -617,5 +706,11 @@ public class AssetController {
     @ResponseBody
     public Result handleAssetNotFoundException() {
         return ResultUtil.buildErrorResult(ErrorInfo.ASSET_NOT_FOUND);
+    }
+
+    @ExceptionHandler(NoEnoughDigitAssetException.class)
+    @ResponseBody
+    public Result handleAssetNotEnoughException() {
+        return ResultUtil.buildErrorResult(ErrorInfo.DIGIT_ASSET_NOT_ENOUGH);
     }
 }
