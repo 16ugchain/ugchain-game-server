@@ -3,6 +3,7 @@ package com.fiveonechain.digitasset.mapper;
 import com.fiveonechain.digitasset.domain.Asset;
 import com.fiveonechain.digitasset.mapper.util.SimpleSelectInExtendedLanguageDriver;
 import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.type.JdbcType;
 
 import java.util.List;
 
@@ -40,6 +41,8 @@ public interface AssetMapper {
             @Result(property = "photos", column = "photos"),
             @Result(property = "startTime", column = "start_time"),
             @Result(property = "endTime", column = "end_time"),
+            @Result(property = "createTime", column = "create_time",jdbcType = JdbcType.TIMESTAMP,javaType = java.sql.Timestamp.class),
+            @Result(property = "updateTime", column = "update_time",jdbcType = JdbcType.TIMESTAMP,javaType = java.sql.Timestamp.class),
             @Result(property = "evalConclusion", column = "eval_conclusion"),
             @Result(property = "evalValue", column = "eval_value"),
             @Result(property = "fee", column = "fee"),

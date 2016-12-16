@@ -1,6 +1,9 @@
 package com.fiveonechain.digitasset.domain.result;
 
+import com.fiveonechain.digitasset.domain.AssetOrderOperation;
+
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by fanjl on 2016/12/9.
@@ -19,7 +22,7 @@ public class OrderCenterCmd {
     private Date startTime;
     private String statusStr;
     private int status;
-    private String operation;//订单操作
+    private List<AssetOrderOperation> operation;//订单操作
     private String expEarning;//预期收益
     private String buyerName;//申购人
     private String buyerCorp;//申购单位
@@ -120,11 +123,11 @@ public class OrderCenterCmd {
         this.buyerCorp = buyerCorp;
     }
 
-    public String getOperation() {
+    public List<AssetOrderOperation> getOperation() {
         return operation;
     }
 
-    public void setOperation(String operation) {
+    public void setOperation(List<AssetOrderOperation> operation) {
         this.operation = operation;
     }
 

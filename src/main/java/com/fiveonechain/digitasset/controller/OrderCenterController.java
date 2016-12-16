@@ -41,15 +41,15 @@ public class OrderCenterController {
                         Model model){
         List<AssetOrder> assetOrders = iAssetOrderService.getAssetOrderListByOwner(userContext.getUserId());
         List<AssetOrder> assetOrderAssign = iAssetOrderService.getAssetOrderListByBuyerId(userContext.getUserId());
-        List<OrderCenterCmd> orderCenterCmds = orderCenterCmdPlay(assetOrders);
-        List<OrderCenterCmd> orderCenterCmdsAssign = orderCenterCmdPlay(assetOrderAssign);
+        List<OrderCenterCmd> orderCenterCmds = orderCenterCmdPlay(assetOrders,userContext.getUserId());
+        List<OrderCenterCmd> orderCenterCmdsAssign = orderCenterCmdPlay(assetOrderAssign,userContext.getUserId());
 
         model.addAttribute("orderCenterCmdsAssign",orderCenterCmdsAssign);
         model.addAttribute("orderCenterCmds",orderCenterCmds);
         return "indent-center";
     }
 
-    public List<OrderCenterCmd> orderCenterCmdPlay(List<AssetOrder> assetOrders){
+    public List<OrderCenterCmd> orderCenterCmdPlay(List<AssetOrder> assetOrders,int userId){
         List<OrderCenterCmd> orderCenterCmds = new LinkedList<>();
         for(AssetOrder assetOrder : assetOrders){
             OrderCenterCmd orderCenterCmd = new OrderCenterCmd();
@@ -80,20 +80,12 @@ public class OrderCenterController {
                 orderCenterCmd.setStatus(assetOrder.getStatus());
                 orderCenterCmd.setStatusStr(AssetOrderStatusEnum.fromValue(assetOrder.getStatus()).getName());
                 orderCenterCmd.setExpEarning(String.valueOf(asset.get().getExpEarnings()));
-                getOperationByStatus(orderCenterCmd,assetOrder.getStatus());
+                List<AssetOrderOperation> assetOrderOperations = iAssetOrderService.getOperationByStatusAndRole(AssetOrderStatusEnum.fromValue(assetOrder.getStatus()),UserRoleEnum.fromValue(userId));
+                orderCenterCmd.setOperation(assetOrderOperations);
             }
             orderCenterCmds.add(orderCenterCmd);
         }
         return orderCenterCmds;
     }
 
-    public void getOperationByStatus(OrderCenterCmd orderCenterCmd,int orderStatus){
-        if(orderStatus == AssetOrderStatusEnum.APPLY.getId()){
-            orderCenterCmd.setOperation("查看");
-        }else if(orderStatus == AssetOrderStatusEnum.OBLIGATIONS.getId()){
-            orderCenterCmd.setOperation("支付");
-        }else if(orderStatus == AssetOrderStatusEnum.COMPLETE_OUT_TIME.getId()){
-            orderCenterCmd.setOperation("申诉");
-        }
-    }
 }

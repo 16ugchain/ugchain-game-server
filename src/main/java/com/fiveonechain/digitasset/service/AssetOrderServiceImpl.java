@@ -1,13 +1,18 @@
 package com.fiveonechain.digitasset.service;
 
 import com.fiveonechain.digitasset.domain.AssetOrder;
+import com.fiveonechain.digitasset.domain.AssetOrderOperation;
 import com.fiveonechain.digitasset.domain.AssetOrderStatusEnum;
+import com.fiveonechain.digitasset.domain.UserRoleEnum;
+import com.fiveonechain.digitasset.domain.result.OrderCenterCmd;
 import com.fiveonechain.digitasset.exception.AssetOrderException;
 import com.fiveonechain.digitasset.mapper.AssetOrderMapper;
 import com.fiveonechain.digitasset.mapper.SequenceMapper;
+import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -54,6 +59,36 @@ public class AssetOrderServiceImpl implements AssetOrderService {
     @Override
     public List<AssetOrder> getAssetOrderListByStatus(AssetOrderStatusEnum status) {
         return assetOrderMapper.findListByStatus(status.getId());
+    }
+
+    @Override
+    public List<AssetOrderOperation> getOperationByStatusAndRole( AssetOrderStatusEnum status, UserRoleEnum userRoleEnum) {
+        List<AssetOrderOperation> assetOrderOperations = Collections.emptyList();
+        if(userRoleEnum==UserRoleEnum.USER_ASSIGNEE){
+            if(status.getId() == AssetOrderStatusEnum.APPLY.getId()){
+                assetOrderOperations = Lists.newArrayList(AssetOrderOperation.VIEW);
+                return assetOrderOperations;
+            }else if(status.getId() == AssetOrderStatusEnum.OBLIGATIONS.getId()){
+                assetOrderOperations = Lists.newArrayList(AssetOrderOperation.PAY);
+                return assetOrderOperations;
+            }else if(status.getId() == AssetOrderStatusEnum.COMPLETE_OUT_TIME.getId()){
+                assetOrderOperations = Lists.newArrayList(AssetOrderOperation.APPEAL);
+                return assetOrderOperations;
+            }
+        }else if(userRoleEnum==UserRoleEnum.USER_PUBLISHER){
+            if(status.getId() == AssetOrderStatusEnum.APPLY.getId()){
+                assetOrderOperations = Lists.newArrayList(AssetOrderOperation.AGREE_APPLY,AssetOrderOperation.REJECT_APPLY);
+                return assetOrderOperations;
+            }else if(status.getId() == AssetOrderStatusEnum.OBLIGATIONS_DONE.getId()){
+                assetOrderOperations = Lists.newArrayList(AssetOrderOperation.COMPLETED);
+                return assetOrderOperations;
+            }else {
+                assetOrderOperations = Lists.newArrayList(AssetOrderOperation.VIEW);
+                return assetOrderOperations;
+            }
+        }
+        return assetOrderOperations;
+
     }
 
     @Override

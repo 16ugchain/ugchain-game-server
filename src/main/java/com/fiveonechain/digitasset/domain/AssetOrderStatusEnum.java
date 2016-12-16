@@ -7,7 +7,7 @@ public enum  AssetOrderStatusEnum {
     APPLY(1,"申请"),
     APPLY_OUT_TIME(2,"申请超时"),
     APPLY_REJECT(3,"驳回申请"),
-//    APPLY_DONE(4,"同意申请"),
+    APPLY_DONE(4,"同意申请"),
     OBLIGATIONS(5,"待支付"),
     OBLIGATIONS_OUT_TIME(6,"支付超时"),
     OBLIGATIONS_DONE(7,"支付完成"),

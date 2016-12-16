@@ -27,6 +27,27 @@
         </ul>
     </div>
 </nav>
+<style>
+    .modal-dialog {
+        z-index: 10000!important;
+    }
+
+</style>
+<button type="button" class="btn btn-primary" data-toggle="modal" id="modalAlert" data-target=".bs-example-modal-sm" style="width:0px;height:0px;padding: 0px;margin: 0px;overflow: hidden; position: fixed;top: 100000000000px">友情提示</button>
+<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="mySmallModalLabel">温馨提醒:</h4>
+            </div>
+            <div class="modal-body">
+                密码
+            </div>
+        </div>
+    </div>
+</div>
 <script>
     // 默认受让人
     var roleNum = 0;

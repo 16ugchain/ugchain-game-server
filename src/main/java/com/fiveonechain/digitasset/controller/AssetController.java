@@ -564,7 +564,7 @@ public class AssetController {
     public Result issueAsset(
             @AuthenticationPrincipal UserContext host,
             @PathVariable("assetId") int assetId,
-            @RequestParam("payOrder") String order) {
+            @RequestParam(value="payOrder", required = false)  String order) {
 
         if (!host.hasRole(UserRoleEnum.USER_PUBLISHER)) {
             return ResultUtil.buildErrorResult(ErrorInfo.USER_PERMISSION_DENIED);
