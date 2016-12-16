@@ -222,7 +222,18 @@ public class AssetController {
             return ResultUtil.buildErrorResult(ErrorInfo.USER_PERMISSION_DENIED);
         }
 
-        return ResultUtil.success();
+        List<AssetRecord> assetRecordList = assetService.getAssetRecordListByIssuer(host.getUserId(), assetId);
+
+        List<AssetStatusItem> statusList = Lists.newArrayListWithCapacity(assetRecordList.size());
+        for (AssetRecord record : assetRecordList) {
+            AssetStatusItem item = new AssetStatusItem();
+            item.setTime(record.getCreateTime());
+            item.setMessage(AssetStatus.fromValue(record.getStatus()).getMessage());
+
+            statusList.add(item);
+        }
+
+        return ResultUtil.success(statusList);
     }
 
     /**
@@ -708,6 +719,38 @@ public class AssetController {
         }
         assetService.applyAssetDelivery(host, asset);
 
+        return ResultUtil.success();
+    }
+
+
+    @RequestMapping("assets/{assetId}/delivery")
+    public Result rejectDelivery(
+            @AuthenticationPrincipal UserContext host,
+            @PathVariable("assetId") int assetId,
+            @RequestParam("result") boolean result) {
+
+        if (!host.hasRole(UserRoleEnum.CORP)) {
+            return ResultUtil.buildErrorResult(ErrorInfo.USER_PERMISSION_DENIED);
+        }
+
+        Optional<Asset> assetOpt = assetService.getAssetOptional(assetId);
+        if (!assetOpt.isPresent()) {
+            return ResultUtil.buildErrorResult(ErrorInfo.ASSET_NOT_FOUND);
+        }
+        Asset asset = assetOpt.get();
+        if (!assetService.isAssetGuaranteed(asset, host.getUserId())) {
+            return ResultUtil.buildErrorResult(ErrorInfo.USER_PERMISSION_DENIED);
+        }
+
+        if (result) {
+            assetService.updateAssetStatusStateMachine(host, assetId, AssetStatus.DELIVERY);
+        } else {
+            assetService.updateAssetStatusStateMachine(host, assetId, AssetStatus.ISSUE);
+            if (assetService.checkAssetMaturity(asset)) {
+                assetService.updateAssetStatusStateMachine(userService.getSystemUserContext(),
+                        assetId, AssetStatus.MATURITY);
+            }
+        }
         return ResultUtil.success();
     }
 
