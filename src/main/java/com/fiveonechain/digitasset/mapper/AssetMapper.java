@@ -67,16 +67,9 @@ public interface AssetMapper {
             @Param("status") int status);
 
     @ResultMap("asset")
-<<<<<<< HEAD
     @Select("SELECT " + ALL_COLUMN + " FROM asset WHERE user_id = #{userId}  ORDER BY asset_id DESC")
     List<Asset> selectByUserId(
             @Param("userId") int userId);
-
-=======
-    @Select("SELECT " + ALL_COLUMN + " FROM asset WHERE user_id = #{userId} ORDER BY asset_id DESC")
-    List<Asset> selectByUserId(
-            @Param("userId") int userId);
->>>>>>> e9ea49bf245850e141257f7a361ff3b7c809bd44
 
     @ResultMap("asset")
     @Select("SELECT " + ALL_COLUMN + " FROM asset WHERE guar_id = #{guarId} AND status != #{status} ORDER BY update_time DESC")
