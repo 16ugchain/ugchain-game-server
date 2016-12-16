@@ -1,5 +1,7 @@
 package com.fiveonechain.digitasset.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fiveonechain.digitasset.auth.UserContext;
 import com.fiveonechain.digitasset.config.QiNiuConfig;
 import com.fiveonechain.digitasset.domain.ImageUrl;
@@ -7,6 +9,7 @@ import com.fiveonechain.digitasset.domain.User;
 import com.fiveonechain.digitasset.domain.result.ErrorInfo;
 import com.fiveonechain.digitasset.domain.result.Result;
 import com.fiveonechain.digitasset.exception.ImageUploadException;
+import com.fiveonechain.digitasset.exception.JsonSerializableException;
 import com.fiveonechain.digitasset.service.ImageUploadService;
 import com.fiveonechain.digitasset.service.ImageUrlService;
 import com.fiveonechain.digitasset.service.UserService;
@@ -20,8 +23,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Created by fanjl on 2016/12/7.
@@ -39,7 +45,7 @@ public class ImageController {
     private QiNiuConfig qiNiuConfig;
 
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
-    public Result upload(
+    public String upload(
             @RequestParam("imageUrl") MultipartFile[] images,
             @AuthenticationPrincipal UserContext userContext
     ) {
@@ -47,13 +53,13 @@ public class ImageController {
         User user = iUserService.getUserByUserId(userContext.getUserId());
         if (user == null) {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.USER_NOT_FOUND);
-            return result;
+            return "{'error':'error'}";
         }
         List<Integer> imageUrls = new LinkedList<>();
         for(MultipartFile image : images){
             if (image.getSize() > qiNiuConfig.getImageMaxSize()) {
                 Result result = ResultUtil.buildErrorResult(ErrorInfo.IMAGE_TOO_LARGE);
-                return result;
+                return "{'error':'error'}";
             }
             String message = "";
             try {
@@ -68,12 +74,23 @@ public class ImageController {
             if (imageUrlService.insertImageUrl(imageUrl) != 1) {
                 ErrorInfo errorInfo = ErrorInfo.SERVER_ERROR;
                 Result result = ResultUtil.buildErrorResult(errorInfo);
-                return result;
+                return "{'error':'error'}";
             }
             imageUrls.add(imageUrl.getImageId());
 
         }
+        String imageIdUrl = imageUrls.stream().map(Object::toString).collect(Collectors.joining(","));
+        Map<String, String> map = new HashMap<>();
+        map.put("error", "");
+        map.put("data",imageIdUrl);
+        ObjectMapper mapper = new ObjectMapper();
+        String resultString = "";
+        try {
+            resultString = mapper.writeValueAsString(map);
+        } catch (JsonProcessingException e) {
+            throw new JsonSerializableException(e);
+        }
         Result result = ResultUtil.success(imageUrls);
-        return result;
+        return resultString;
     }
 }

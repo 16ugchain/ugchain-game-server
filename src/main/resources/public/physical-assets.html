@@ -56,7 +56,7 @@
 	            </div>
 	        </div>
 	        <div class="col-sm-12">
-	       
+
 	        	<table id="table2" data-toggle="table" data-pagination="true" data-search="true" data-use-row-attr-func="true" data-reorderable-rows="true">
 					<thead>
 						<tr>
@@ -72,9 +72,9 @@
 							<th data-field="last_time">
 								到期时间
 							</th>
-							<th data-field="can_trade" data-sortable="true">
-								可交易份额
-							</th>
+							<!--<th data-field="can_trade" data-sortable="true">-->
+								<!--可交易份额-->
+							<!--</th>-->
 							<th data-field="guarantee">
 								担保公司
 							</th>
@@ -91,38 +91,40 @@
 	    </div>
 	    <script>
 
-	    	var data = [
-			    {	
-			    	"name":"<a href='asset-details.html'>Mr.Sofar</a>",
-			        "valuation": "571万",
-			        "start_time":"2016-11-12",
-			        "last_time":"2016-12-12",
-			        "can_trade": "100股",
-			        "guarantee":"北京点触",
-			        "status":"代缴费",
-			        "operation":"缴费发行"
-			    },
-			    {	
-			    	"name":"<a href='asset-details.html'>Mr.Sofar</a>",
-			        "valuation": "571万",
-			        "start_time":"2016-11-12",
-			        "last_time":"2016-12-12",
-			        "can_trade": "100股",
-			        "guarantee":"北京点触",
-			        "status":"代缴费",
-			        "operation":"缴费发行"
-			    },
-			];
+			var data = [];
 			// 表格嵌入数据
-			 $.get('/assets/assetsList',function(result) {
-				 //成功返回表格数据
-				 console.log(result);
-//				 for (var i = 0; i < data.length; i++) {
-//					 // 点击资产名称跳连接
-//					 data[i].name = "<a href=" + "/连接" + ">" + data[i].name + "</a>";
-//				 }
-
-			 })
+			$.ajax({
+				url : "/assets/assetsList",
+				type : "get",
+				async: false,
+				success: function(result){
+					console.log(result);
+//					var da = JSON.parse(result);
+					for (var i = 0; i < result.data.length; i++) {
+						data[i] = new Array();
+						// 点击资产名称跳连接
+						data[i].name = "<a href=" + "/assetsDetail/"+result.data[i].assetId+">" + result.data[i].name + "</a>";
+						data[i].valuation = ""+result.data[i]["value"]+"";
+						if(result.data[i]["startTime"]==null){
+							data[i].start_time = ""
+						}else {
+							data[i].start_time = ""+result.data[i]["startTime"]+"";
+						}
+						if(result.data[i]["endTime"]==null){
+							data[i].last_time = ""
+						}else{
+							data[i].last_time = ""+result.data[i]["endTime"]+"";
+						}
+						for(var j=0;j<result.data[i]["operation"].length;j++){
+							data[i].operation = new Array();
+							data[i].operation.push("<a href=\"assets/"+result.data[i].assetId+"/issue\">"+result.data[i]["operation"][j]["message"]+"</a>");
+						}
+//						data[i].can_trade = ""+result.data[i]["tradeShare"]+"";
+						data[i].guarantee = ""+result.data[i]["guarName"]+"";
+						data[i].status = ""+result.data[i]["statusStr"]+"";
+					}
+				}
+			})
 			$("#table2").bootstrapTable({
 				data:data
 			});

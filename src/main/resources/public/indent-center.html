@@ -160,15 +160,15 @@
 									</thead>
 									<tr>
 										<#list orderCenterCmds as orderCenterCmd>
-											<td>${orderCenterCmd.assetName}</td>
-											<td>${orderCenterCmd.assetId}</td>
-											<td>${orderCenterCmd.ApplicationShare}</td>
-											<td>${orderCenterCmd.percent}</td>
+											<td>${orderCenterCmd.assetName!""}</td>
+											<td>${orderCenterCmd.assetId!""}</td>
+											<td>${orderCenterCmd.ApplicationShare!""}</td>
+											<td>${orderCenterCmd.percent!""}</td>
 											<td>${orderCenterCmd.endTime?date}</td>
-											<td>${orderCenterCmd.guarName}</td>
-											<td>${orderCenterCmd.holderName}</td>
-											<td>${orderCenterCmd.startTime}</td>
-											<td>${orderCenterCmd.statusStr}</td>
+											<td>${orderCenterCmd.guarName!""}</td>
+											<td>${orderCenterCmd.holderName!""}</td>
+											<td>${orderCenterCmd.startTime!""}</td>
+											<td>${orderCenterCmd.statusStr!""}</td>
 											<td id="operation" value="${orderCenterCmd.status}">${orderCenterCmd.operation!"查看"}</td>
 										</#list>
 
@@ -223,16 +223,16 @@
 									</thead>
 									<tr>
 										<#list orderCenterCmdsAssign as orderCenterCmdAssign>
-											<td>${orderCenterCmdAssign.assetName}</td>
-											<td>${orderCenterCmdAssign.assetId}</td>
-											<td>${orderCenterCmdAssign.ApplicationShare}</td>
-											<td>${orderCenterCmdAssign.percent}</td>
+											<td>${orderCenterCmdAssign.assetName!""}</td>
+											<td>${orderCenterCmdAssign.assetId!""}</td>
+											<td>${orderCenterCmdAssign.ApplicationShare!""}</td>
+											<td>${orderCenterCmdAssign.percent!""}</td>
 											<td>${orderCenterCmdAssign.endTime?date}</td>
-											<td>${orderCenterCmdAssign.guarName}</td>
-											<td>${orderCenterCmdAssign.expEarning}</td>
-											<td>${orderCenterCmdAssign.buyerName}</td>
-											<td>${orderCenterCmdAssign.buyerCorp}</td>
-											<td>${orderCenterCmdAssign.statusStr}</td>
+											<td>${orderCenterCmdAssign.guarName!""}</td>
+											<td>${orderCenterCmdAssign.expEarning!""}</td>
+											<td>${orderCenterCmdAssign.buyerName!""}</td>
+											<td>${orderCenterCmdAssign.buyerCorp!""}</td>
+											<td>${orderCenterCmdAssign.statusStr!""}</td>
 											<td id="assignOperation" value="${orderCenterCmd.status}">${orderCenterCmdAssign.operation!"查看"}</td>
 										</#list>
 

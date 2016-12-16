@@ -2,8 +2,6 @@ package com.fiveonechain.digitasset.domain.result;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import java.util.Date;
-
 /**
  * Created by yuanshichao on 2016/12/6.
  */
@@ -24,7 +22,7 @@ public class AssetItem {
 
     private Integer expEarnings;
 
-    private Date endTime;
+    private String endTime;
 
     public int getAssetId() {
         return assetId;
@@ -98,11 +96,11 @@ public class AssetItem {
         this.expEarnings = expEarnings;
     }
 
-    public Date getEndTime() {
+    public String getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(Date endTime) {
+    public void setEndTime(String endTime) {
         this.endTime = endTime;
     }
 }

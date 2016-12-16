@@ -97,7 +97,8 @@ public class AssetServiceImpl implements AssetService {
 
     @Override
     public List<Asset> getAssetListByOwner(int userId) {
-        return null;
+        List<Asset> assets = assetMapper.selectByUserId(userId);
+        return assets;
     }
 
     @Override

@@ -61,13 +61,13 @@
 	    	.hand-down ,
 			.kv-file-upload,
 			.fileinput-remove-button,
-			.fileinput-upload-button {
-				opacity: 0;
-				width: 0px;
-				height: 1px;
-				padding: 0px;
-				margin: 0px;
-			}
+			/*.fileinput-upload-button {*/
+				/*opacity: 0;*/
+				/*width: 0px;*/
+				/*height: 1px;*/
+				/*padding: 0px;*/
+				/*margin: 0px;*/
+			/*}*/
 		</style>
 	</head>
 	<body class="gray-bg">
@@ -115,9 +115,7 @@
 						<div class="form-group">
 							<label for="file-1" class="col-sm-4 control-label">产权证明</label>
 							<div class="col-sm-8">
-								<form enctype="multipart/form-data" id="asset_prove" onsubmit="return saveImg()" action="/image/upload" method="post">
 								<input id="file-1" name="imageUrl" type="file" multiple class="file" data-overwrite-initial="false" data-min-file-count="1">
-								</form>
 									<div class="text-muted">*请上传相关产权证明扫描图片*</div>
 							</div>
 						</div>

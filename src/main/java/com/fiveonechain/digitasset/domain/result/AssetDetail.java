@@ -2,7 +2,6 @@ package com.fiveonechain.digitasset.domain.result;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -11,7 +10,7 @@ import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AssetDetail {
-
+    private int assetId;
     private String name;
     private String desc;
     private int value;//资产估值
@@ -24,8 +23,10 @@ public class AssetDetail {
     private List<String> photoList;
 
     private int tradeShare;//流通份额
-    private Date startTime;//发行时间
-    private Date endTime;//到期时间
+    private String startTime;//发行时间
+    private String endTime;//到期时间
+    private String statusStr;//状态
+    private List<CodeMessagePair> operation;//操作
 
     public String getName() {
         return name;
@@ -99,19 +100,19 @@ public class AssetDetail {
         this.digitalAssetCmds = digitalAssetCmds;
     }
 
-    public Date getStartTime() {
+    public String getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(Date startTime) {
+    public void setStartTime(String startTime) {
         this.startTime = startTime;
     }
 
-    public Date getEndTime() {
+    public String getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(Date endTime) {
+    public void setEndTime(String endTime) {
         this.endTime = endTime;
     }
 
@@ -121,5 +122,29 @@ public class AssetDetail {
 
     public void setTradeShare(int tradeShare) {
         this.tradeShare = tradeShare;
+    }
+
+    public String getStatusStr() {
+        return statusStr;
+    }
+
+    public void setStatusStr(String statusStr) {
+        this.statusStr = statusStr;
+    }
+
+    public List<CodeMessagePair> getOperation() {
+        return operation;
+    }
+
+    public void setOperation(List<CodeMessagePair> operation) {
+        this.operation = operation;
+    }
+
+    public int getAssetId() {
+        return assetId;
+    }
+
+    public void setAssetId(int assetId) {
+        this.assetId = assetId;
     }
 }

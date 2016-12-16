@@ -92,18 +92,6 @@
                 </th>
             </tr>
             </thead>
-            <!--<tr>-->
-            <!--<#list tradeCenterCmds as tradeCenterCmd>-->
-            <!--<td>${tradeCenterCmd.assetName!""}</td>-->
-            <!--<td>${tradeCenterCmd.assetId!""}</td>-->
-            <!--<td>${tradeCenterCmd.circulationShare!""}</td>-->
-            <!--<td>${tradeCenterCmd.assetPercent!""}</td>-->
-            <!--<td>${tradeCenterCmd.assetEvaluation!""}</td>-->
-            <!--<td>${tradeCenterCmd.endTime?date}</td>-->
-            <!--<td>${tradeCenterCmd.guarName!""}</td>-->
-            <!--<td>${tradeCenterCmd.expectExpEarning!""}</td>-->
-            <!--</#list>-->
-            <!--</tr>-->
         </table>
     </div>
 
@@ -118,45 +106,36 @@
 <script src="../js/plugins/pace.min.js"></script>
 <script>
     // 表格模拟数据 后台删除。
-    var data = [
-//		    {
-//		    	"name":"<a href='asset-details.html'>Mr.Sofar</a>",
-//		        "id": 0,
-//		        "share":"100",
-//		        "proportion":"100%",
-//		        "forecast": "100",
-//		        "last_time":"2016-12-12",
-//		        "guarantee":"北京点触",
-//		        "premium":"110%"
-//		    },
-//		    {
-//		    	"name":"<a href='asset-details.html'>Mr.Sofar</a>",
-//		        "id": 0,
-//		        "share":"100",
-//		        "proportion":"100%",
-//		        "forecast": "100",
-//		        "last_time":"2016-12-12",
-//		        "guarantee":"北京点触",
-//		        "premium":"110%"
-//		    }
-    ];
+    var data = new Array();
     // 表格嵌入数据
     $.get('/assets/trade', function (result) {
         //成功返回表格数据
         for (var i = 0; i < result.data.length; i++) {
-            console.log(result.data[i].assetName);
+            console.log(result.data[i]["guaranteed"]);
             // 点击资产名称跳连接
-            data[i] = {
-                "name": "<a href=" + "/assetsDetail/"+result.data[i].assetId+">" + result.data[i].assetName + "",
-                "id": result.data[i].assetId,
-                "share": result.data[i].availShare,
-                "proportion": result.data[i].percent,
-                "forecast": result.data[i].value,
-                "last_time": result.data[i].endTime,
-                "guarantee": result.data[i].guaranteedName,
-                "premium": result.data[i].expEarnings
-
+            data[i] = new Array();
+            if(result.data[i]["guaranteed"]==true){
+                data[i]["guarantee"]=result.data[i]["guraName"];
+            }else{
+                data[i]["guarantee"]="";
             }
+            data[i]["name"]="<a href=" + "/assetsDetail/"+result.data[i].assetId+">" + result.data[i].assetName + "";
+            data[i]["id"]=result.data[i].assetId;
+            data[i]["share"]=result.data[i]["availShare"];
+            data[i]["proportion"]=result.data[i]["percent"];
+            data[i]["forecast"]=result.data[i]["value"];
+            data[i]["last_time"]=result.data[i]["endTime"];
+            data[i]["premium"]=result.data[i]["expEarnings"];
+//            data[i] = {
+//                "name": "<a href=" + "/assetsDetail/"+result.data[i].assetId+">" + result.data[i].assetName + "",
+//                "id": result.data[i].assetId,
+//                "share": result.data[i].availShare,
+//                "proportion": result.data[i].percent,
+//                "forecast": result.data[i].value,
+//                "last_time": result.data[i].endTime,
+//                "premium": result.data[i].expEarnings
+//
+//            }
         }
         console.log(data);
         $("#table2").bootstrapTable("load",{

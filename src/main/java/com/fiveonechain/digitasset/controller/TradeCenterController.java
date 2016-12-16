@@ -44,5 +44,11 @@ public class TradeCenterController {
         return "asset-details";
     }
 
+    @RequestMapping("/tradeCenter/index")
+    public String assetsDetail(@AuthenticationPrincipal UserContext userContext
+                               ) {
+        return "deal-center";
+    }
+
 
 }

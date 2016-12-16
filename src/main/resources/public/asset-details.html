@@ -188,34 +188,7 @@
 	        </div>
 	    </div>
 	    <script>
-	    	var tableData = [
-//	    		{
-//	    			"holder":"Mr.Sofar",
-//	    			"circulation-share":"100",
-//	    			"proportion":"100",
-//	    			"operation":"<a href='#' class='text-success'>申请认购</a>"
-//
-//	    		},
-//	    		{
-//	    			"holder":"Mr.Sofar",
-//	    			"circulation-share":"1000",
-//	    			"proportion":"100",
-//	    			"operation":"<a href='#' class='text-success'>申请认购</a>"
-//
-//	    		},
-//	    		{
-//	    			"holder":"Mr.Sofar",
-//	    			"circulation-share":"100",
-//	    			"proportion":"100",
-//	    			"operation":"<a href='#' class='text-success'>申请认购</a>"
-//	    		},
-//	    		{
-//	    			"holder":"Mr.Sofar",
-//	    			"circulation-share":"100",
-//	    			"proportion":"100",
-//	    			"operation":"<a href='#' class='text-success'>申请认购</a>"
-//	    		}
-	    	]
+	    	var tableData = new Array();
 			var assetId =$("#assetId").val();
 			$.ajax({
 				url : "../assets/"+assetId,
@@ -231,23 +204,33 @@
 					}
 					$("#assetEval").text(result["data"]["value"]);
 					$("#assetName").text(result["data"]["name"]);
+					tradeUserAsset();
 					for(var i = 0; i < result.data.photoList.length;i++){
 						var html = "<div class=\"item\"><img data-src=\"holder.js/900x500/auto/#777:#555/text:First slide\" alt=\"First slide [900x500]\" src=\""+result["data"]["photoList"][i]+"\" data-holder-rendered=\"true\"></div>"
 						$("#assetImg").appendChild(html);
 					}
-					console.log(result["data"]["digitalAssetCmds"].length);
-					for (var i = 0; i < result.data.digitalAssetCmds.length; i++) {
+				}
+			})
+		function tradeUserAsset(){
+			$.ajax({
+				url : "../assets/"+assetId+"/tradedigitassets/",
+				type : "get",
+				async: false,
+				success: function(result){
+					console.log(result);
+					for (var i = 0; i < result.data.length; i++) {
 						// 点击资产名称跳连接
 						tableData[i] = {
-							"holder":  result["data"]["digitalAssetCmds"][i]["holderName"],
-							"circulation-share": result["data"]["digitalAssetCmds"][i]["tradeShare"],
-							"proportion": result["data"]["digitalAssetCmds"][i]["percent"],
+							"holder":  result["data"][i]["ownerName"],
+							"circulation-share": result["data"][i]["availShare"],
+							"proportion": result["data"][i]["percent"],
 							"operation": "<a href='/assets/' class='text-success'>申请认购</a>"
 
 						}
 					}
 				}
 			})
+		}
 			console.log(tableData[0]);
 	    	$("#table").bootstrapTable({
                 data: tableData

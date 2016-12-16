@@ -19,4 +19,12 @@ public class CodeMessagePair {
         Assert.notNull(message);
         return new CodeMessagePair(code, message);
     }
+
+    public int getCode() {
+        return code;
+    }
+
+    public String getMessage() {
+        return message;
+    }
 }

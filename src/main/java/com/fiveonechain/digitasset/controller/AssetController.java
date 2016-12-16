@@ -17,12 +17,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -42,7 +37,6 @@ public class AssetController {
     private static final int MAX_PHOTO_SIZE = 6;
 
     private final List<AssetStatus> maturityStatusList = Lists.newArrayList(AssetStatus.MATURITY, AssetStatus.CLEAR);
-
     @Autowired
     private AssetService assetService;
 
@@ -114,12 +108,12 @@ public class AssetController {
         }
 
         int userId = userContext.getUserId();
-        if (!imageUrlService.isImageIdsValid(userId, certIds, ImageTypeEnum.ASSET_CERT)) {
-            throw new IllegalArgumentException("产权证明异常");
-        }
-        if (!imageUrlService.isImageIdsValid(userId, photoIds, ImageTypeEnum.ASSET_PHOTO)) {
-            throw new IllegalArgumentException("照片异常");
-        }
+//        if (!imageUrlService.isImageIdsValid(userId, certIds, ImageTypeEnum.ASSET_CERT)) {
+//            throw new IllegalArgumentException("产权证明异常");
+//        }
+//        if (!imageUrlService.isImageIdsValid(userId, photoIds, ImageTypeEnum.ASSET_PHOTO)) {
+//            throw new IllegalArgumentException("照片异常");
+//        }
 
         int assetId = assetService.nextAssetId();
 
@@ -220,13 +214,31 @@ public class AssetController {
 
         List<Asset> assets = assetService.getAssetListByOwner(userContext.getUserId());
         List<AssetDetail> assetDetails = new LinkedList<>();
+        Optional<User> user = userService.getUserOptional(userContext.getUserId());
+        if(!user.isPresent()){
+            return ResultUtil.buildErrorResult(ErrorInfo.SERVER_ERROR);
+        }
         if(assets!=null && assets.size()>0){
             for (Asset asset : assets){
                 AssetDetail assetDetail = new AssetDetail();
+                assetDetail.setAssetId(asset.getAssetId());
                 assetDetail.setName(asset.getName());
-                assetDetail.setStartTime(asset.getStartTime());
-                assetDetail.setEndTime(asset.getEndTime());
-                assetDetail.setTradeShare(asset.getCycle());
+                if(asset.getStartTime()!=null){
+                    assetDetail.setStartTime(DateUtil.formatDate(asset.getStartTime(),DateUtil.HC_DATETIME));
+                }
+                if(asset.getEndTime()!=null){
+                    assetDetail.setEndTime(DateUtil.formatDate(asset.getEndTime(),DateUtil.HC_DATETIME));
+                }
+                int availShare = userAssetService.sumTradeBalanceByAsset(asset.getAssetId());
+                assetDetail.setTradeShare(availShare);
+                assetDetail.setStatusStr(AssetStatus.fromValue(asset.getStatus()).getMessage());
+                UserRoleEnum userRoleEnum = UserRoleEnum.fromValue(user.get().getRole());
+                List<AssetOperation> operations = assetService.getAvailableOperation(AssetStatus.fromValue(asset.getStatus()),userRoleEnum);
+                if(operations.size()>0){
+                    assetDetail.setOperation(mapCodeMessagePair(operations));
+                }else{
+                    assetDetail.setOperation(Collections.emptyList());
+                }
                 boolean isGuaranteed = assetService.isAssetGuaranteed(asset);
                 if (isGuaranteed) {
                     Optional<GuaranteeCorp> guarOpt = guarService.getGuarOptional(asset.getGuarId());
@@ -428,7 +440,7 @@ public class AssetController {
             AssetItem item = new AssetItem();
             item.setAssetId(asset.getAssetId());
             item.setAssetName(asset.getName());
-            item.setEndTime(asset.getEndTime());
+            item.setEndTime(DateUtil.formatDate(asset.getEndTime(),DateUtil.HC_DATETIME));
 
             boolean isGuar = assetService.isAssetGuaranteed(asset);
             item.setGuaranteed(isGuar);

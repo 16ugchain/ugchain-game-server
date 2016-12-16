@@ -1,8 +1,8 @@
 package com.fiveonechain.digitasset.controller;
 
 import com.fiveonechain.digitasset.auth.UserContext;
-import com.fiveonechain.digitasset.domain.result.OrderCenterCmd;
 import com.fiveonechain.digitasset.domain.*;
+import com.fiveonechain.digitasset.domain.result.OrderCenterCmd;
 import com.fiveonechain.digitasset.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -72,8 +72,10 @@ public class OrderCenterController {
                 if(userInfo.isPresent()){
                     orderCenterCmd.setBuyerName(userInfo.get().getRealName());
                 }
-                GuaranteeCorp guaranteeCorpBuyer = guaranteeCorpService.findByUserId(assetOrder.getBuyerId());
-                orderCenterCmd.setBuyerCorp(guaranteeCorpBuyer.getCorpName());
+                Optional<GuaranteeCorp> guaranteeCorpBuyer = guaranteeCorpService.getGuarOptional(assetOrder.getBuyerId());
+                if(guaranteeCorpBuyer.isPresent()){
+                    orderCenterCmd.setBuyerCorp(guaranteeCorpBuyer.get().getCorpName());
+                }
                 orderCenterCmd.setStartTime(assetOrder.getCreateTime());
                 orderCenterCmd.setStatus(assetOrder.getStatus());
                 orderCenterCmd.setStatusStr(AssetOrderStatusEnum.fromValue(assetOrder.getStatus()).getName());

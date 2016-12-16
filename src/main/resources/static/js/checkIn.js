@@ -1,23 +1,32 @@
-var checkIn = new Vue({
-        el: "body",
-        data: {
-            userInfo: {
-                imageId: ""
-            },
-            api: {
-                upload: "/image/upload"
-            }
+var asset = new Vue({
+    el: "#asset",
+    data: {
+        assetData: {
+            "assetName": "",
+            "assetCycle": "",
+            "assetDescription": "",
+            "assetAppraisement": "",
+            "assetGuarantee": "",
+            "guaranteeCompany": ""
+        },
+        userInfo: {
+            proveImgId: [],
+            assetImgId: []
+        },
+        api: {
+            upload: "/image/upload",
+            createAsset: "/assets"
         }
-
     }
-);
+});
+
 
 $("#file-1").fileinput({
     language: 'zh', //设置语言
-    uploadAsync : true,
-    uploadUrl: checkIn.api.upload, // you must set a valid URL here else you will get an error
+    uploadUrl: asset.api.upload, // you must set a valid URL here else you will get an error
     allowedFileExtensions: ['jpg', 'png', 'gif'],
     overwriteInitial: false,
+    showUpload: true, //是否显示上传按钮
     // maxFileSize: 1000,
     maxFileSize: 10000,
     maxFileCount: 5,
@@ -29,46 +38,34 @@ $("#file-1").fileinput({
         return filename.replace('(', '_').replace(']', '_');
     }
 });
-function saveImg(){
-    $("#asset_prove").ajaxSubmit(function(message) {
-        console.log(message);
-        checkIn.userInfo.imageId = message.data;
-    });
-    return false;
-}
-$('#file-1').on('fileuploaded', function(event, data, previewId, index) {
-    var form = data.form, files = data.files, extra = data.extra,
-        response = data.response, reader = data.reader;
-    console.log(response);//打印出返回的json
+$("#file-1").on("fileuploaded", function (event, data, previewId, index) {
+    var da = data.response;
+    asset.userInfo.proveImgId.push(da["data"]);
+    console.log(asset.userInfo.proveImgId);
 });
 $("#file-2").fileinput({
     language: 'zh', //设置语言
-    uploadUrl: '#', // you must set a valid URL here else you will get an error
+    uploadUrl: asset.api.upload, // you must set a valid URL here else you will get an error
     allowedFileExtensions: ['jpg', 'png', 'gif'],
+    showUpload: true, //是否显示上传按钮
     overwriteInitial: true,
     // maxFileSize: 1000,
     maxFileSize: 10000,
     maxFileCount: 10,
     minFileCount: 6,
-    initialCaption: "请上实物图片",
+    initialCaption: "请上传实物图片",
     browseClass: "btn btn-success", //按钮样式
     slugCallback: function (filename) {
         return filename.replace('(', '_').replace(']', '_');
     }
 });
-var asset = new Vue({
-    el: "#asset",
-    data: {
-        assetData: {
-            "assetName": "",
-            "assetCycle": "",
-            "assetDescription": "",
-            "assetAppraisement": "",
-            "assetGuarantee": "",
-            "guaranteeCompany": ""
-        }
-    }
-})
+$("#file-2").on("fileuploaded", function (event, data, previewId, index) {
+    var da = data.response;
+    asset.userInfo.assetImgId.push(da["data"]);
+    console.log(asset.userInfo.assetImgId);
+});
+
+
 $('form').bootstrapValidator({
     message: 'This value is not valid',
     feedbackIcons: {
@@ -92,6 +89,10 @@ $('form').bootstrapValidator({
             validators: {
                 notEmpty: {
                     message: '发行周期不能为空'
+                },
+                regexp: {
+                    regexp: /[1-6]|[1-9]+$/,
+                    message: '发行周期不能超过60个月'
                 }
             }
         },
@@ -126,14 +127,25 @@ $('form').bootstrapValidator({
 }).on('success.form.bv', function (e) {
     // 全部验证通过，提交校验
     e.preventDefault();
-
-    // assetData.assetName   资产名称
-    // assetData.assetCycle     发行周期
-    // assetData.assetDescription   资产描述
-    // assetData.assetAppraisement    资产估值
-    // assetData.assetGuarantee      延压担保
-    // assetData.guaranteeCompany     担保公司
-
+    var certStr = asset.userInfo.proveImgId.join(",");
+    var photosStr = asset.userInfo.assetImgId.join(",");
+    console.log(certStr);
+    console.log(photosStr);
+    $.post(asset.api.createAsset, {
+        name: asset.assetData.assetName,
+        desc: asset.assetData.assetDescription,
+        cert: certStr,
+        value: asset.assetData.assetAppraisement,
+        cycle: asset.assetData.assetCycle,
+        photos: photosStr,
+        guarId: asset.assetData.guaranteeCompany
+    }, function (data) {
+        console.log(data);
+        if (data.meta.code === 200) {
+            console.log(data.meta.message);
+            window.location.href="/physical-assets.html";
+        }
+    })
     // post 请求
     // $.post()
 });
