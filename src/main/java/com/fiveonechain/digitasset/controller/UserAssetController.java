@@ -41,6 +41,7 @@ public class UserAssetController {
     @Autowired
     private UserAssetService userAssetService;
 
+    /*
     @RequestMapping(value = "/users/self/digitassets", method = RequestMethod.GET)
     public Result getMyDigitAssetList(
             @AuthenticationPrincipal UserContext userContext) {
@@ -57,6 +58,7 @@ public class UserAssetController {
         Result result = ResultUtil.success(userAssetList);
         return result;
     }
+    */
 
     @RequestMapping(value = "/assets/{assetId}/tradedigitassets", method = RequestMethod.GET)
     public Result getAvailDigitAssetListByAsset(

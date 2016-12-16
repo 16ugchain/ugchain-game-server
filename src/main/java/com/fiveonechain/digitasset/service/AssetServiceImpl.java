@@ -1,13 +1,16 @@
 package com.fiveonechain.digitasset.service;
 
 import com.fiveonechain.digitasset.auth.UserContext;
+import com.fiveonechain.digitasset.config.AppConfig;
 import com.fiveonechain.digitasset.domain.*;
 import com.fiveonechain.digitasset.exception.AssetNotFoundException;
 import com.fiveonechain.digitasset.exception.AssetStatusTransferException;
+import com.fiveonechain.digitasset.exception.NoEnoughBalanceException;
 import com.fiveonechain.digitasset.exception.UserOperatoinPermissionException;
 import com.fiveonechain.digitasset.mapper.AssetMapper;
 import com.fiveonechain.digitasset.mapper.AssetRecordMapper;
 import com.fiveonechain.digitasset.mapper.SequenceMapper;
+import com.fiveonechain.digitasset.mapper.UserAssetMapper;
 import com.fiveonechain.digitasset.util.DateUtil;
 import com.google.common.collect.Lists;
 import org.slf4j.Logger;
@@ -52,6 +55,15 @@ public class AssetServiceImpl implements AssetService {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private UserAssetService userAssetService;
+
+    @Autowired
+    private UserAssetMapper userAssetMapper;
+
+    @Autowired
+    private AppConfig appConfig;
+
     @Override
     public int nextAssetId() {
         return seqMapper.nextId(SequenceMapper.ASSET);
@@ -85,6 +97,22 @@ public class AssetServiceImpl implements AssetService {
     }
 
     @Override
+    @Transactional
+    public void issueAsset(UserContext host, Asset asset) {
+
+        LocalDateTime now = LocalDateTime.now();
+        Date startTime = DateUtil.toDate(now);
+        Date endTime = DateUtil.toDate(now.plusMonths(asset.getCycle()));
+        asset.setStartTime(startTime);
+        asset.setEndTime(endTime);
+
+        updateAssetIssueInfo(asset);
+        updateAssetStatusStateMachine(host, asset.getAssetId(), AssetStatus.ISSUE);
+
+        userAssetService.createDigitAsset(asset);
+    }
+
+    @Override
     public Asset getAsset(int assetId) {
         return assetMapper.select(assetId);
     }
@@ -97,13 +125,12 @@ public class AssetServiceImpl implements AssetService {
 
     @Override
     public List<Asset> getAssetListByOwner(int userId) {
-        List<Asset> assets = assetMapper.selectByUserId(userId);
-        return assets;
+        return assetMapper.selectByUserId(userId);
     }
 
     @Override
-    public List<Asset> getAssetListByGuarantee(int guarId) {
-        return null;
+    public boolean isAssetIssuedByUser(Asset asset, int userId) {
+        return asset.getUserId() == userId;
     }
 
     @Override
@@ -193,15 +220,6 @@ public class AssetServiceImpl implements AssetService {
     }
 
     @Override
-    public void issueAsset(UserContext host, Asset asset, String payOrder) {
-
-        // TODO check pay order
-
-        assetMapper.updateAssetIssueInfoByAssetId(asset);
-        updateAssetStatusStateMachine(host, asset.getAssetId(), AssetStatus.ISSUE);
-    }
-
-    @Override
     public boolean isAssetGuaranteed(Asset asset) {
         return asset.getGuarId() != DUMMY_GUAR_ID;
     }
@@ -249,12 +267,30 @@ public class AssetServiceImpl implements AssetService {
     }
 
     @Override
+    public boolean checkAssetExpireToIssue(Asset asset) {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime updateTime = DateUtil.toLocalDateTime(asset.getUpdateTime());
+        return now.isAfter(updateTime.plusDays(appConfig.getIssueExpireTime()));
+    }
+
+    @Override
     public List<Asset> getNoGuarAssetListByIssuerAndStatusList(int userId, List<AssetStatus> statusList) {
         return assetMapper.selectByGuarIdAndUserIdAndStatusList(DUMMY_GUAR_ID, userId, mapStatusCode(statusList));
     }
 
     private List<Integer> mapStatusCode(List<AssetStatus> statusList) {
         return statusList.stream().map(s -> s.getCode()).collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public void applyAssetDelivery(UserContext host, Asset asset) {
+
+        UserAsset digitAsset = userAssetMapper.selectForUpdate(asset.getAssetId(), host.getUserId());
+        if (!userAssetService.hasEnoughDigitAsset(digitAsset, asset.getEvalValue())) {
+            throw new NoEnoughBalanceException(asset.getAssetId(), host.getUserId());
+        }
+        updateAssetStatusStateMachine(host, asset.getAssetId(), AssetStatus.APPLY_DELIVERY);
     }
 
     @Override
