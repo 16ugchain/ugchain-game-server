@@ -1,10 +1,7 @@
 package com.fiveonechain.digitasset.service;
 
 import com.fiveonechain.digitasset.auth.UserContext;
-import com.fiveonechain.digitasset.domain.Asset;
-import com.fiveonechain.digitasset.domain.AssetOperation;
-import com.fiveonechain.digitasset.domain.AssetStatus;
-import com.fiveonechain.digitasset.domain.UserRoleEnum;
+import com.fiveonechain.digitasset.domain.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -37,6 +34,8 @@ public interface AssetService {
     List<Asset> getNoGuarAssetListByIssuerAndStatusList(int userId, List<AssetStatus> status);
 
     List<Asset> getAssetListByGuarExcludeStatus(int guarId, AssetStatus notStatus);
+
+    List<AssetRecord> getAssetRecordListByIssuer(int issuerId, int assetId);
 
     void updateAssetStatusStateMachine(UserContext host, int assetId, AssetStatus newStatus);
 

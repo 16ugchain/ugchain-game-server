@@ -97,6 +97,11 @@ public class AssetServiceImpl implements AssetService {
     }
 
     @Override
+    public List<AssetRecord> getAssetRecordListByIssuer(int issuerId, int assetId) {
+        return assetRecordMapper.selectByUserIdAndAssetId(issuerId, assetId);
+    }
+
+    @Override
     @Transactional
     public void issueAsset(UserContext host, Asset asset) {
 
