@@ -1,9 +1,14 @@
 package com.fiveonechain.digitasset.service;
 
+import com.fiveonechain.digitasset.auth.UserContext;
 import com.fiveonechain.digitasset.domain.AssetOrder;
 import com.fiveonechain.digitasset.domain.AssetOrderOperation;
 import com.fiveonechain.digitasset.domain.AssetOrderStatusEnum;
+<<<<<<<HEAD
 import com.fiveonechain.digitasset.domain.UserRoleEnum;
+=======
+import com.fiveonechain.digitasset.domain.User;
+>>>>>>>a3c6ff9416963b113136aacfde5d8cae5f34b02c
 
 import java.util.List;
 
@@ -13,7 +18,7 @@ import java.util.List;
 public interface AssetOrderService {
     int nextOrderId();
 
-    int createAssetOrder(AssetOrder assetOrder);
+    void createAssetOrder(AssetOrder assetOrder);
 
     AssetOrder getAssetOrder(int orderId);
 
@@ -25,8 +30,22 @@ public interface AssetOrderService {
 
     List<AssetOrder> getAssetOrderListByStatus(AssetOrderStatusEnum status);
 
-    List<AssetOrderOperation> getOperationByStatusAndRole( AssetOrderStatusEnum status, UserRoleEnum userRoleEnum);
+    List<AssetOrderOperation> getOperationByStatusAndRole(AssetOrderStatusEnum status, UserRoleEnum userRoleEnum);
 
-    void updateAssetOrderStatus(int orderId,AssetOrderStatusEnum assetOrderStatusEnum);
+    void confirmOrderApply(UserContext host, AssetOrder order);
+
+    void setOrderPayExpiration(UserContext host, AssetOrder order);
+
+    void finishOrderSuccess(UserContext host, AssetOrder order);
+
+    void finishOrderFailed(UserContext host, AssetOrder order);
+
+    void updateAssetOrderStatus(int orderId, AssetOrderStatusEnum assetOrderStatusEnum);
+
+    boolean checkOrderApplyExpired(AssetOrder order);
+
+    boolean checkOrderPayExpired(AssetOrder order);
+
+    boolean checkOrderPayConfirmExpired(AssetOrder order);
 
 }

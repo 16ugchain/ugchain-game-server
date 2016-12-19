@@ -10,6 +10,7 @@ public enum ErrorInfo {
     USER_PERMISSION_DENIED(4006, "没有权限"),
     ASSET_EXPIRE_TO_ISSUE(4007, "资产发行过期"),
     DIGIT_ASSET_NOT_ENOUGH(4008, "数字资产不足"),
+    TRADE_DIGIT_ASSET_NOT_ENOUGH(4009, "流通数字资产不足"),
     IMAGETYPE_NOT_FOUND(5001,"图片类型不存在"),
     IMAGE_TOO_LARGE(5003,"图片太大"),
     IMAGE_UPLOAD_FAIL(5004,"图片上传失败"),

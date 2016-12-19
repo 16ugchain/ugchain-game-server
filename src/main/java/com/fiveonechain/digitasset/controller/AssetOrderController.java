@@ -1,12 +1,17 @@
 package com.fiveonechain.digitasset.controller;
 
 import com.fiveonechain.digitasset.auth.UserContext;
-import com.fiveonechain.digitasset.domain.AssetOrder;
-import com.fiveonechain.digitasset.domain.AssetOrderStatusEnum;
+import com.fiveonechain.digitasset.domain.*;
 import com.fiveonechain.digitasset.domain.result.ErrorInfo;
 import com.fiveonechain.digitasset.domain.result.Result;
+import com.fiveonechain.digitasset.exception.AssetNotFoundException;
 import com.fiveonechain.digitasset.exception.AssetOrderException;
+import com.fiveonechain.digitasset.exception.NoEnoughDigitAssetException;
+import com.fiveonechain.digitasset.exception.NoEnoughTradeBalanceException;
 import com.fiveonechain.digitasset.service.AssetOrderService;
+import com.fiveonechain.digitasset.service.AssetService;
+import com.fiveonechain.digitasset.service.UserAssetService;
+import com.fiveonechain.digitasset.service.UserService;
 import com.fiveonechain.digitasset.util.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -16,6 +21,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.Optional;
 
 /**
  * Created by fanjl on 16/11/21.
@@ -23,40 +29,73 @@ import java.util.Date;
 @RestController
 @RequestMapping("assetOrder")
 public class AssetOrderController {
+
     @Autowired
-    private AssetOrderService iAssetOrderService;
+    private AssetOrderService assetOrderService;
+
+    @Autowired
+    private AssetService assetService;
+
+    @Autowired
+    private UserAssetService userAssetService;
+
+    @Autowired
+    private UserService userService;
 
     @RequestMapping(value = "createOrder", method = RequestMethod.POST)
     public Result sellOrder(
-            @AuthenticationPrincipal UserContext userContext,
+            @AuthenticationPrincipal UserContext host,
             @RequestParam("userId") int userId,
             @RequestParam("assetId") int assetId,
             @RequestParam("amount") int amount,
-            @RequestParam("cycle") int cycle,
             @RequestParam("unitPrice") double unitPrice) {
 
-        int buyerId = userContext.getUserId();
-        // TODO 检查userAsset是否有效
-//        UserAsset asset = assetService.getAsset(assetId);
-        LocalDateTime currentTime = LocalDateTime.now();
 
-        Date startTime = Date.from(currentTime.atZone(ZoneId.systemDefault()).toInstant());
-        Date endTime = Date.from(currentTime.plusDays(cycle).atZone(ZoneId.systemDefault()).toInstant());
+        if (unitPrice <= 0) {
+            throw new IllegalArgumentException("每股出价异常");
+        }
+        if (amount <= 0) {
+            throw new IllegalArgumentException("认购份额异常");
+        }
+        if (host.getUserId() == userId) {
+            return ResultUtil.buildErrorResult(ErrorInfo.USER_PERMISSION_DENIED);
+        }
+
+        if (!host.hasRole(UserRoleEnum.USER_PUBLISHER, UserRoleEnum.USER_ASSIGNEE)) {
+            return ResultUtil.buildErrorResult(ErrorInfo.USER_PERMISSION_DENIED);
+        }
+
+        /*
+        Optional<Asset> assetOpt = assetService.getAssetOptional(assetId);
+        if (!assetOpt.isPresent()) {
+            return ResultUtil.buildErrorResult(ErrorInfo.ASSET_NOT_FOUND);
+        }
+        Asset asset = assetOpt.get();
+        */
+
+        Optional<UserAsset> userAssetOpt = userAssetService.getDigitAssetOptional(userId, assetId);
+        if (!userAssetOpt.isPresent()) {
+            return ResultUtil.buildErrorResult(ErrorInfo.DIGIT_ASSET_NOT_FOUND);
+        }
+        UserAsset userAsset = userAssetOpt.get();
+
+        if (!userAssetService.hasEnoughTradeBalance(userAsset, amount)) {
+            return ResultUtil.buildErrorResult(ErrorInfo.DIGIT_ASSET_NOT_ENOUGH);
+        }
+
+
+        int orderId = assetOrderService.nextOrderId();
 
         AssetOrder assetOrder = new AssetOrder();
+        assetOrder.setOrderId(orderId);
         assetOrder.setUserId(userId);
         assetOrder.setAssetId(assetId);
-        assetOrder.setBuyerId(buyerId);
+        assetOrder.setBuyerId(host.getUserId());
         assetOrder.setAmount(amount);
         assetOrder.setUnitPrices(BigDecimal.valueOf(unitPrice));
-        assetOrder.setEndTime(endTime);
         assetOrder.setStatus(AssetOrderStatusEnum.APPLY.getId());
 
-
-        if(iAssetOrderService.createAssetOrder(assetOrder)!=1){
-            Result result = ResultUtil.buildErrorResult(ErrorInfo.SERVER_ERROR);
-            return result;
-        }
+        assetOrderService.createAssetOrder(assetOrder);
 
         return ResultUtil.success();
     }
@@ -66,7 +105,7 @@ public class AssetOrderController {
             @AuthenticationPrincipal UserContext userContext,
             @PathVariable("assetOrderId") int assetOrderId) {
 
-        AssetOrder assetOrder = iAssetOrderService.getAssetOrder(assetOrderId);
+        AssetOrder assetOrder = assetOrderService.getAssetOrder(assetOrderId);
         if (assetOrder == null) {
             return ResultUtil.buildErrorResult(ErrorInfo.ORDER_NOT_FOUND);
         }
@@ -80,94 +119,125 @@ public class AssetOrderController {
      */
     @RequestMapping(value = "{assetOrderId}/apply", method = RequestMethod.POST)
     public Result ApplyOrder(
+            @AuthenticationPrincipal UserContext host,
             @PathVariable("assetOrderId") int assetOrderId,
-            @RequestParam("result") boolean result
-            ) {
-        AssetOrder assetOrder = iAssetOrderService.getAssetOrder(assetOrderId);
+            @RequestParam("result") boolean result) {
+
+        AssetOrder assetOrder = assetOrderService.getAssetOrder(assetOrderId);
         if(assetOrder == null){
             return ResultUtil.buildErrorResult(ErrorInfo.ORDER_NOT_FOUND);
         }
-        // TODO: 同意后需要锁死份额 
-        LocalDateTime currentTime = LocalDateTime.now();
-        Date startTime = Date.from(currentTime.atZone(ZoneId.systemDefault()).toInstant());
-        if(assetOrder.getEndTime().before(startTime)){
-            iAssetOrderService.updateAssetOrderStatus(assetOrderId,AssetOrderStatusEnum.APPLY_OUT_TIME);
+        if (assetOrder.getUserId() != host.getUserId()) {
+            return ResultUtil.buildErrorResult(ErrorInfo.USER_PERMISSION_DENIED);
+        }
+        if (!assetOrderService.checkOrderApplyExpired(assetOrder)) {
+            assetOrderService.updateAssetOrderStatus(assetOrderId, AssetOrderStatusEnum.APPLY_OUT_TIME);
             return ResultUtil.buildErrorResult(ErrorInfo.ORDER_APPLY_OUTTIME);
         }
+
         if (result) {
-            iAssetOrderService.updateAssetOrderStatus(assetOrderId, AssetOrderStatusEnum.OBLIGATIONS);
+            assetOrderService.confirmOrderApply(host, assetOrder);
         } else {
-            iAssetOrderService.updateAssetOrderStatus(assetOrderId, AssetOrderStatusEnum.APPLY_REJECT);
+            assetOrderService.updateAssetOrderStatus(assetOrderId, AssetOrderStatusEnum.APPLY_REJECT);
         }
 
         return ResultUtil.success();
     }
 
     /**支付状态订单的状态变化
+     * 订单支付
      * @param assetOrderId
      * @param result
      * @return
      */
     @RequestMapping(value = "{assetOrderId}/obligation", method = RequestMethod.POST)
     public Result obligationOrder(
+            @AuthenticationPrincipal UserContext host,
             @PathVariable("assetOrderId") int assetOrderId,
-            @RequestParam("result") boolean result
-    ) {
-        AssetOrder assetOrder = iAssetOrderService.getAssetOrder(assetOrderId);
-        LocalDateTime currentTime = LocalDateTime.now();
-        Date startTime = Date.from(currentTime.atZone(ZoneId.systemDefault()).toInstant());
-        if(assetOrder.getEndTime().before(startTime)){
-            iAssetOrderService.updateAssetOrderStatus(assetOrderId,AssetOrderStatusEnum.OBLIGATIONS_OUT_TIME);
+            @RequestParam("result") boolean result) {
+
+        AssetOrder assetOrder = assetOrderService.getAssetOrder(assetOrderId);
+        if(assetOrder == null){
+            return ResultUtil.buildErrorResult(ErrorInfo.ORDER_NOT_FOUND);
+        }
+        if (assetOrder.getBuyerId() != host.getUserId()) {
+            return ResultUtil.buildErrorResult(ErrorInfo.USER_PERMISSION_DENIED);
+        }
+        if (!assetOrderService.checkOrderPayExpired(assetOrder)) {
+            assetOrderService.setOrderPayExpiration(host, assetOrder);
             return ResultUtil.buildErrorResult(ErrorInfo.ORDER_OBLIGATION_OUTTIME);
         }
+
         if (result) {
-            iAssetOrderService.updateAssetOrderStatus(assetOrderId, AssetOrderStatusEnum.OBLIGATIONS_DONE);
+            assetOrderService.updateAssetOrderStatus(assetOrderId, AssetOrderStatusEnum.OBLIGATIONS_DONE);
         }
 
         return ResultUtil.success();
     }
 
     /**持有人完成订单的状态变化
+     * 订单支付确认
      * @param assetOrderId
      * @param result
      * @return
      */
     @RequestMapping(value = "{assetOrderId}/finishOrder", method = RequestMethod.POST)
     public Result finishOrder(
+            @AuthenticationPrincipal UserContext host,
             @PathVariable("assetOrderId") int assetOrderId,
-            @RequestParam("result") boolean result
-    ) {
-        AssetOrder assetOrder = iAssetOrderService.getAssetOrder(assetOrderId);
-        LocalDateTime currentTime = LocalDateTime.now();
-        Date startTime = Date.from(currentTime.atZone(ZoneId.systemDefault()).toInstant());
-        if(assetOrder.getEndTime().before(startTime)){
-            iAssetOrderService.updateAssetOrderStatus(assetOrderId,AssetOrderStatusEnum.COMPLETE_OUT_TIME);
+            @RequestParam("result") boolean result) {
+
+
+        AssetOrder assetOrder = assetOrderService.getAssetOrder(assetOrderId);
+        if(assetOrder == null){
+            return ResultUtil.buildErrorResult(ErrorInfo.ORDER_NOT_FOUND);
+        }
+        if (assetOrder.getUserId() != host.getUserId()) {
+            return ResultUtil.buildErrorResult(ErrorInfo.USER_PERMISSION_DENIED);
+        }
+        /*
+        if (!assetOrderService.checkOrderPayConfirmExpired(assetOrder)) {
+            assetOrderService.updateAssetOrderStatus(assetOrderId, AssetOrderStatusEnum.COMPLETE_OUT_TIME);
             return ResultUtil.buildErrorResult(ErrorInfo.ORDER_COMEPLETE_OUTTIME);
-        }
+        }*/
+
         if (result) {
-            iAssetOrderService.updateAssetOrderStatus(assetOrderId, AssetOrderStatusEnum.TRADE_SUCCESS);
+            assetOrderService.finishOrderSuccess(host, assetOrder);
         }
-//        else {
-//            iAssetOrderService.updateAssetOrderStatus(assetOrderId,AssetOrderStatusEnum.TRADE_FAILED);
-//        }
 
         return ResultUtil.success();
     }
 
     /**仲裁后，修改订单状态
+     * 担保公司仲裁
      * @param assetOrderId
      * @param result
      * @return
      */
     @RequestMapping(value = "{assetOrderId}/tradeResult", method = RequestMethod.POST)
     public Result tradeFail(
+            @AuthenticationPrincipal UserContext host,
             @PathVariable("assetOrderId") int assetOrderId,
-            @RequestParam("result") boolean result
-    ) {
+            @RequestParam("result") boolean result) {
+
+        AssetOrder assetOrder = assetOrderService.getAssetOrder(assetOrderId);
+        if(assetOrder == null){
+            return ResultUtil.buildErrorResult(ErrorInfo.ORDER_NOT_FOUND);
+        }
+
+        Optional<Asset> assetOpt = assetService.getAssetOptional(assetOrder.getAssetId());
+        if (!assetOpt.isPresent()) {
+            return ResultUtil.buildErrorResult(ErrorInfo.ASSET_NOT_FOUND);
+        }
+        Asset asset = assetOpt.get();
+        if (!assetService.isAssetGuaranteed(asset, host.getUserId())) {
+            return ResultUtil.buildErrorResult(ErrorInfo.USER_PERMISSION_DENIED);
+        }
+
         if (result) {
-            iAssetOrderService.updateAssetOrderStatus(assetOrderId, AssetOrderStatusEnum.TRADE_SUCCESS);
+            assetOrderService.finishOrderSuccess(host, assetOrder);
         }else {
-            iAssetOrderService.updateAssetOrderStatus(assetOrderId,AssetOrderStatusEnum.TRADE_FAILED);
+            assetOrderService.finishOrderFailed(host, assetOrder);
         }
 
         return ResultUtil.success();
@@ -177,6 +247,24 @@ public class AssetOrderController {
     @ResponseBody
     public Result handleOrderException() {
         return ResultUtil.buildErrorResult(ErrorInfo.ORDER_EXCEPTION);
+    }
+
+    @ExceptionHandler(AssetNotFoundException.class)
+    @ResponseBody
+    public Result handleAssetNotFoundException() {
+        return ResultUtil.buildErrorResult(ErrorInfo.ASSET_NOT_FOUND);
+    }
+
+    @ExceptionHandler(NoEnoughDigitAssetException.class)
+    @ResponseBody
+    public Result handleAssetNotEnoughException() {
+        return ResultUtil.buildErrorResult(ErrorInfo.DIGIT_ASSET_NOT_ENOUGH);
+    }
+
+    @ExceptionHandler(NoEnoughTradeBalanceException.class)
+    @ResponseBody
+    public Result handleTradeBalanceNotEnoughException() {
+        return ResultUtil.buildErrorResult(ErrorInfo.TRADE_DIGIT_ASSET_NOT_ENOUGH);
     }
 
 }

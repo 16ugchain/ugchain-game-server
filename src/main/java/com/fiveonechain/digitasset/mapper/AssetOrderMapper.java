@@ -10,10 +10,10 @@ import java.util.List;
  */
 @Mapper
 public interface AssetOrderMapper {
-    final static String columns = "asset_id,order_id,user_id,amount,unit_prices,buyer_id,end_time,status";
-    final static String all_columns = "asset_id,order_id,user_id,amount,unit_prices,buyer_id,status,create_time,update_time,end_time";
+    final static String columns = "asset_id,order_id,user_id,amount,unit_prices,buyer_id,status";
+    final static String all_columns = "asset_id,order_id,user_id,amount,unit_prices,buyer_id,status,create_time,update_time";
     final static String entity = "#{assetOrder.assetId},#{assetOrder.orderId},#{assetOrder.userId}," +
-            "#{assetOrder.amount},#{assetOrder.unitPrices},#{assetOrder.buyerId},#{assetOrder.endTime},#{assetOrder.status}";
+            "#{assetOrder.amount},#{assetOrder.unitPrices},#{assetOrder.buyerId},#{assetOrder.status}";
 
     @Insert("insert into asset_order (" + columns + ") values(" + entity + ")")
     int insertOrder(@Param("assetOrder") AssetOrder assetOrder);
@@ -24,7 +24,6 @@ public interface AssetOrderMapper {
             @Result(property = "userId", column = "user_id"),
             @Result(property = "unitPrices", column = "unit_prices"),
             @Result(property = "buyerId", column = "buyer_id"),
-            @Result(property = "endTime", column = "end_time")
     })
     @Select("select " + all_columns + " from asset_order where order_id=#{orderId}")
     AssetOrder findByOrderId(@Param("orderId") int orderId);
@@ -63,7 +62,6 @@ CREATE TABLE `asset_order` (
   `amount` int(11) NOT NULL,
   `buyer_id` int(11) NOT NULL,
   `create_time` timestamp NOT NULL default CURRENT_TIMESTAMP,
-  `end_time` timestamp NOT NULL,
   `update_time` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   `status` tinyint(4) NOT NULL default '0',
 

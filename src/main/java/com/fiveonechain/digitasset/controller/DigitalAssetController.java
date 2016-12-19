@@ -41,18 +41,23 @@ public class DigitalAssetController {
         List<DigitalAssetCmd> digitalAssetCmds = new LinkedList<DigitalAssetCmd>();
         for(UserAsset userAsset : userAssets){
             DigitalAssetCmd digitalAssetCmd = new DigitalAssetCmd();
-            Optional<Asset> asset = assetService.getAssetOptional(userAsset.getAssetId());
-            if(asset.isPresent()){
-                digitalAssetCmd.setAssetName(asset.get().getName());
-                digitalAssetCmd.setEndTime(asset.get().getEndTime());
-                UserInfo userInfo = userInfoService.getUserInfoByUserId(asset.get().getUserId());
+            Optional<Asset> assetOpt = assetService.getAssetOptional(userAsset.getAssetId());
+            if(assetOpt.isPresent()){
+                Asset asset = assetOpt.get();
+                digitalAssetCmd.setAssetName(asset.getName());
+                digitalAssetCmd.setEndTime(asset.getEndTime());
+                UserInfo userInfo = userInfoService.getUserInfoByUserId(asset.getUserId());
                 digitalAssetCmd.setPublishName(userInfo.getRealName());
-                digitalAssetCmd.setStatusStr(AssetStatus.fromValue(asset.get().getStatus()).getMessage());
-                Optional<GuaranteeCorp> guaranteeCorp = guaranteeCorpService.getGuarOptByGuarId(asset.get().getGuarId());
+                digitalAssetCmd.setStatusStr(AssetStatus.fromValue(asset.getStatus()).getMessage());
+                Optional<GuaranteeCorp> guaranteeCorp = guaranteeCorpService.getGuarOptByGuarId(asset.getGuarId());
                 if(guaranteeCorp.isPresent()){
                     digitalAssetCmd.setGuarName(guaranteeCorp.get().getCorpName());
                 }
                 digitalAssetCmd.setHoldShare(userAsset.getBalance());
+                digitalAssetCmd.setLockedShare(userAsset.getLockBalance());
+                if (asset.getStatus() == AssetStatus.ISSUE.getCode()) {
+                    digitalAssetCmd.setWhollyOwner(userAssetService.hasEnoughDigitAsset(userAsset, asset.getEvalValue()));
+                }
 
             }
             digitalAssetCmd.setAssetId(userAsset.getAssetId());

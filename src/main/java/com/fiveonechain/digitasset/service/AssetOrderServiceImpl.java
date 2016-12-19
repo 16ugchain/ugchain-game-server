@@ -1,5 +1,7 @@
 package com.fiveonechain.digitasset.service;
 
+import com.fiveonechain.digitasset.auth.UserContext;
+import com.fiveonechain.digitasset.config.AppConfig;
 import com.fiveonechain.digitasset.domain.AssetOrder;
 import com.fiveonechain.digitasset.domain.AssetOrderOperation;
 import com.fiveonechain.digitasset.domain.AssetOrderStatusEnum;
@@ -8,11 +10,16 @@ import com.fiveonechain.digitasset.domain.result.OrderCenterCmd;
 import com.fiveonechain.digitasset.exception.AssetOrderException;
 import com.fiveonechain.digitasset.mapper.AssetOrderMapper;
 import com.fiveonechain.digitasset.mapper.SequenceMapper;
+<<<<<<< HEAD
 import com.google.common.collect.Lists;
+=======
+import com.fiveonechain.digitasset.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
+import org.springframework.transaction.annotation.Transactional;
 import java.util.Collections;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -24,16 +31,21 @@ public class AssetOrderServiceImpl implements AssetOrderService {
     private SequenceMapper sequenceMapper;
     @Autowired
     private AssetOrderMapper assetOrderMapper;
+
+    @Autowired
+    private UserAssetService userAssetService;
+
+    @Autowired
+    private AppConfig appConfig;
+
     @Override
     public int nextOrderId() {
         return sequenceMapper.nextId(sequenceMapper.ASSET_ORDER);
     }
 
     @Override
-    public int createAssetOrder(AssetOrder assetOrder) {
-        int id = nextOrderId();
-        assetOrder.setOrderId(id);
-        return assetOrderMapper.insertOrder(assetOrder);
+    public void createAssetOrder(AssetOrder assetOrder) {
+        assetOrderMapper.insertOrder(assetOrder);
     }
 
     @Override
@@ -92,6 +104,36 @@ public class AssetOrderServiceImpl implements AssetOrderService {
     }
 
     @Override
+    @Transactional
+    public void confirmOrderApply(UserContext host, AssetOrder order) {
+        userAssetService.lockDigitAssetShare(order.getUserId(), order.getAssetId(), order.getAmount());
+        updateAssetOrderStatus(order.getOrderId(), AssetOrderStatusEnum.OBLIGATIONS);
+    }
+
+    @Override
+    @Transactional
+    public void setOrderPayExpiration(UserContext host, AssetOrder order) {
+        userAssetService.unLockDigitAssetShare(order.getUserId(), order.getAssetId(), order.getAmount());
+        updateAssetOrderStatus(order.getOrderId(), AssetOrderStatusEnum.OBLIGATIONS_OUT_TIME);
+    }
+
+    @Override
+    @Transactional
+    public void finishOrderSuccess(UserContext host, AssetOrder order) {
+        userAssetService.transferDigitAssetShare(
+                order.getUserId(), order.getBuyerId(), order.getAssetId(), order.getAmount(), order.getOrderId());
+        updateAssetOrderStatus(order.getOrderId(), AssetOrderStatusEnum.TRADE_SUCCESS);
+    }
+
+    @Override
+    @Transactional
+    public void finishOrderFailed(UserContext host, AssetOrder order) {
+        userAssetService.unLockDigitAssetShare(order.getUserId(), order.getAssetId(), order.getAmount());
+        updateAssetOrderStatus(order.getOrderId(), AssetOrderStatusEnum.TRADE_FAILED);
+    }
+
+    @Override
+    @Transactional
     public void updateAssetOrderStatus(int orderId, AssetOrderStatusEnum newStatus) {
         Integer curStatusCode = assetOrderMapper.selectStatusForUpdate(orderId);
         if (curStatusCode == null) {
@@ -150,4 +192,24 @@ public class AssetOrderServiceImpl implements AssetOrderService {
         assetOrderMapper.updateStatusByOrderId(newStatus.getId(), orderId);
     }
 
+    @Override
+    public boolean checkOrderApplyExpired(AssetOrder order) {
+        return isAfter(order.getUpdateTime(), appConfig.getOrderApplyExpireTime());
+    }
+
+    @Override
+    public boolean checkOrderPayExpired(AssetOrder order) {
+        return isAfter(order.getUpdateTime(), appConfig.getOrderPayExpireTime());
+    }
+
+    @Override
+    public boolean checkOrderPayConfirmExpired(AssetOrder order) {
+        return isAfter(order.getUpdateTime(), appConfig.getOrderPayConfirmExpireTime());
+    }
+
+    private boolean isAfter(Date lastDate, int deltaInDays) {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime last = DateUtil.toLocalDateTime(lastDate);
+        return now.isAfter(last.plusDays(deltaInDays));
+    }
 }

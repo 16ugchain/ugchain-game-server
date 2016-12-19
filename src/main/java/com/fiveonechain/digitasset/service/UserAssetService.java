@@ -39,4 +39,5 @@ public interface UserAssetService {
 
     boolean hasEnoughDigitAsset(UserAsset digitAsset, int needAmount);
 
+    boolean hasEnoughTradeBalance(UserAsset digitAsset, int needAmount);
 }

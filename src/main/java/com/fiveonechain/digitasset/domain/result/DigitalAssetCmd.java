@@ -12,9 +12,11 @@ public class DigitalAssetCmd {
     private String holderName;
     private int tradeShare;//流通份额
     private int holdShare;//持有份额
+    private int lockedShare;
     private Date endTime;
     private String guarName;
     private String statusStr;
+    private boolean isWhollyOwner;
 
     private String percent;//占资比例  持有份额／资产估价
 
@@ -96,6 +98,22 @@ public class DigitalAssetCmd {
 
     public void setTradeShare(int tradeShare) {
         this.tradeShare = tradeShare;
+    }
+
+    public boolean isWhollyOwner() {
+        return isWhollyOwner;
+    }
+
+    public void setWhollyOwner(boolean whollyOwner) {
+        isWhollyOwner = whollyOwner;
+    }
+
+    public int getLockedShare() {
+        return lockedShare;
+    }
+
+    public void setLockedShare(int lockedShare) {
+        this.lockedShare = lockedShare;
     }
 }
 

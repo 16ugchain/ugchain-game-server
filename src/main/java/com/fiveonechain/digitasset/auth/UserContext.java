@@ -48,4 +48,13 @@ public class UserContext {
         }
         return false;
     }
+
+    public boolean hasRole(UserRoleEnum... roles) {
+        for (UserRoleEnum role : roles) {
+            if (hasRole(role)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
