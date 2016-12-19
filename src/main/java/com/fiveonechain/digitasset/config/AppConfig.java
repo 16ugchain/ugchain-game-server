@@ -12,6 +12,9 @@ import org.springframework.context.annotation.Configuration;
 public class AppConfig {
 
     private Integer issueExpireTime;
+    private Integer orderApplyExpireTime;
+    private Integer orderPayExpireTime;
+    private Integer orderPayConfirmExpireTime;
 
     public Integer getIssueExpireTime() {
         return issueExpireTime;
@@ -19,5 +22,29 @@ public class AppConfig {
 
     public void setIssueExpireTime(Integer issueExpireTime) {
         this.issueExpireTime = issueExpireTime;
+    }
+
+    public Integer getOrderApplyExpireTime() {
+        return orderApplyExpireTime;
+    }
+
+    public void setOrderApplyExpireTime(Integer orderApplyExpireTime) {
+        this.orderApplyExpireTime = orderApplyExpireTime;
+    }
+
+    public Integer getOrderPayExpireTime() {
+        return orderPayExpireTime;
+    }
+
+    public void setOrderPayExpireTime(Integer orderPayExpireTime) {
+        this.orderPayExpireTime = orderPayExpireTime;
+    }
+
+    public Integer getOrderPayConfirmExpireTime() {
+        return orderPayConfirmExpireTime;
+    }
+
+    public void setOrderPayConfirmExpireTime(Integer orderPayConfirmExpireTime) {
+        this.orderPayConfirmExpireTime = orderPayConfirmExpireTime;
     }
 }

@@ -1,7 +1,9 @@
 package com.fiveonechain.digitasset.service;
 
+import com.fiveonechain.digitasset.auth.UserContext;
 import com.fiveonechain.digitasset.domain.AssetOrder;
 import com.fiveonechain.digitasset.domain.AssetOrderStatusEnum;
+import com.fiveonechain.digitasset.domain.User;
 
 import java.util.List;
 
@@ -23,6 +25,20 @@ public interface AssetOrderService {
 
     List<AssetOrder> getAssetOrderListByStatus(AssetOrderStatusEnum status);
 
+    void confirmOrderApply(UserContext host, AssetOrder order);
+
+    void setOrderPayExpiration(UserContext host, AssetOrder order);
+
+    void finishOrderSuccess(UserContext host, AssetOrder order);
+
+    void finishOrderFailed(UserContext host, AssetOrder order);
+
     void updateAssetOrderStatus(int orderId,AssetOrderStatusEnum assetOrderStatusEnum);
+
+    boolean checkOrderApplyExpired(AssetOrder order);
+
+    boolean checkOrderPayExpired(AssetOrder order);
+
+    boolean checkOrderPayConfirmExpired(AssetOrder order);
 
 }

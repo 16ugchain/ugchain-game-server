@@ -212,5 +212,11 @@ public class UserAssetServiceImpl implements UserAssetService {
         return false;
     }
 
-
+    @Override
+    public boolean hasEnoughTradeBalance(UserAsset digitAsset, int needAmount) {
+        if (digitAsset.getTradeBalance() >= needAmount) {
+            return true;
+        }
+        return false;
+    }
 }
