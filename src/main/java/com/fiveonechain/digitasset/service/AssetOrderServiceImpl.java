@@ -7,6 +7,7 @@ import com.fiveonechain.digitasset.mapper.AssetOrderMapper;
 import com.fiveonechain.digitasset.mapper.SequenceMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -25,10 +26,8 @@ public class AssetOrderServiceImpl implements AssetOrderService {
     }
 
     @Override
-    public int createAssetOrder(AssetOrder assetOrder) {
-        int id = nextOrderId();
-        assetOrder.setOrderId(id);
-        return assetOrderMapper.insertOrder(assetOrder);
+    public void createAssetOrder(AssetOrder assetOrder) {
+        assetOrderMapper.insertOrder(assetOrder);
     }
 
     @Override

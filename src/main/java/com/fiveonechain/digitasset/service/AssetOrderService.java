@@ -11,7 +11,7 @@ import java.util.List;
 public interface AssetOrderService {
     int nextOrderId();
 
-    int createAssetOrder(AssetOrder assetOrder);
+    void createAssetOrder(AssetOrder assetOrder);
 
     AssetOrder getAssetOrder(int orderId);
 
