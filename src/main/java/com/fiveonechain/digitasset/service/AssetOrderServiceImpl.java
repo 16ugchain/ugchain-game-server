@@ -10,9 +10,7 @@ import com.fiveonechain.digitasset.domain.result.OrderCenterCmd;
 import com.fiveonechain.digitasset.exception.AssetOrderException;
 import com.fiveonechain.digitasset.mapper.AssetOrderMapper;
 import com.fiveonechain.digitasset.mapper.SequenceMapper;
-<<<<<<< HEAD
 import com.google.common.collect.Lists;
-=======
 import com.fiveonechain.digitasset.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
