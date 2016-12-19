@@ -315,10 +315,10 @@ public class AssetServiceImpl implements AssetService {
             case ISSUE:
                 if (role == UserRoleEnum.CORP) {
                     operationList = Lists.newArrayList(AssetOperation.FREEZE);
-                } else if (role == UserRoleEnum.USER_PUBLISHER
+                }/* else if (role == UserRoleEnum.USER_PUBLISHER
                         || role == UserRoleEnum.USER_ASSIGNEE) {
                     operationList = Lists.newArrayList(AssetOperation.APPLY_DELIVERY);
-                }
+                }*/
                 break;
             case FROZEN:
                 if (role == UserRoleEnum.CORP) {
