@@ -87,21 +87,62 @@
 					<th data-field="operation" data-sortable="true">
 						操作
 					</th>
-					<th data-field="contract" data-sortable="true">
-						电子合同
-					</th>
+					<!--<th data-field="contract" data-sortable="true">-->
+						<!--电子合同-->
+					<!--</th>-->
 				</tr>
 			</thead>
+
 				<#list digitalAssetCmds as digitalAssetCmd>
-					<td>${digitalAssetCmd.name!""}</td>
+					<tr>
+					<td>${digitalAssetCmd.assetName!""}</td>
 					<td>${digitalAssetCmd.assetId!""}</td>
 					<td>${digitalAssetCmd.publishName!""}</td>
 					<td>${digitalAssetCmd.holdShare!""}</td>
-					<td>${digitalAssetCmd.endTime?date!""}</td>
+					<td>${digitalAssetCmd.endTimeStr!""}</td>
 					<td>${digitalAssetCmd.guarName!""}</td>
 					<td>${digitalAssetCmd.statusStr!""}</td>
+					<td><label><input type="checkbox" name="" value="" data-toggle="modal" data-target="#myModal2">申请认购</label></td>
+					</tr>
 				</#list>
+
 		</table>
+		<!-- 允许认购模态框 -->
+		<div class="modal inmodal bs-example-modal-sm" id="myModal2" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="mySmallModalLabel">
+			<div class="modal-dialog">
+				<div class="modal-content animated flipInX">
+					<div class="modal-body">
+						<form class="form-horizontal" role="form" id="trade">
+							<!-- 认购份额 -->
+							<div class="form-group">
+								<label for="registerNmae" class="col-xs-3 control-label">允许认购份额</label>
+								<div class="col-xs-6">
+									<div class="input-group">
+										<input type="text" class="form-control" id="tradeBalance" placeholder="请输入允许认购份额">
+										<span class="input-group-btn">
+								        	<button class="btn btn-default" type="button">股</button>
+								     	</span>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="registerNmae" class="col-xs-3 control-label"></label>
+								<div class="col-xs-6">
+									<div class="row">
+										<button class="col-xs-4 col-xs-offset-1 btn btn-default">
+											取消
+										</button>
+										<button class="col-xs-4 col-xs-offset-1 btn btn-success">
+											修改
+										</button>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
        	<script>
 //       		var aaa = [
 //			    {
@@ -164,6 +205,99 @@
 //    		$("#table").bootstrapTable({
 //                data:aaa
 //            });
+
+$('#trade').bootstrapValidator({
+	message: 'This value is not valid',
+	feedbackIcons: {
+		valid: 'glyphicon glyphicon-ok',
+		invalid: 'glyphicon glyphicon-remove',
+		validating: 'glyphicon glyphicon-refresh'
+	},
+	fields: {
+		opinion: {
+			validators: {
+				notEmpty: {
+					message: '评估意见不能为空'
+				}
+			}
+		},
+		worth: {
+			validators: {
+				notEmpty: {
+					message: '评估价值不能为空'
+				},
+				stringLength: {
+					min: 4,
+					max: 9,
+					message: '请输入大于4位数小于9位数的数字'
+				},
+				regexp: {
+					regexp: /^(0|[1-9][0-9]*)$/,
+					message: '请输入大于0的整数'
+				}
+			}
+		},
+		charge: {
+			validators: {
+				notEmpty: {
+					message: '服务收费不能为空'
+				},
+				stringLength: {
+					min: 2,
+					max: 5,
+					message: '请输入大于2位数小于5位数的数字'
+				},
+				regexp: {
+					regexp: /^(0|[1-9][0-9]*)$/,
+					message: '请输入大于0的整数'
+				}
+			}
+		},
+		earnings: {
+			validators: {
+				notEmpty: {
+					message: '预期收益不能为空'
+				},
+				stringLength: {
+					min: 1,
+					max: 4,
+					message: '请输入大于1位数小于4位数的数字'
+				},
+				regexp: {
+					regexp: /([1-9]\d*(\.\d*[1-9])?)|(0\.\d*[1-9])/,
+					message: '请输入大于0的数字'
+				}
+			}
+		}
+
+	}
+}).on('success.form.bv', function(e) {
+	e.preventDefault();
+	// 资产评估事件
+
+	$.ajax({
+		url : "assets/"+assetId+"/evaluate",
+		type : "post",
+		data : {"result":false,
+			"conclusion":$("#opinion"),
+			"value":$("#worth"),
+			"fee":$("#charge"),
+			"earnings":$("#earnings")},
+		success: function(result){
+			console.log(result);
+			if(result.meta.code==200){
+				$("#modalAlert",parent.document).click();
+				$(".modal-body",parent.document).html("评估成功");
+				location.reload();
+			}else{
+				$("#modalAlert",parent.document).click();
+				$(".modal-body",parent.document).html(result.meta.message);
+				location.reload();
+			}
+		}
+	})
+
+});
        	</script>
         
     </div>

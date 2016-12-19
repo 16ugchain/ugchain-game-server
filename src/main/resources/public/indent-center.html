@@ -169,7 +169,14 @@
 											<td>${orderCenterCmd.holderName!""}</td>
 											<td>${orderCenterCmd.startTime!""}</td>
 											<td>${orderCenterCmd.statusStr!""}</td>
-											<td id="operation" value="${orderCenterCmd.status}">${orderCenterCmd.operation!"查看"}</td>
+
+												<td id="operation" value="${orderCenterCmd.status}">
+                                                    <#list orderCenterCmd.operation as op>
+                                                        <a href="javascript:void(0);" onclick="handlerOrder(${op.code},${orderCenterCmd.orderId})">${op.message!"查看"}</a>
+                                                    </#list>
+												</td>
+
+
 										</#list>
 
 									</tr>
@@ -233,9 +240,12 @@
 											<td>${orderCenterCmdAssign.buyerName!""}</td>
 											<td>${orderCenterCmdAssign.buyerCorp!""}</td>
 											<td>${orderCenterCmdAssign.statusStr!""}</td>
-											<td id="assignOperation" value="${orderCenterCmdAssign.status}">${orderCenterCmdAssign.operation!"查看"}</td>
+											<td id="assignOperation" value="${orderCenterCmdAssign.status}">
+												<#list orderCenterCmdAssign.operation as op>
+                                                    <a href="javascript:void(0);" onclick="handlerOrder(${op.code},${orderCenterCmdAssign.orderId})">${op.message!"查看"}</a>
+												</#list>
+											</td>
 										</#list>
-
 									</tr>
 								</table>
 						 	<!-- </div> -->
@@ -299,7 +309,29 @@
     <!-- 第三方插件 -->
     <script src="../js/plugins/pace.min.js"></script>
     <script>
-
+        function handlerOrder(operationCode,assetId){
+            var flag = false;
+            switch (operationCode){
+                case 1: flag = true;break;
+                case 2: flag = false;break;
+                case 6: return false;
+            }
+                $.ajax({
+                    url : "../assetOrder/"+assetId+"/apply",
+                    type : "post",
+                    data : {"result":flag},
+                    success: function(result){
+                        console.log(result);
+                        if(result.meta.code==200){
+                            $("#modalAlert",parent.document).click();
+                            $(".modal-body",parent.document).html("操作成功");
+                        }else{
+                            $("#modalAlert",parent.document).click();
+                            $(".modal-body",parent.document).html(result.meta.message);
+                        }
+                    }
+                })
+        }
 //    	var table1 = [
 //			    {
 //			    	"name":"Mr.Sofar",

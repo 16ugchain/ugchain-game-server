@@ -31,6 +31,9 @@
     .modal-dialog {
         z-index: 10000!important;
     }
+    .input-group-btn {
+        z-index: 1000;
+    }
 
 </style>
 <button type="button" class="btn btn-primary" data-toggle="modal" id="modalAlert" data-target=".bs-example-modal-sm" style="width:0px;height:0px;padding: 0px;margin: 0px;overflow: hidden; position: fixed;top: 100000000000px">友情提示</button>
@@ -67,33 +70,8 @@
 
     // 左侧菜单栏
     var roleNavber = [
+        [],
         [
-            {
-                title: "交易中心",
-                icon: "&#xe61f;",
-                active: true,
-                link: "/tradeCenter/index"
-            },
-            {
-                title: "订单中心",
-                icon: "&#xe604;",
-                active: false,
-                link: "/orderCenter/index"
-//                    indent-center.html
-            },
-            {
-                title: "数字资产",
-                icon: "&#xe61b;",
-                active: false,
-                link: "/digitalCenter/index"
-            },
-            {
-                title: "我的信息",
-                icon: "&#xe64f;",
-                active: false,
-                link: "/userInfo/index"
-            },
-        ],[
             {
                 title: "实物资产",
                 icon: "&#xe60f;",
@@ -130,7 +108,35 @@
                 active: false,
                 link: "/userInfo/index"
             },
-        ],[
+        ],
+        [
+            {
+                title: "交易中心",
+                icon: "&#xe61f;",
+                active: true,
+                link: "/tradeCenter/index"
+            },
+            {
+                title: "订单中心",
+                icon: "&#xe604;",
+                active: false,
+                link: "/orderCenter/index"
+//                    indent-center.html
+            },
+            {
+                title: "数字资产",
+                icon: "&#xe61b;",
+                active: false,
+                link: "/digitalCenter/index"
+            },
+            {
+                title: "我的信息",
+                icon: "&#xe64f;",
+                active: false,
+                link: "/userInfo/index"
+            },
+        ],
+        [
             {
                 title: "资产评估",
                 icon: "&#xe61b;",
@@ -141,7 +147,7 @@
                 title: "订单中心",
                 icon: "&#xe604;",
                 active: false,
-                link: "/indent-center.html"
+                link: "/orderCenter/index"
             },
             {
                 title: "赎回兑付",

@@ -344,9 +344,9 @@ public class AssetController {
             assetItem.setAssetId(asset.getAssetId());
             assetItem.setAssetName(asset.getName());
             assetItem.setDesc(asset.getDescription());
+            String updatetime = DateUtil.formatDate(asset.getUpdateTime(),DateUtil.HC_DATETIME);
+            assetItem.setUpdateTimeStr(updatetime);
             assetItem.setStatus(CodeMessagePair.of(status.getCode(), status.getMessage()));
-            assetItem.setUpdateTime(asset.getUpdateTime());
-
             List<AssetOperation> operationList = assetService.getAvailableOperation(status, UserRoleEnum.CORP);
             assetItem.setOperations(mapCodeMessagePair(operationList));
 
@@ -432,8 +432,15 @@ public class AssetController {
                 LOGGER.error("{} issuerId {} NOT FOUND", ErrorInfo.SERVER_ERROR, asset.getUserId());
                 continue;
             }
-
-            assetItem.setIssuerName(userInfoOpt.get().getRealName());
+            Optional<User> user = userService.getUserOptional(asset.getUserId());
+            if (!user.isPresent()) {
+                LOGGER.error("{} issuerId {} NOT FOUND", ErrorInfo.SERVER_ERROR, asset.getUserId());
+                continue;
+            }
+            assetItem.setTelephone(user.get().getTelephone());
+            String endTimeStr = DateUtil.formatDate(asset.getEndTime(),DateUtil.HC_DATETIME);
+            assetItem.setEndTimeStr(endTimeStr);
+            assetItem.setIssuerInfo(userInfoOpt.get());
 
             Optional<UserAsset> userAssetOpt = userAssetService.getWhollyOwnerOfAsset(asset.getAssetId(), asset.getEvalValue());
             if (!userAssetOpt.isPresent()) {
@@ -442,7 +449,6 @@ public class AssetController {
             }
 
             assetItem.setProposerId(userAssetOpt.get().getUserId());
-
             userInfoOpt = userInfoService.getUserInfoOptional(assetItem.getProposerId());
             if (!userInfoOpt.isPresent()) {
                 LOGGER.error("{} wholly-owner UserId {} NOT FOUND", ErrorInfo.SERVER_ERROR, assetItem.getProposerId());

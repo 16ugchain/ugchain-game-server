@@ -165,17 +165,11 @@
                                 <!-- <table id="table" data-toggle="table" data-pagination="true" data-search="true" data-use-row-attr-func="true" data-reorderable-rows="true" data-url="/js/a.json"> -->
                                 <thead>
                                 <tr>
-                                    <th data-field="holder" >
-                                        持有人
+                                    <th data-field="time" data-sortable="true">
+                                        时间
                                     </th>
-                                    <th data-field="circulation-share" data-sortable="true">
+                                    <th data-field="message">
                                         流通份额
-                                    </th>
-                                    <th data-field="proportion" data-sortable="true">
-                                        占资比例
-                                    </th>
-                                    <th data-field="operation">
-                                        操作
                                     </th>
                                 </tr>
                                 </thead>
@@ -191,7 +185,7 @@
     var tableData = new Array();
     var assetId =$("#assetId").val();
     $.ajax({
-        url : "../assets/"+assetId,
+        url : "../assets/"+assetId+"",
         type : "get",
         async: false,
         success: function(result){
@@ -208,26 +202,27 @@
                 var html = "<div class=\"item\"><img data-src=\"holder.js/900x500/auto/#777:#555/text:First slide\" alt=\"First slide [900x500]\" src=\""+result["data"]["photoList"][i]+"\" data-holder-rendered=\"true\"></div>"
                 $("#assetImg").appendChild(html);
             }
+            publishAssetDetail();
         }
     })
+    function publishAssetDetail(){
+        $.ajax({
+            url : "../assets/"+assetId+"/status",
+            type : "get",
+            async: false,
+            success: function(result){
+                for (var i = 0; i < result.data.length; i++) {
+                    // 点击资产名称跳连接
+                    tableData[i] = {
+                        "time":  result["data"][i]["time"],
+                        "message": result["data"][i]["message"],
 
-    $.ajax({
-        url : "../assets/"+assetId+"/tradedigitassets/",
-        type : "get",
-        async: false,
-        success: function(result){
-            for (var i = 0; i < result.data.shareList.length; i++) {
-                // 点击资产名称跳连接
-                tableData[i] = {
-                    "holder":  result["data"]["shareList"][i]["ownerName"],
-                    "circulation-share": result["data"]["shareList"][i]["availShare"],
-                    "proportion": result["data"]["shareList"][i]["percent"],
-                    "operation": "<a href='/assets/' class='text-success'>申请认购</a>"
-
+                    }
                 }
             }
-        }
-    })
+        })
+    }
+
     console.log(tableData[0]);
     $("#table").bootstrapTable({
         data: tableData

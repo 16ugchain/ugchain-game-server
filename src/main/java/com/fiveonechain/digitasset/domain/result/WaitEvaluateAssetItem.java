@@ -12,6 +12,7 @@ public class WaitEvaluateAssetItem {
     private int issuerId;
     private String issuerName;
 
+
     public int getAssetId() {
         return assetId;
     }

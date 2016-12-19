@@ -1,6 +1,7 @@
 package com.fiveonechain.digitasset.domain.result;
 
-import java.util.Collections;
+import com.fiveonechain.digitasset.domain.UserInfo;
+
 import java.util.List;
 
 /**
@@ -11,9 +12,12 @@ public class DeliveryAssetItem {
     private int assetId;
     private String assetName;
     private int issuerId;
-    private String issuerName;
+    private UserInfo issuerInfo;
     private int proposerId;
+    private int unitPrices;//单价
+    private String telephone;
     private String proposerName;
+    private String endTimeStr;
     private CodeMessagePair status;
     private List<CodeMessagePair> operations;
 
@@ -41,12 +45,12 @@ public class DeliveryAssetItem {
         this.issuerId = issuerId;
     }
 
-    public String getIssuerName() {
-        return issuerName;
+    public UserInfo getIssuerInfo() {
+        return issuerInfo;
     }
 
-    public void setIssuerName(String issuerName) {
-        this.issuerName = issuerName;
+    public void setIssuerInfo(UserInfo issuerInfo) {
+        this.issuerInfo = issuerInfo;
     }
 
     public int getProposerId() {
@@ -79,5 +83,29 @@ public class DeliveryAssetItem {
 
     public void setOperations(List<CodeMessagePair> operations) {
         this.operations = operations;
+    }
+
+    public int getUnitPrices() {
+        return unitPrices;
+    }
+
+    public void setUnitPrices(int unitPrices) {
+        this.unitPrices = unitPrices;
+    }
+
+    public String getTelephone() {
+        return telephone;
+    }
+
+    public void setTelephone(String telephone) {
+        this.telephone = telephone;
+    }
+
+    public String getEndTimeStr() {
+        return endTimeStr;
+    }
+
+    public void setEndTimeStr(String endTimeStr) {
+        this.endTimeStr = endTimeStr;
     }
 }

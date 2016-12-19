@@ -36,8 +36,15 @@ public class TradeCenterController {
     private ImageUrlService imageUrlService;
 
 
-    @RequestMapping("/assetsDetail/{assetId}")
-    public String assetsDetail(@AuthenticationPrincipal UserContext userContext,
+    @RequestMapping("/assetsDetail/publish/{assetId}")
+    public String assetsDetailPublish(@AuthenticationPrincipal UserContext userContext,
+                               @PathVariable("assetId") int assetId,
+                               Model model) {
+        model.addAttribute("assetId", assetId);
+        return "asset-details-publish";
+    }
+    @RequestMapping("/assetsDetail/assign/{assetId}")
+    public String assetsDetailAssign(@AuthenticationPrincipal UserContext userContext,
                                @PathVariable("assetId") int assetId,
                                Model model) {
         model.addAttribute("assetId", assetId);

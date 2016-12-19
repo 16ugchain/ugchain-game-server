@@ -14,9 +14,11 @@ public class OrderCenterCmd {
     * */
     private String assetName;//资产名称
     private int assetId;//资产编号
+    private int orderId;//订单编号
     private int ApplicationShare;//申购份额
     private String percent;//占资比例
     private Date endTime;
+    private String endTimeStr;
     private String guarName;
     private String holderName;//持有人
     private Date startTime;
@@ -137,5 +139,21 @@ public class OrderCenterCmd {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public int getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(int orderId) {
+        this.orderId = orderId;
+    }
+
+    public String getEndTimeStr() {
+        return endTimeStr;
+    }
+
+    public void setEndTimeStr(String endTimeStr) {
+        this.endTimeStr = endTimeStr;
     }
 }

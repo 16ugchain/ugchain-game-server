@@ -4,6 +4,7 @@ import com.fiveonechain.digitasset.auth.UserContext;
 import com.fiveonechain.digitasset.domain.*;
 import com.fiveonechain.digitasset.domain.result.OrderCenterCmd;
 import com.fiveonechain.digitasset.service.*;
+import com.fiveonechain.digitasset.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -26,6 +27,7 @@ public class OrderCenterController {
     @Autowired
     private AssetService assetService;
 
+
     @Autowired
     private UserInfoService userInfoService;
 
@@ -41,26 +43,28 @@ public class OrderCenterController {
                         Model model){
         List<AssetOrder> assetOrders = iAssetOrderService.getAssetOrderListByOwner(userContext.getUserId());
         List<AssetOrder> assetOrderAssign = iAssetOrderService.getAssetOrderListByBuyerId(userContext.getUserId());
-        List<OrderCenterCmd> orderCenterCmds = orderCenterCmdPlay(assetOrders,userContext.getUserId());
-        List<OrderCenterCmd> orderCenterCmdsAssign = orderCenterCmdPlay(assetOrderAssign,userContext.getUserId());
+        List<OrderCenterCmd> orderCenterCmds = orderCenterCmdPlay(assetOrders,UserRoleEnum.USER_ASSIGNEE);
+        List<OrderCenterCmd> orderCenterCmdsAssign = orderCenterCmdPlay(assetOrderAssign,UserRoleEnum.USER_PUBLISHER);
 
         model.addAttribute("orderCenterCmdsAssign",orderCenterCmdsAssign);
         model.addAttribute("orderCenterCmds",orderCenterCmds);
         return "indent-center";
     }
 
-    public List<OrderCenterCmd> orderCenterCmdPlay(List<AssetOrder> assetOrders,int userId){
+    public List<OrderCenterCmd> orderCenterCmdPlay(List<AssetOrder> assetOrders,UserRoleEnum userRoleEnum){
         List<OrderCenterCmd> orderCenterCmds = new LinkedList<>();
         for(AssetOrder assetOrder : assetOrders){
             OrderCenterCmd orderCenterCmd = new OrderCenterCmd();
-            OrderCenterCmd orderCenterCmdAssign = new OrderCenterCmd();
             Optional<Asset> asset = assetService.getAssetOptional(assetOrder.getAssetId());
             if(!asset.isPresent()){
                 continue;
             }else{
                 //我发起的
+                String endTimeStr = DateUtil.formatDate(assetOrder.getEndTime(),DateUtil.HC_DATETIME);
+                orderCenterCmd.setOrderId(assetOrder.getOrderId());
                 orderCenterCmd.setAssetName(asset.get().getName());
                 orderCenterCmd.setAssetId(asset.get().getAssetId());
+                orderCenterCmd.setEndTimeStr(endTimeStr);
                 orderCenterCmd.setApplicationShare(assetOrder.getAmount());
                 orderCenterCmd.setPercent(String.valueOf(assetOrder.getAmount()*100/asset.get().getEvalValue()));
                 orderCenterCmd.setEndTime(assetOrder.getEndTime());
@@ -80,7 +84,7 @@ public class OrderCenterController {
                 orderCenterCmd.setStatus(assetOrder.getStatus());
                 orderCenterCmd.setStatusStr(AssetOrderStatusEnum.fromValue(assetOrder.getStatus()).getName());
                 orderCenterCmd.setExpEarning(String.valueOf(asset.get().getExpEarnings()));
-                List<AssetOrderOperation> assetOrderOperations = iAssetOrderService.getOperationByStatusAndRole(AssetOrderStatusEnum.fromValue(assetOrder.getStatus()),UserRoleEnum.fromValue(userId));
+                List<AssetOrderOperation> assetOrderOperations = iAssetOrderService.getOperationByStatusAndRole(AssetOrderStatusEnum.fromValue(assetOrder.getStatus()),userRoleEnum);
                 orderCenterCmd.setOperation(assetOrderOperations);
             }
             orderCenterCmds.add(orderCenterCmd);

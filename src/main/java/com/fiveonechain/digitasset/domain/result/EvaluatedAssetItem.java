@@ -1,7 +1,6 @@
 package com.fiveonechain.digitasset.domain.result;
 
 import java.util.Collections;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -14,7 +13,7 @@ public class EvaluatedAssetItem {
     private String assetName;
     private String desc;
     private CodeMessagePair status;
-    private Date updateTime;
+    private String updateTimeStr;
     private List<CodeMessagePair> operations = Collections.emptyList();
 
     public void addOperation(CodeMessagePair operation) {
@@ -48,13 +47,6 @@ public class EvaluatedAssetItem {
         this.desc = desc;
     }
 
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
 
     public CodeMessagePair getStatus() {
         return status;
@@ -70,5 +62,13 @@ public class EvaluatedAssetItem {
 
     public void setOperations(List<CodeMessagePair> operations) {
         this.operations = operations;
+    }
+
+    public String getUpdateTimeStr() {
+        return updateTimeStr;
+    }
+
+    public void setUpdateTimeStr(String updateTimeStr) {
+        this.updateTimeStr = updateTimeStr;
     }
 }

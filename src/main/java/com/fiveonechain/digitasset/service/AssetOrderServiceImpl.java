@@ -64,7 +64,7 @@ public class AssetOrderServiceImpl implements AssetOrderService {
     @Override
     public List<AssetOrderOperation> getOperationByStatusAndRole( AssetOrderStatusEnum status, UserRoleEnum userRoleEnum) {
         List<AssetOrderOperation> assetOrderOperations = Collections.emptyList();
-        if(userRoleEnum==UserRoleEnum.USER_ASSIGNEE){
+        if(userRoleEnum.getId()==UserRoleEnum.USER_ASSIGNEE.getId()){
             if(status.getId() == AssetOrderStatusEnum.APPLY.getId()){
                 assetOrderOperations = Lists.newArrayList(AssetOrderOperation.VIEW);
                 return assetOrderOperations;
@@ -75,7 +75,7 @@ public class AssetOrderServiceImpl implements AssetOrderService {
                 assetOrderOperations = Lists.newArrayList(AssetOrderOperation.APPEAL);
                 return assetOrderOperations;
             }
-        }else if(userRoleEnum==UserRoleEnum.USER_PUBLISHER){
+        }else if(userRoleEnum.getId()==UserRoleEnum.USER_PUBLISHER.getId()){
             if(status.getId() == AssetOrderStatusEnum.APPLY.getId()){
                 assetOrderOperations = Lists.newArrayList(AssetOrderOperation.AGREE_APPLY,AssetOrderOperation.REJECT_APPLY);
                 return assetOrderOperations;

@@ -39,8 +39,8 @@ public interface AssetMapper {
             @Result(property = "description", column = "description"),
             @Result(property = "certificate", column = "certificate"),
             @Result(property = "photos", column = "photos"),
-            @Result(property = "startTime", column = "start_time"),
-            @Result(property = "endTime", column = "end_time"),
+            @Result(property = "startTime", column = "start_time",jdbcType = JdbcType.TIMESTAMP,javaType = java.sql.Timestamp.class),
+            @Result(property = "endTime", column = "end_time",jdbcType = JdbcType.TIMESTAMP,javaType = java.sql.Timestamp.class),
             @Result(property = "createTime", column = "create_time",jdbcType = JdbcType.TIMESTAMP,javaType = java.sql.Timestamp.class),
             @Result(property = "updateTime", column = "update_time",jdbcType = JdbcType.TIMESTAMP,javaType = java.sql.Timestamp.class),
             @Result(property = "evalConclusion", column = "eval_conclusion"),
@@ -81,12 +81,14 @@ public interface AssetMapper {
             @Param("status") int notStatus);
 
     @Lang(SimpleSelectInExtendedLanguageDriver.class)
+    @ResultMap("asset")
     @Select("SELECT " + ALL_COLUMN + " FROM asset WHERE guar_id = #{guarId} AND status IN (#{statusList}) ORDER BY update_time DESC")
     List<Asset> selectByGuarIdAndStatusList(
             @Param("guarId") int guarId,
             @Param("statusList") List<Integer> statusList);
 
     @Lang(SimpleSelectInExtendedLanguageDriver.class)
+    @ResultMap("asset")
     @Select("SELECT " + ALL_COLUMN + " FROM asset WHERE user_id = #{userId} AND status IN (#{statusList}) ORDER BY update_time DESC")
     List<Asset> selectByGuarIdAndUserIdAndStatusList(
             @Param("guarId") int guarId,

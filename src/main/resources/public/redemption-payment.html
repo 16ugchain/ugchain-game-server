@@ -91,38 +91,43 @@
     <!-- 第三方插件 -->
     <script src="js/plugins/pace.min.js"></script>
     <script>
-    	var aaa = [
-		    {	
-		    	"name":"Mr.Sofar",
-		        "id": 0,
-		        "time": "2016-10-11",
-		        "status":"发行中",
-		        "operation":'<button type="button" class="btn btn-success">完成</button>',
-		    },
-		    {	
-		    	"name":"Mr.Sofar",
-		        "id": 0,
-		        "time": "2016-10-11",
-		        "status":"发行中",
-		        "operation":'<span class="text-success">完成</span>',
-		    },
-		    {	
-		    	"name":"Mr.Sofar",
-		        "id": 0,
-		        "time": "2016-10-11",
-		        "status":"发行中",
-		        "operation":'<button type="button" class="btn btn-success">完成</button>',
-		    },
-		    {	
-		    	"name":"Mr.Sofar",
-		        "id": 0,
-		        "time": "2016-10-11",
-		        "status":"发行中",
-		        "operation":'<button type="button" class="btn btn-success">完成</button>',
-		    }
-		];
-		$("#table").bootstrapTable({
-            data:aaa
-        });
+		var data = new Array();
+		// 表格嵌入数据
+		$.get('/assets/maturity', function (result) {
+			//成功返回表格数据
+			for (var i = 0; i < result.data.length; i++) {
+				data[i] = new Array();
+				data[i]["name"]="<a href=" + "/assetsDetail/"+result.data[i].assetId+">" + result.data[i].assetName + "</a>";
+				data[i]["id"]=result.data[i].assetId;
+				data[i]["time"]=result.data[i]["endTime"];
+				data[i]["status"]=result.data[i]["status"]["message"];
+				console.log(result.data[i]);
+				for(var j=0;j<result.data[i]["operations"].length;j++){
+					console.log(result.data[i]["operations"][j]["message"]);
+					data[i]["operation"]="<a href=\"javascript:void(0);\" onclick=\"clearAssets("+result.data[i].assetId+")\">"+result.data[i]["operations"][j]["message"]+"</a>";
+				}
+			}
+			console.log(data);
+			$("#table").bootstrapTable("load",{
+				data: data
+			});
+
+		})
+		function clearAssets(assetId) {
+			$.ajax({
+				url : "/assets/"+assetId+"/clear",
+				type : "post",
+				success: function(result){
+					console.log(result);
+					if(result.meta.code==200){
+						$("#modalAlert",parent.document).click();
+						$(".modal-body",parent.document).html("赎回成功");
+					}else{
+						$("#modalAlert",parent.document).click();
+						$(".modal-body",parent.document).html("赎回失败，请稍后再试");
+					}
+				}
+			})
+		}
     </script>
 </html>

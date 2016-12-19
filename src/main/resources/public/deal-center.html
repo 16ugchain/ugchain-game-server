@@ -106,6 +106,7 @@
 <script src="../js/plugins/pace.min.js"></script>
 <script>
     // 表格模拟数据 后台删除。
+    console.log(window.parent.roleNum);
     var data = new Array();
     // 表格嵌入数据
     $.get('/assets/trade', function (result) {
@@ -119,23 +120,17 @@
             }else{
                 data[i]["guarantee"]="";
             }
-            data[i]["name"]="<a href=" + "/assetsDetail/"+result.data[i].assetId+">" + result.data[i].assetName + "";
+            if(window.parent.roleNum==1){
+                data[i]["name"]="<a href=" + "/assetsDetail/publish/"+result.data[i].assetId+">" + result.data[i].assetName + "";
+            }else if(window.parent.roleNum==2){
+                data[i]["name"]="<a href=" + "/assetsDetail/assign/"+result.data[i].assetId+">" + result.data[i].assetName + "";
+            }
             data[i]["id"]=result.data[i].assetId;
             data[i]["share"]=result.data[i]["availShare"];
             data[i]["proportion"]=result.data[i]["percent"];
             data[i]["forecast"]=result.data[i]["value"];
             data[i]["last_time"]=result.data[i]["endTime"];
             data[i]["premium"]=result.data[i]["expEarnings"];
-//            data[i] = {
-//                "name": "<a href=" + "/assetsDetail/"+result.data[i].assetId+">" + result.data[i].assetName + "",
-//                "id": result.data[i].assetId,
-//                "share": result.data[i].availShare,
-//                "proportion": result.data[i].percent,
-//                "forecast": result.data[i].value,
-//                "last_time": result.data[i].endTime,
-//                "premium": result.data[i].expEarnings
-//
-//            }
         }
         console.log(data);
         $("#table2").bootstrapTable("load",{

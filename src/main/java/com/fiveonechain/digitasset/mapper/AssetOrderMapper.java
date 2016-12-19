@@ -45,7 +45,6 @@ public interface AssetOrderMapper {
     @Select("select " + all_columns + " from asset_order where status=#{status}")
     List<AssetOrder> findListByStatus(@Param("status") int status);
 
-    @ResultMap("assetOrder")
     @Select("SELECT status FROM asset_order WHERE order_id = #{orderId} FOR UPDATE")
     Integer selectStatusForUpdate(@Param("orderId") int orderId);
 

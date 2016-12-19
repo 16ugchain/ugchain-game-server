@@ -1,54 +1,238 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico">
-		<!-- 网站作者 -->
-		<meta name="author" content="51区块研发团队">
-		<!-- 网站关键词 -->
-		<meta name="keywords" content="51区块,数字资产">
-		<!-- 网站描述 -->
-		<meta name="description" content="51区块">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico">
+	<!-- 网站作者 -->
+	<meta name="author" content="51区块研发团队">
+	<!-- 网站关键词 -->
+	<meta name="keywords" content="51区块,数字资产">
+	<!-- 网站描述 -->
+	<meta name="description" content="51区块">
 
-		<title>结算交割| 51区块</title>
+	<title>结算交割| 51区块</title>
 
-		<!-- Bootstrap.css -->
-		<link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
+	<!-- Bootstrap.css -->
+	<link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
 
-		<!-- bootstrapValidator.css -->
-		<link rel="stylesheet" href="//cdn.bootcss.com/bootstrap-validator/0.5.3/css/bootstrapValidator.min.css">
+	<!-- bootstrapValidator.css -->
+	<link rel="stylesheet" href="//cdn.bootcss.com/bootstrap-validator/0.5.3/css/bootstrapValidator.min.css">
 
-		<!-- public.css -->
-		<link rel="stylesheet" href="/css/public.css">
+	<!-- public.css -->
+	<link rel="stylesheet" href="/css/public.css">
 
-		<!-- jQuery.js 1.11.1-->
-		<script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+	<!-- jQuery.js 1.11.1-->
+	<script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
 
-		<!-- Bootstrap.js -->
-		<script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+	<!-- Bootstrap.js -->
+	<script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
 
-		<!-- vue.js -->
-		<script src="//cdn.bootcss.com/vue/1.0.24/vue.js"></script>
-		<script src="//cdn.bootcss.com/vue-router/0.7.10/vue-router.min.js"></script>
+	<!-- vue.js -->
+	<script src="//cdn.bootcss.com/vue/1.0.24/vue.js"></script>
+	<script src="//cdn.bootcss.com/vue-router/0.7.10/vue-router.min.js"></script>
 
-		<!-- jquery.cookie.js -->
-		<script src="//cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.js"></script>
-		<link href="/css/animate.css" rel="stylesheet">
-	    <link href="/css/style.css?v=4.1.0" rel="stylesheet">
-	</head>
-	<body class="gray-bg">
-	    <div class="wrapper wrapper-content animated fadeIn container-fluid">
-	        <div class="row">
-	            <div class="col-sm-12">
-	                 <!-- <h3 class="">
-	                	
-	                </h3> -->
-	                <h3 class="bs-callout-success">
-	                	结算交割
-		            </h3>
-	            </div>
-	        </div>
-	    </div>
+	<!-- jquery.cookie.js -->
+	<script src="//cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+	<link href="/css/animate.css" rel="stylesheet">
+	<link href="/css/style.css?v=4.1.0" rel="stylesheet">
+	<!-- 表格 -->
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.css">
+	<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/locale/bootstrap-table-zh-CN.min.js"></script>
+	<style>
+		.dropdown-menu {
+			width: 266px;
+			z-index: 10000;
+		}
+		.dropdown-li {
+			display: block;
+
+			padding: 10px 0 0;
+			width: auto
+		}
+		.dropdown-menu:before {
+			content: ' ';
+
+			height: 0;
+
+			position: absolute;
+
+			width: 0;
+
+			border: 10px solid transparent;
+
+			border-bottom-color: #fff;
+
+			margin-top: -30px;
+
+			left: 10px;
+		}
+		.btn-default {
+			background: #f8f8f8;
+		}
+
+		.fixed-table-body {
+			overflow: visible;
+		}
+	</style>
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeIn container-fluid">
+	<div class="row">
+		<div class="col-sm-12">
+			<!-- <h3 class="">
+
+           </h3> -->
+			<h3 class="bs-callout-success">
+				结算交割
+			</h3>
+		</div>
+		<div class="col-sm-12">
+			<table id="table" data-toggle="table" data-pagination="true" data-search="true" data-use-row-attr-func="true" data-reorderable-rows="true">
+				<thead>
+				<tr>
+					<th data-field="name">
+						资产名称
+					</th>
+					<th data-field="id">
+						资产编号
+					</th>
+					<th data-field="publisher" data-sortable="true">
+						发行人
+					</th>
+					<th data-field="assigneer">
+						受让人
+					</th>
+					<th data-field="univalence" data-sortable="true">
+						单价
+					</th>
+					<th data-field="last_time">
+						到期时间
+					</th>
+					<th data-field="status" >
+						状态
+					</th>
+					<th data-field="operation" data-sortable="true">
+						操作
+					</th>
+				</tr>
+				</thead>
+			</table>
+		</div>
+	</div>
+</div>
+<!-- <div class="btn-group">
+  <button type="button" class="btn btn-default">张先生</button>
+  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+    <span class="caret"></span>
+    <span class="sr-only">Toggle Dropdown</span>
+  </button>
+  <ul class="dropdown-menu dropdown-messages" role="menu">
+    <li class="dropdown-li row">
+        <div class="col-xs-4 text-right">发行人:</div><div class="col-xs-8">Mr.Sofar</div>
+    </li>
+    <li class="dropdown-li row">
+        <div class="col-xs-4 text-right">证件类型:</div><div class="col-xs-8">身份证</div>
+    </li>
+    <li class="dropdown-li row">
+        <div class="col-xs-4 text-right">证件号码:</div><div class="col-xs-8">455454***545454</div>
+    </li>
+    <li class="dropdown-li row">
+        <div class="col-xs-4 text-right">联系电话:</div><div class="col-xs-8">12212121</div>
+    </li>
+    <li class="dropdown-li row">
+        <div class="col-xs-4 text-right">联系邮箱:</div><div class="col-xs-8">454545454</div>
+    </li>
+  </ul>
+</div> -->
+<script>
+	var table = [
+		{
+			"name":"Mr.Sofar",
+			"id": 0,
+			"publisher":'<div class="btn-group"><button type="button" class="btn btn-default">张先生</button> <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span> <span class="sr-only">Toggle Dropdown</span></button><ul class="dropdown-menu dropdown-messages" role="menu"><li class="dropdown-li row"><div class="col-xs-4 text-right">发行人:</div><div class="col-xs-8">Mr.Sofar</div></li><li class="dropdown-li row"><div class="col-xs-4 text-right">证件类型:</div><div class="col-xs-8">身份证</div></li><li class="dropdown-li row"><div class="col-xs-4 text-right">证件号码:</div><div class="col-xs-8">455454***545454</div></li><li class="dropdown-li row"><div class="col-xs-4 text-right">联系电话:</div><div class="col-xs-8">12212121</div></li><li class="dropdown-li row"><div class="col-xs-4 text-right">联系邮箱:</div><div class="col-xs-8">454545454</div></li></ul></div>',
+			"assigneer":"Mr.Sofarr",
+
+			"univalence": "1000",
+			"last_time":"2016-12-12",
+			"status":"正在处理",
+
+			"operation":'<span class="text-muted">完成</span>'
+		},
+		{
+			"name":"Mr.Sofar",
+			"id": 0,
+			"publisher":'<div class="btn-group"><button type="button" class="btn btn-default">张先生</button> <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span> <span class="sr-only">Toggle Dropdown</span></button><ul class="dropdown-menu dropdown-messages" role="menu"><li class="dropdown-li row"><div class="col-xs-4 text-right">发行人:</div><div class="col-xs-8">Mr.Sofar</div></li><li class="dropdown-li row"><div class="col-xs-4 text-right">证件类型:</div><div class="col-xs-8">身份证</div></li><li class="dropdown-li row"><div class="col-xs-4 text-right">证件号码:</div><div class="col-xs-8">455454***545454</div></li><li class="dropdown-li row"><div class="col-xs-4 text-right">联系电话:</div><div class="col-xs-8">12212121</div></li><li class="dropdown-li row"><div class="col-xs-4 text-right">联系邮箱:</div><div class="col-xs-8">454545454</div></li></ul></div>',
+			"assigneer":"Mr.Sofarr",
+
+			"univalence": "1000",
+			"last_time":"2016-12-12",
+			"status":"正在处理",
+
+			"operation":'<span class="text-muted">完成</span>'
+		},
+		{
+			"name":"Mr.Sofar",
+			"id": 0,
+			"publisher":'<div class="btn-group"><button type="button" class="btn btn-default">张先生</button> <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span> <span class="sr-only">Toggle Dropdown</span></button><ul class="dropdown-menu dropdown-messages" role="menu"><li class="dropdown-li row"><div class="col-xs-4 text-right">发行人:</div><div class="col-xs-8">Mr.Sofar</div></li><li class="dropdown-li row"><div class="col-xs-4 text-right">证件类型:</div><div class="col-xs-8">身份证</div></li><li class="dropdown-li row"><div class="col-xs-4 text-right">证件号码:</div><div class="col-xs-8">455454***545454</div></li><li class="dropdown-li row"><div class="col-xs-4 text-right">联系电话:</div><div class="col-xs-8">12212121</div></li><li class="dropdown-li row"><div class="col-xs-4 text-right">联系邮箱:</div><div class="col-xs-8">454545454</div></li></ul></div>',
+			"assigneer":"Mr.Sofarr",
+
+			"univalence": "1000",
+			"last_time":"2016-12-12",
+			"status":"正在处理",
+
+			"operation":'<span class="text-muted">完成</span>'
+		}
+	];
+	var data = new Array();
+	// 表格嵌入数据
+	$.get('/assets/delivery', function (result) {
+		//成功返回表格数据
+		for (var i = 0; i < result.data.length; i++) {
+			console.log(result.data[i]);
+			// 点击资产名称跳连接
+			data[i] = new Array();
+			data[i]["name"] = result.data[i].assetName;
+			data[i]["id"] = result.data[i].assetId;
+			data[i]["publisher"] = '<div class="btn-group"><button type="button" class="btn btn-default">'+result.data[i].issuerInfo.realName+'</button> ' +
+					'<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span> <span class="sr-only">Toggle Dropdown</span></button>' +
+					'<ul class="dropdown-menu dropdown-messages" role="menu"><li class="dropdown-li row"><div class="col-xs-4 text-right">' +
+					'发行人:</div><div class="col-xs-8">'+result.data[i].issuerInfo.realName+'</div></li><li class="dropdown-li row"><div class="col-xs-4 text-right">' +
+					'证件类型:</div><div class="col-xs-8">身份证</div>' +
+					'</li><li class="dropdown-li row"><div class="col-xs-4 text-right">' +
+					'证件号码:</div><div class="col-xs-8">'+result.data[i].issuerInfo.identity+'</div></li>' +
+					'<li class="dropdown-li row"><div class="col-xs-4 text-right">' +
+					'联系电话:</div><div class="col-xs-8">'+result.data[i].telephone+'</div></li><li class="dropdown-li row"><div class="col-xs-4 text-right">联系邮箱:</div><div class="col-xs-8">'+result.data[i].issuerInfo.email+'</div></li></ul></div>';
+			data[i]["assigneer"] = result.data[i]["proposerName"];
+			data[i]["last_time"] = result.data[i]["endTimeStr"];
+			data[i]["status"] = result.data[i]["status"]["message"];
+			data[i]["operations"] = "<a href=\"javaScript:void(0)\" onclick=\"delivery(" + result.data[i].assetId + ")\">完成</a>";
+		}
+		console.log(data);
+		$("#table").bootstrapTable("load", {
+			data: data
+		});
+	})
+	function delivery(assetId) {
+		$.ajax({
+			url : "assets/"+assetId+"/delivery",
+			type : "post",
+			data : {"result":true},
+			success: function(result){
+				console.log(result);
+				if(result.meta.code==200){
+					$("#modalAlert",parent.document).click();
+					$(".modal-body",parent.document).html("交割成功");
+					location.reload();
+				}else{
+					$("#modalAlert",parent.document).click();
+					$(".modal-body",parent.document).html(result.meta.message);
+					location.reload();
+				}
+			}
+		})
+	}
+</script>
 </html>
