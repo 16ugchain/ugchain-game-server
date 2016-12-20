@@ -127,7 +127,7 @@ public class AssetOrderController {
         if (assetOrder.getUserId() != host.getUserId()) {
             return ResultUtil.buildErrorResult(ErrorInfo.USER_PERMISSION_DENIED);
         }
-        if (!assetOrderService.checkOrderApplyExpired(assetOrder)) {
+        if (assetOrderService.checkOrderApplyExpired(assetOrder)) {
             assetOrderService.updateAssetOrderStatus(assetOrderId, AssetOrderStatusEnum.APPLY_OUT_TIME);
             return ResultUtil.buildErrorResult(ErrorInfo.ORDER_APPLY_OUTTIME);
         }
@@ -160,7 +160,7 @@ public class AssetOrderController {
         if (assetOrder.getBuyerId() != host.getUserId()) {
             return ResultUtil.buildErrorResult(ErrorInfo.USER_PERMISSION_DENIED);
         }
-        if (!assetOrderService.checkOrderPayExpired(assetOrder)) {
+        if (assetOrderService.checkOrderPayExpired(assetOrder)) {
             assetOrderService.setOrderPayExpiration(host, assetOrder);
             return ResultUtil.buildErrorResult(ErrorInfo.ORDER_OBLIGATION_OUTTIME);
         }
@@ -193,7 +193,7 @@ public class AssetOrderController {
             return ResultUtil.buildErrorResult(ErrorInfo.USER_PERMISSION_DENIED);
         }
         /*
-        if (!assetOrderService.checkOrderPayConfirmExpired(assetOrder)) {
+        if (assetOrderService.checkOrderPayConfirmExpired(assetOrder)) {
             assetOrderService.updateAssetOrderStatus(assetOrderId, AssetOrderStatusEnum.COMPLETE_OUT_TIME);
             return ResultUtil.buildErrorResult(ErrorInfo.ORDER_COMEPLETE_OUTTIME);
         }*/

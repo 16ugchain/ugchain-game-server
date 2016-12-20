@@ -42,15 +42,15 @@ public class OrderCenterController {
                         Model model){
         List<AssetOrder> assetOrders = iAssetOrderService.getAssetOrderListByOwner(userContext.getUserId());
         List<AssetOrder> assetOrderAssign = iAssetOrderService.getAssetOrderListByBuyerId(userContext.getUserId());
-        List<OrderCenterCmd> orderCenterCmds = orderCenterCmdPlay(assetOrders,UserRoleEnum.USER_ASSIGNEE);
-        List<OrderCenterCmd> orderCenterCmdsAssign = orderCenterCmdPlay(assetOrderAssign,UserRoleEnum.USER_PUBLISHER);
+        List<OrderCenterCmd> orderCenterCmdsOwner = orderCenterCmdPlay(assetOrders, false);
+        List<OrderCenterCmd> orderCenterCmdsBuyer = orderCenterCmdPlay(assetOrderAssign, true);
 
-        model.addAttribute("orderCenterCmdsAssign",orderCenterCmdsAssign);
-        model.addAttribute("orderCenterCmds",orderCenterCmds);
+        model.addAttribute("orderCenterCmdsAssign", orderCenterCmdsOwner);
+        model.addAttribute("orderCenterCmds", orderCenterCmdsBuyer);
         return "indent-center";
     }
 
-    public List<OrderCenterCmd> orderCenterCmdPlay(List<AssetOrder> assetOrders,UserRoleEnum userRoleEnum){
+    public List<OrderCenterCmd> orderCenterCmdPlay(List<AssetOrder> assetOrders, boolean isBuyer){
         List<OrderCenterCmd> orderCenterCmds = new LinkedList<>();
         for(AssetOrder assetOrder : assetOrders){
             OrderCenterCmd orderCenterCmd = new OrderCenterCmd();
@@ -80,7 +80,7 @@ public class OrderCenterController {
                 orderCenterCmd.setStatus(assetOrder.getStatus());
                 orderCenterCmd.setStatusStr(AssetOrderStatusEnum.fromValue(assetOrder.getStatus()).getName());
                 orderCenterCmd.setExpEarning(String.valueOf(asset.get().getExpEarnings()));
-                List<AssetOrderOperation> assetOrderOperations = iAssetOrderService.getOperationByStatusAndRole(AssetOrderStatusEnum.fromValue(assetOrder.getStatus()),userRoleEnum);
+                List<AssetOrderOperation> assetOrderOperations = iAssetOrderService.getOperationByStatusAndRole(AssetOrderStatusEnum.fromValue(assetOrder.getStatus()),isBuyer);
                 orderCenterCmd.setOperation(assetOrderOperations);
             }
             orderCenterCmds.add(orderCenterCmd);

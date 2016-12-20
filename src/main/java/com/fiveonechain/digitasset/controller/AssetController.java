@@ -104,6 +104,9 @@ public class AssetController {
             throw new IllegalArgumentException("资产估值异常");
         }
 
+        if (!userInfoService.isExistsUserAuth(userContext.getUserId())) {
+            return ResultUtil.buildErrorResult(ErrorInfo.USER_INFO_NOT_FOUND);
+        }
 
         boolean needGuar = false;
         if (guarId != null) {
@@ -267,8 +270,8 @@ public class AssetController {
                 if(asset.getEndTime()!=null){
                     assetDetail.setEndTime(DateUtil.formatDate(asset.getEndTime(),DateUtil.HC_DATETIME));
                 }
-                int availShare = userAssetService.sumTradeBalanceByAsset(asset.getAssetId());
-                assetDetail.setTradeShare(availShare);
+                //int availShare = userAssetService.sumTradeBalanceByAsset(asset.getAssetId());
+                //assetDetail.setTradeShare(availShare);
                 assetDetail.setStatusStr(AssetStatus.fromValue(asset.getStatus()).getMessage());
                 UserRoleEnum userRoleEnum = UserRoleEnum.fromValue(user.get().getRole());
                 List<AssetOperation> operations = assetService.getAvailableOperation(AssetStatus.fromValue(asset.getStatus()),userRoleEnum);
@@ -286,7 +289,7 @@ public class AssetController {
                     }
                     assetDetail.setGuaranteed(true);
                     assetDetail.setGuarId(asset.getGuarId());
-                    assetDetail.setValue(asset.getValue());
+                    assetDetail.setValue(asset.getEvalValue());
                     assetDetail.setGuarName(guarOpt.get().getCorpName());
                 } else {
                     assetDetail.setGuaranteed(false);

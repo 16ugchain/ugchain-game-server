@@ -1,6 +1,8 @@
 package com.fiveonechain.digitasset.util;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.helpers.DefaultHandler;
 
 import java.io.*;
@@ -11,6 +13,8 @@ import java.net.URL;
  * Created by fanjl on 2016/11/30.
  */
 public class HttpClientUtil extends DefaultHandler {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(HttpClientUtil.class);
 
     private static String postUrl = "http://cf.51welink.com/submitdata/Service.asmx/g_Submit";
     private static String sname = "DL-shanghq1";
@@ -41,7 +45,7 @@ public class HttpClientUtil extends DefaultHandler {
 
             //获取响应状态
             if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                System.out.println("connect failed!");
+                LOGGER.error("connect failed!");
                 return "";
             }
             //获取响应内容体
@@ -53,7 +57,7 @@ public class HttpClientUtil extends DefaultHandler {
             in.close();
             return result;
         } catch (IOException e) {
-            e.printStackTrace(System.out);
+            LOGGER.error("SMS", e);
         }
         return "";
     }

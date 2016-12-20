@@ -153,9 +153,7 @@ $("#file-1").on("change", function () {
 function saveImg(){
     $("#upload").ajaxSubmit(function(message) {
         var json = JSON.parse(message);
-        console.log(json.data);
         register.userInfo.imageId = json.data;
-        console.log(register.userInfo.imageId);
     });
     return false;
 }
