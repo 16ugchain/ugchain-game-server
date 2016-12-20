@@ -13,6 +13,8 @@ public interface UserAssetService {
 
     void createDigitAsset(Asset asset);
 
+    void createUserAsset(int assetId, int userId);
+
     void lockDigitAssetShare(int ownerId, int assetId, int amount);
 
     void unLockDigitAssetShare(int ownerId, int assetId, int amount);
