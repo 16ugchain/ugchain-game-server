@@ -46,7 +46,7 @@ var register = new Vue({
             cardUsername: "",
             cardNumber: "",
             bank: "",
-            imageId: ""
+            imageId: []
         },
         tabIndex: 0,
         api: {
@@ -73,6 +73,29 @@ var register = new Vue({
             $(".tab-content > div").removeClass('active').eq(register.tabIndex).addClass('active');
         }
     }
+});
+
+$("#file-1").fileinput({
+    language: 'zh', //设置语言
+    uploadUrl: register.api.upload, // you must set a valid URL here else you will get an error
+    allowedFileExtensions : ['jpg', 'png','gif'],
+    overwriteInitial: false,
+    // maxFileSize: 1000,
+    maxFileSize: 10000,
+    maxFileCount: 2,
+    minFilesNum: 1,
+    maxFilesNum: 3,
+    browseClass: "btn btn-primary", //按钮样式
+    slugCallback: function(filename) {
+        return filename.replace('(', '_').replace(']', '_');
+    }
+});
+$(".file-drop-zone-title").html("*拖拽照片到这里或者点击选择按钮*");
+$("#file-1").on("fileuploaded", function (event, data, previewId, index) {
+    var da = data.response;
+    console.log(da);
+    register.userInfo.imageId.push(da.data);
+    console.log(register.userInfo.imageId);
 });
 $.ajaxSetup({
     headers: {'HTTP_AUTHORIZATION': $.cookie("Authorization")}
@@ -127,43 +150,7 @@ $(".btn-skip").on('click', function (event) {
     console.log("下一步");
     register.tabFun();
 });
-$("#file-1").on("change", function () {
-    var form1 = document.createElement("form");
-    form1.id = "upload";
-    form1.name = "upload";
-    document.body.appendChild(form1);
-    form1.appendChild(document.getElementById("file-1"));
-    var input1 = document.createElement("input");
-    var sub = document.createElement("input");
-    sub.type = "submit";
-    form1.appendChild(sub);
-    input1.type = "hidden";
-    input1.name = "type";
-    input1.value = register.userInfo.papersType;
-    form1.appendChild(input1);
-    form1.action = register.api.upload;
-    form1.method = "POST";
-    form1.enctype = "multipart/form-data";
-    form1.autocomplete="off";
-    $("#upload").attr("onsubmit","return saveImg()");
-    sub.click();
-    document.body.removeChild(form1);
-});
-// 图片上传
-function saveImg(){
-    $("#upload").ajaxSubmit(function(message) {
-        var json = JSON.parse(message);
-        register.userInfo.imageId = json.data;
-    });
-    return false;
-}
-$("#file-1").on("fileuploaded", function (event, data, previewId, index) {
-    var da = data.response;
-    var json = JSON.parse(da);
-    console.log(json.data);
-    register.userInfo.imageId = json.data;
-    console.log(register.userInfo.imageId);
-});
+
 // 表单验证
 $(function () {
     // 注册
@@ -359,9 +346,6 @@ $(function () {
             email: {
                 message: '电子邮箱错误',
                 validators: {
-                    notEmpty: {
-                        message: '电子邮箱不能为空'
-                    },
                     emailAddress: {     //　　邮箱格式校验
                         message: '邮箱格式错误'
                     }
@@ -369,9 +353,6 @@ $(function () {
             },
             contactPhone: {
                 validators: {
-                    notEmpty: {
-                        message: '联系电话不能为空'
-                    },
                     regexp: {
                         regexp: /(^(0[0-9]{2,3}\-)?([2-9][0-9]{6,7})+(\-[0-9]{1,4})?$)|(^((\(\d{3}\))|(\d{3}\-))?(1[358]\d{9})$)/,
                         message: '联系电话格式错误'
@@ -385,9 +366,8 @@ $(function () {
             for (var i = 0; i < $('img.kv-preview-data.file-preview-image').length; i++) {
                 register.userInfo.papersImg.push($('img.kv-preview-data.file-preview-image').eq(i).attr("src"))
             }
-            console.log(register.userInfo);
-            console.log(register.userInfo.papersImg);
-            console.log(register.userInfo.imageId);
+            var imageIdStr = register.userInfo.imageId.join(",");
+            console.log(imageIdStr);
             //  填写信息事件
             $.post(register.api.authenticate, {
                 // 真实姓名
@@ -403,7 +383,7 @@ $(function () {
                 // 邮箱
                 email: register.userInfo.email,
                 //image_id
-                image_id: register.userInfo.imageId
+                image_id: imageIdStr
             }, function (data) {
 
                 console.log("提交信息成功");

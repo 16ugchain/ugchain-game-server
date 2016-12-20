@@ -53,6 +53,10 @@ public interface AssetOrderMapper {
 
     @Update("UPDATE asset_order SET status = #{status} WHERE order_id = #{orderId}")
     int updateStatusByOrderId(@Param("status") int status, @Param("orderId") int orderId);
+
+    @Update("UPDATE asset_order SET image_id = #{imageId} WHERE order_id = #{orderId}")
+    int updateAssetOrderImg(@Param("imageId") String imageId, @Param("orderId") int orderId);
+
 }
 
 

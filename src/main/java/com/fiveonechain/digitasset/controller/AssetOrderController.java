@@ -97,6 +97,26 @@ public class AssetOrderController {
         return ResultUtil.success();
     }
 
+    /**更新申诉图片id
+     * @param assetOrderId
+     * @param imageId
+     * @return
+     */
+    @RequestMapping(value = "{assetOrderId}/updateImgId", method = RequestMethod.POST)
+    public Result ApplyOrder(
+            @AuthenticationPrincipal UserContext host,
+            @PathVariable("assetOrderId") int assetOrderId,
+            @RequestParam("imgId") String imageId) {
+
+        AssetOrder assetOrder = assetOrderService.getAssetOrder(assetOrderId);
+        if(assetOrder == null){
+            return ResultUtil.buildErrorResult(ErrorInfo.ORDER_NOT_FOUND);
+        }
+        assetOrderService.updateAssetOrderImg(assetOrderId, imageId);
+
+        return ResultUtil.success();
+    }
+
     @RequestMapping(value = "/{assetOrderId}", method = RequestMethod.GET)
     public Result getAssetOrderDetail(
             @AuthenticationPrincipal UserContext userContext,

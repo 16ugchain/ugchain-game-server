@@ -3,12 +3,12 @@ package com.fiveonechain.digitasset.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fiveonechain.digitasset.auth.UserContext;
-import com.fiveonechain.digitasset.domain.result.UserInfoCmd;
 import com.fiveonechain.digitasset.domain.User;
 import com.fiveonechain.digitasset.domain.UserAuthStatusEnum;
 import com.fiveonechain.digitasset.domain.UserInfo;
 import com.fiveonechain.digitasset.domain.result.ErrorInfo;
 import com.fiveonechain.digitasset.domain.result.Result;
+import com.fiveonechain.digitasset.domain.result.UserInfoCmd;
 import com.fiveonechain.digitasset.exception.JsonSerializableException;
 import com.fiveonechain.digitasset.service.ImageUploadService;
 import com.fiveonechain.digitasset.service.ImageUrlService;
@@ -22,7 +22,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -107,7 +106,7 @@ public class UserInfoController {
                                @RequestParam("real_name") String real_name,
                                @RequestParam("identity") String identity,
                                @RequestParam("identity_type") int type,
-                               @RequestParam("image_id") int imageId,
+                               @RequestParam("image_id") String imageId,
                                @RequestParam(value = "email", required = false, defaultValue = "") String email,
                                @RequestParam(value = "fixed_line", required = false, defaultValue = "") String fixed_line
     ) {
@@ -122,15 +121,13 @@ public class UserInfoController {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.AUTHENTICATION);
             return result;
         }
-        List<String> imageIds = new ArrayList<String>();
-        imageIds.add(String.valueOf(imageId));
         UserInfo userInfo = new UserInfo();
         userInfo.setUserId(userContext.getUserId());
         userInfo.setIdentity(identity);
         userInfo.setIdentityType(type);
         userInfo.setRealName(real_name);
         userInfo.setEmail(email);
-        userInfo.setImageId(imageIds.toString());
+        userInfo.setImageId(imageId);
         userInfo.setFixedLine(fixed_line);
         userInfo.setStatus(UserAuthStatusEnum.SUCCESS.getId());
         if (userInfoService.insertAndGetUserAuth(userInfo) != 1) {

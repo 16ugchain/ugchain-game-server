@@ -191,6 +191,11 @@ public class AssetOrderServiceImpl implements AssetOrderService {
     }
 
     @Override
+    public void updateAssetOrderImg(int orderId, String imageId) {
+        assetOrderMapper.updateAssetOrderImg(imageId,orderId);
+    }
+
+    @Override
     public boolean checkOrderApplyExpired(AssetOrder order) {
         return isAfter(order.getUpdateTime(), appConfig.getOrderApplyExpireTime());
     }

@@ -27,8 +27,8 @@
     <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
 
     <!-- Bootstrap.js -->
+    <script src="//cdn.bootcss.com/bootstrap-validator/0.5.3/js/bootstrapValidator.min.js"></script>
     <script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-
     <!-- vue.js -->
     <script src="//cdn.bootcss.com/vue/1.0.24/vue.js"></script>
     <script src="//cdn.bootcss.com/vue-router/0.7.10/vue-router.min.js"></script>
@@ -37,7 +37,12 @@
     <script src="//cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.js"></script>
     <link href="/css/animate.css" rel="stylesheet">
     <link href="/css/style.css?v=4.1.0" rel="stylesheet">
+    <style>
+        .modal-dialog {
+            z-index: 10000!important;
+        }
 
+    </style>
     <!-- 表格 -->
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.js"></script>
@@ -188,6 +193,7 @@
             <div class="modal-body">
                 <form class="form-horizontal" role="form" id="assessmentForm">
                     <!-- 评估意见 -->
+                    <input type="hidden" id="assetId" value=""/>
                     <div class="form-group">
                         <label for="opinion" class="col-xs-3 control-label">评估意见</label>
                         <div class="col-xs-7">
@@ -268,7 +274,7 @@
             data[i]["publishName"] = result.data[i]["issuerName"];
             data[i]["operations"] = new Array();
             data[i]["operations"][0] = "<a href=\"javaScript:void(0)\" onclick=\"reject(" + result.data[i].assetId + ")\">驳回</a>";
-            data[i]["operations"][1] = "<a href=\"javaScript:void(0)\" data-toggle=\"modal\" data-target=\"#myModal\" \">同意</a>";
+            data[i]["operations"][1] = "<a href=\"javaScript:void(0)\" data-toggle=\"modal\" data-target=\"#myModal\" onclick=\"selfModal("+result.data[i].assetId+")\" \">同意</a>";
         }
         console.log(data);
         $("#table1").bootstrapTable("load", {
@@ -319,29 +325,9 @@
             }
         })
     }
-    $("#agree").click(function () {
-        $.ajax({
-            url : "assets/"+assetId+"/evaluate",
-            type : "post",
-            data : {"result":false,
-                "conclusion":"还行不错",
-                "value":40,
-                "fee":2,
-                "earnings":120},
-            success: function(result){
-                console.log(result);
-                if(result.meta.code==200){
-                    $("#modalAlert",parent.document).click();
-                    $(".modal-body",parent.document).html("评估成功");
-                    location.reload();
-                }else{
-                    $("#modalAlert",parent.document).click();
-                    $(".modal-body",parent.document).html(result.meta.message);
-                    location.reload();
-                }
-            }
-        })
-    })
+    function selfModal(assetId) {
+        $("#assetId").val(assetId);
+    }
 //    function agree(assetId) {
 //        $.ajax({
 //            url : "assets/"+assetId+"/evaluate",
@@ -478,15 +464,14 @@
     }).on('success.form.bv', function(e) {
         e.preventDefault();
         // 资产评估事件
-
         $.ajax({
-            url : "assets/"+assetId+"/evaluate",
+            url : "assets/"+$("#assetId").val()+"/evaluate",
             type : "post",
             data : {"result":false,
-                "conclusion":$("#opinion"),
-                "value":$("#worth"),
-                "fee":$("#charge"),
-                "earnings":$("#earnings")},
+                "conclusion":$("#opinion").val(),
+                "value":$("#worth").val(),
+                "fee":$("#charge").val(),
+                "earnings":$("#earnings").val()},
             success: function(result){
                 console.log(result);
                 if(result.meta.code==200){

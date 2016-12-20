@@ -122,11 +122,11 @@
             }
             data[i]["name"]="<a href=" + "/assetsDetail/assign/"+result.data[i].assetId+">" + result.data[i].assetName + "";
             data[i]["id"]=result.data[i].assetId;
-            data[i]["share"]=result.data[i]["availShare"];
-            data[i]["proportion"]=result.data[i]["percent"];
-            data[i]["forecast"]=result.data[i]["value"];
+            data[i]["share"]=result.data[i]["availShare"]+"股";
+            data[i]["proportion"]=result.data[i]["percent"]+"%";
+            data[i]["forecast"]=result.data[i]["value"]+"元";
             data[i]["last_time"]=result.data[i]["endTime"];
-            data[i]["premium"]=result.data[i]["expEarnings"];
+            data[i]["premium"]=result.data[i]["expEarnings"]+"%";
         }
         console.log(data);
         $("#table2").bootstrapTable("load",{

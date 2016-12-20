@@ -165,7 +165,7 @@
 	        			</div>
 		            </div>
 		            <!-- 填写信息 -->
-		            <div id="tab-3" class="tab-pane">
+		            <div id="tab-3" class="tab-pane "  >
 		                <div class="row">
 	        				<div class="panel-body col-md-4 col-md-offset-4 col-xs-8 col-xs-offset-2">
 	        					
@@ -410,24 +410,5 @@
 				</div>
 			</div>
 		<script src="/js/register.js"></script>
-		<script>
-			// 照片上传
-			$("#file-1").fileinput({
-		    	language: 'zh', //设置语言
-		        uploadUrl: '#', // you must set a valid URL here else you will get an error
-		        allowedFileExtensions : ['jpg', 'png','gif'],
-		        overwriteInitial: false,
-		        // maxFileSize: 1000,
-		        maxFileSize: 10000,
-		        maxFileCount: 2,
-		        minFilesNum: 2,
-		        maxFilesNum: 3,
-		        browseClass: "btn btn-primary", //按钮样式   
-		        slugCallback: function(filename) {
-		            return filename.replace('(', '_').replace(']', '_');
-		        }
-			});
-			$(".file-drop-zone-title").html("*拖拽照片到这里或者点击选择按钮*");
-		</script>
 	</body>
 </html>

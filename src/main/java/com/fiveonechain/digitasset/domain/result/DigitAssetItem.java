@@ -9,7 +9,7 @@ public class DigitAssetItem {
     private int ownerId;
     private String ownerName;
     private int availShare;
-    private int percent;
+    private String percent;
 
     public int getAssetId() {
         return assetId;
@@ -43,11 +43,11 @@ public class DigitAssetItem {
         this.availShare = availShare;
     }
 
-    public int getPercent() {
+    public String getPercent() {
         return percent;
     }
 
-    public void setPercent(int percent) {
+    public void setPercent(String percent) {
         this.percent = percent;
     }
 }

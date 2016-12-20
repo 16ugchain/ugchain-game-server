@@ -4,7 +4,6 @@ import com.fiveonechain.digitasset.auth.UserContext;
 import com.fiveonechain.digitasset.domain.AssetOrder;
 import com.fiveonechain.digitasset.domain.AssetOrderOperation;
 import com.fiveonechain.digitasset.domain.AssetOrderStatusEnum;
-import com.fiveonechain.digitasset.domain.UserRoleEnum;
 
 import java.util.List;
 
@@ -37,6 +36,8 @@ public interface AssetOrderService {
     void finishOrderFailed(UserContext host, AssetOrder order);
 
     void updateAssetOrderStatus(int orderId, AssetOrderStatusEnum assetOrderStatusEnum);
+
+    void updateAssetOrderImg(int orderId, String imageId);
 
     boolean checkOrderApplyExpired(AssetOrder order);
 

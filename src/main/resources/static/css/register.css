@@ -106,14 +106,14 @@ body {
 	z-index: 1000000;
 	background: #fff;
 }
-.hand-down ,
-.kv-file-upload,
-.fileinput-remove-button,
-.fileinput-upload-button {
-	opacity: 0;
-	width: 1px;
-	height: 1px;
-}
+/*.hand-down ,*/
+/*.kv-file-upload,*/
+/*.fileinput-remove-button,*/
+/*.fileinput-upload-button {*/
+	/*opacity: 0;*/
+	/*width: 1px;*/
+	/*height: 1px;*/
+/*}*/
 #tab-3 .col-sm-8{
 	padding-left: 0px;
 	padding-right: 0px; 

@@ -106,9 +106,9 @@
 					<td>${digitalAssetCmd.statusStr!""}</td>
 
 						<#if digitalAssetCmd.tradeShare!=0  >
-							<td><label><input type="checkbox" value="${digitalAssetCmd.tradeShare}"  onclick="selfModal(${digitalAssetCmd.assetId},${digitalAssetCmd.lockedShare})" checked="checked"  name=""  data-toggle="modal" data-target="#myModal2">是否允许认购</label></td>
+							<td><input type="checkbox" checked="checked"  disabled="disabled" ><label><a href="#" value="${digitalAssetCmd.tradeShare}"  onclick="selfModal(${digitalAssetCmd.assetId},${digitalAssetCmd.lockedShare})"   data-toggle="modal" data-target="#myModal2">是否允许认购</label></td>
 						<#else>
-							<td><label><input type="checkbox"  value="0" name="" onclick="selfModal(${digitalAssetCmd.assetId},0)"  data-toggle="modal" data-target="#myModal2">是否允许认购</label></td>
+							<td><input type="checkbox" disabled="disabled" ><label ><a href="#" onclick="selfModal(${digitalAssetCmd.assetId},0)"  data-toggle="modal" data-target="#myModal2">是否允许认购</a></label></td>
 						</#if>
 					</tr>
 				</#list>

@@ -99,9 +99,9 @@
 
        		<!-- 动态 -->
 
-	        <div class="col-sm-12">
-	        	<i class="iconfont text-success">&#xe60e;</i><span>您的订单有<i class="text-success">2</i>条新动态</span>
-	        </div>
+	        <!--<div class="col-sm-12">-->
+	        	<!--<i class="iconfont text-success">&#xe60e;</i><span>您的订单有<i class="text-success">2</i>条新动态</span>-->
+	        <!--</div>-->
 
         	<!-- 内容区 -->
 
@@ -257,11 +257,11 @@
                     <!-- <div class="modal-header"> -->
                         <!-- <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                         <h4 class="modal-title">窗口标题</h4> -->
-
+					<input type="hidden" value="" id="orderId">
                         <h3 class="font-bold row text-center">上传支付凭证图片</h3>
                     <!-- </div> -->
                     <div class="modal-body">
-                       <input id="file-1" type="file" multiple class="file" data-overwrite-initial="false" data-min-file-count="2">
+						<input id="file-1" name="imageUrl" type="file" multiple class="file" data-overwrite-initial="false" data-min-file-count="1">
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
@@ -271,29 +271,25 @@
             </div>
         </div>
 		<!-- 申诉 -->
-		<div class="modal inmodal" id="myModal1" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content animated flipInX">
-                     <!-- <div class="modal-header"> -->
-                        <!-- <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                        <h4 class="modal-title">窗口标题</h4> -->
-
-                        <h3 class="font-bold row text-center">申诉窗口</h3>
-                    <!-- </div> -->
-                    <div class="modal-body">
-                    	<form class="form-horizontal" role="form">
-                    		<div class="form-group">
-                        		<textarea name="telephone" id="complaintContent" rows="10" placeholder="请输入申诉内容" style="width:100%;resize:none;padding: 15px;"></textarea>
-                        	</div>
-                    	</form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
-                        <button type="submit" class="btn btn-success">提交</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+		<!--<div class="modal inmodal" id="myModal1" tabindex="-1" role="dialog" aria-hidden="true">-->
+            <!--<div class="modal-dialog">-->
+                <!--<div class="modal-content animated flipInX">-->
+                     <!--&lt;!&ndash; <div class="modal-header"> &ndash;&gt;-->
+                        <!--&lt;!&ndash; <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>-->
+                        <!--<h4 class="modal-title">窗口标题</h4> &ndash;&gt;-->
+					<!--<input type="hidden" value="" id="orderId">-->
+					<!--<h3 class="font-bold row text-center">上传支付凭证图片</h3>-->
+					<!--&lt;!&ndash; </div> &ndash;&gt;-->
+					<!--<div class="modal-body">-->
+						<!--<input id="file-1" type="file" multiple class="file" data-overwrite-initial="false" data-min-file-count="1">-->
+					<!--</div>-->
+                    <!--<div class="modal-footer">-->
+                        <!--<button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>-->
+                        <!--<button type="button" class="btn btn-success" id="payImage">提交</button>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
     </div>
     <!-- 全局js -->
     <script src="../js/plugins/jquery.metisMenu.js"></script>
@@ -309,9 +305,10 @@
             switch (operationCode){
                 case 1: flag = true;break;
                 case 2: flag = false;break;
-                case 3: complete(assetId);break;
-				case 4: pay(assetId);break;
-                case 6: return;break;
+                case 3: complete(assetId);return;break;
+				case 4: pay(assetId);return;break;
+				case 5: appeal(assetId);return;break;
+                case 6: location.href="../assetsDetail/assign/"+assetId;return;break;
 				default : return;
             }
                 $.ajax({
@@ -323,14 +320,20 @@
                         if(result.meta.code==200){
                             $("#modalAlert",parent.document).click();
                             $(".modal-body",parent.document).html("操作成功");
+							location.reload();
                         }else{
                             $("#modalAlert",parent.document).click();
                             $(".modal-body",parent.document).html(result.meta.message);
+							location.reload();
                         }
                     }
                 })
         }
-
+		function appeal(orderId) {
+			$("#orderId").val(orderId);
+			console.log($("#orderId").val());
+			$("#myModal2").show();
+		}
 		function complete(orderId) {
 			$.ajax({
 				url : "../assetOrder/"+orderId+"/finishOrder",
@@ -368,7 +371,7 @@
 		// 上传照片
 		$("#file-1").fileinput({
 			language: 'zh', //设置语言
-			uploadUrl: '#', // you must set a valid URL here else you will get an error
+			uploadUrl: '/image/upload', // you must set a valid URL here else you will get an error
 			allowedFileExtensions : ['jpg', 'png','gif'],
 			overwriteInitial: false,
 			// maxFileSize: 1000,
@@ -380,6 +383,12 @@
 			slugCallback: function(filename) {
 				return filename.replace('(', '_').replace(']', '_');
 			}
+		});
+		var imageIdArray = new Array();
+		$("#file-1").on("fileuploaded", function (event, data, previewId, index) {
+			var da = data.response;
+			console.log(da);
+			imageIdArray.push(da.data);
 		});
 		// 表单检验&提交
 		$('#appeal').bootstrapValidator({
@@ -406,14 +415,25 @@
 		});
 		// 支付图片上传事件
 		$("#payImage").on('click', function(event) {
-			event.preventDefault();
-			/* Act on the event */
-			if($(".kv-preview-data").length>0){
 				// 上传事件
-			}else{
-				alert("请上传图片");
-			}
-
+				console.log($("#orderId").val());
+				var imageIdStr = imageIdArray.join(",");
+				$.ajax({
+					url : "../assetOrder/"+$("#orderId").val()+"/updateImgId",
+					type : "post",
+					data : {"imgId":imageIdStr},
+					success: function(result){
+						console.log(result);
+						if(result.meta.code==200){
+							$("#modalAlert",parent.document).click();
+							$(".modal-body",parent.document).html("上传成功");
+							location.reload();
+						}else{
+							$("#modalAlert",parent.document).click();
+							$(".modal-body",parent.document).html(result.meta.message);
+						}
+					}
+				})
 		});
     </script>
 </body>

@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.DecimalFormat;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -81,7 +82,10 @@ public class UserAssetController {
             share.setAssetId(assetId);
             share.setAvailShare(userAsset.getTradeBalance());
             share.setOwnerId(userAsset.getUserId());
-            share.setPercent(userAsset.getTradeBalance()*100/asset.getEvalValue());
+            float num= (float)(userAsset.getTradeBalance()*100)/asset.getEvalValue();
+            DecimalFormat df = new DecimalFormat("0.00");//格式化小数
+            String percent = df.format(num);
+            share.setPercent(percent);
             Optional<User> userOpt = userService.getUserOptional(userAsset.getUserId());
             if (!userOpt.isPresent()) {
                 LOGGER.error("{} user {} NOT FOUND", ErrorInfo.SERVER_ERROR, userAsset.getUserId());
