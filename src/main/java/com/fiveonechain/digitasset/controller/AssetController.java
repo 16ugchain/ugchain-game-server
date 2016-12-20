@@ -289,7 +289,7 @@ public class AssetController {
                     }
                     assetDetail.setGuaranteed(true);
                     assetDetail.setGuarId(asset.getGuarId());
-                    assetDetail.setValue(asset.getValue());
+                    assetDetail.setValue(asset.getEvalValue());
                     assetDetail.setGuarName(guarOpt.get().getCorpName());
                 } else {
                     assetDetail.setGuaranteed(false);

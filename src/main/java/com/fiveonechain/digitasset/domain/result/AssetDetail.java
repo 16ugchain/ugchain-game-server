@@ -17,7 +17,6 @@ public class AssetDetail {
     private boolean isGuaranteed;
     private Integer guarId;
     private String guarName;
-    private List<DigitalAssetCmd> digitalAssetCmds;
 
     private List<String> certList;
     private List<String> photoList;
@@ -90,14 +89,6 @@ public class AssetDetail {
 
     public void setGuaranteed(boolean guaranteed) {
         isGuaranteed = guaranteed;
-    }
-
-    public List<DigitalAssetCmd> getDigitalAssetCmds() {
-        return digitalAssetCmds;
-    }
-
-    public void setDigitalAssetCmds(List<DigitalAssetCmd> digitalAssetCmds) {
-        this.digitalAssetCmds = digitalAssetCmds;
     }
 
     public String getStartTime() {

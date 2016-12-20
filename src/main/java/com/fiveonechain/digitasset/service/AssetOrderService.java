@@ -26,7 +26,7 @@ public interface AssetOrderService {
 
     List<AssetOrder> getAssetOrderListByStatus(AssetOrderStatusEnum status);
 
-    List<AssetOrderOperation> getOperationByStatusAndRole(AssetOrderStatusEnum status, UserRoleEnum userRoleEnum);
+    List<AssetOrderOperation> getOperationByStatusAndRole(AssetOrderStatusEnum status, boolean isBuyer);
 
     void confirmOrderApply(UserContext host, AssetOrder order);
 
