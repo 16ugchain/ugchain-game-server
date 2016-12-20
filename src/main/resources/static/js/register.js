@@ -159,6 +159,13 @@ function saveImg(){
     });
     return false;
 }
+$("#file-1").on("fileuploaded", function (event, data, previewId, index) {
+    var da = data.response;
+    var json = JSON.parse(da);
+    console.log(json.data);
+    register.userInfo.imageId = json.data;
+    console.log(register.userInfo.imageId);
+});
 // 表单验证
 $(function () {
     // 注册

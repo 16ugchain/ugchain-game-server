@@ -45,8 +45,8 @@ public class OrderCenterController {
         List<OrderCenterCmd> orderCenterCmds = orderCenterCmdPlay(assetOrders,UserRoleEnum.USER_ASSIGNEE);
         List<OrderCenterCmd> orderCenterCmdsAssign = orderCenterCmdPlay(assetOrderAssign,UserRoleEnum.USER_PUBLISHER);
 
-        model.addAttribute("orderCenterCmdsAssign",orderCenterCmds);
-        model.addAttribute("orderCenterCmds",orderCenterCmdsAssign);
+        model.addAttribute("orderCenterCmdsAssign",orderCenterCmdsAssign);
+        model.addAttribute("orderCenterCmds",orderCenterCmds);
         return "indent-center";
     }
 

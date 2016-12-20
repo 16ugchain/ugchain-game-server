@@ -240,7 +240,7 @@
                                 <button type="button" class="col-xs-4 col-xs-offset-1 btn btn-default" data-dismiss="modal">
                                     取消
                                 </button>
-                                <button type="submit" class="col-xs-4 col-xs-offset-1 btn btn-success">
+                                <button type="submit" class="col-xs-4 col-xs-offset-1 btn btn-success" id="agree">
                                     确认
                                 </button>
                             </div>
@@ -268,7 +268,7 @@
             data[i]["publishName"] = result.data[i]["issuerName"];
             data[i]["operations"] = new Array();
             data[i]["operations"][0] = "<a href=\"javaScript:void(0)\" onclick=\"reject(" + result.data[i].assetId + ")\">驳回</a>";
-            data[i]["operations"][1] = "<a href=\"javaScript:void(0)\" onclick=\"agree(" + result.data[i].assetId + ")\">同意</a>";
+            data[i]["operations"][1] = "<a href=\"javaScript:void(0)\" data-toggle=\"modal\" data-target=\"#myModal\" \">同意</a>";
         }
         console.log(data);
         $("#table1").bootstrapTable("load", {
@@ -319,15 +319,15 @@
             }
         })
     }
-    function agree(assetId) {
+    $("#agree").click(function () {
         $.ajax({
             url : "assets/"+assetId+"/evaluate",
             type : "post",
             data : {"result":false,
-                    "conclusion":"还行不错",
-                    "value":40,
-                    "fee":2,
-                    "earnings":120},
+                "conclusion":"还行不错",
+                "value":40,
+                "fee":2,
+                "earnings":120},
             success: function(result){
                 console.log(result);
                 if(result.meta.code==200){
@@ -341,7 +341,30 @@
                 }
             }
         })
-    }
+    })
+//    function agree(assetId) {
+//        $.ajax({
+//            url : "assets/"+assetId+"/evaluate",
+//            type : "post",
+//            data : {"result":false,
+//                    "conclusion":"还行不错",
+//                    "value":40,
+//                    "fee":2,
+//                    "earnings":120},
+//            success: function(result){
+//                console.log(result);
+//                if(result.meta.code==200){
+//                    $("#modalAlert",parent.document).click();
+//                    $(".modal-body",parent.document).html("评估成功");
+//                    location.reload();
+//                }else{
+//                    $("#modalAlert",parent.document).click();
+//                    $(".modal-body",parent.document).html(result.meta.message);
+//                    location.reload();
+//                }
+//            }
+//        })
+//    }
 
     function evledOperation(assetId,operationCode) {
         switch (operationCode){

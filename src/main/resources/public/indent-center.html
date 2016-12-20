@@ -309,6 +309,8 @@
             switch (operationCode){
                 case 1: flag = true;break;
                 case 2: flag = false;break;
+                case 3: complete(assetId);break;
+				case 4: pay(assetId);break;
                 case 6: return;break;
 				default : return;
             }
@@ -328,143 +330,91 @@
                     }
                 })
         }
-//    	var table1 = [
-//			    {
-//			    	"name":"Mr.Sofar",
-//			        "id": 0,
-//			        "share":"100股",
-//			        "possession":"10%",
-//			        "last_time": "2016-10-11",
-//			        "guarantee":"北京点触",
-//			        "holder":"Mr.Sofar",
-//			        "start_time":"2016-10-31",
-//			        "status":"申购中",
-//			        "operation":"<a><u>查看</u></a>"
-//			    },
-//			    {
-//			    	"name":"Mr.Sofar",
-//			        "id": 0,
-//			        "share":"100股",
-//			        "possession":"10%",
-//			        "last_time": "2016-10-11",
-//			        "guarantee":"北京点触",
-//			        "holder":"Mr.Sofar",
-//			        "start_time":"2016-10-31",
-//			        "status":"<span class='text-success'>待支付</span>",
-//			        "operation":'<button type="button" class="btn btn-success btn-upload" data-toggle="modal" data-target="#myModal2">支付</button>'
-//			    },
-//			    {
-//			    	"name":"Mr.Sofar",
-//			        "id": 0,
-//			        "share":"100股",
-//			        "possession":"10%",
-//			        "last_time": "2016-10-11",
-//			        "guarantee":"北京点触",
-//			        "holder":"Mr.Sofar",
-//			        "start_time":"2016-10-31",
-//			        "status":"<span class='text-danger'>订单异常</span>",
-//			        "operation":'<button type="button" class="btn btn-danger complaint-btn" data-toggle="modal" data-target="#myModal1">申诉</button>'
-//			    }
-//			];
-//			// 我发起的
-//    		$("#table1").bootstrapTable({
-//                data:table1
-//            });
-//           	// 我收到的
-//            var table2 = [
-//			    {
-//			    	"name":"Mr.Sofar",
-//			        "id": 0,
-//			        "share":"100股",
-//			        "possession":"10%",
-//			        "last_time": "2016-10-11",
-//			        "guarantee":"北京点触",
-//			        "earnings":"36%",
-//			        "purchaser":"Mr.Sofar",
-//			        "unit":"北京点触",
-//			        "status":"<span class=''>申购中</span>",
-//			        "operation":'<a href="" class="text-success">同意</a>'
-//			    },
-//			    {
-//			    	"name":"Mr.Sofar",
-//			        "id": 0,
-//			        "share":"100股",
-//			        "possession":"10%",
-//			        "last_time": "2016-10-11",
-//			        "guarantee":"北京点触",
-//			        "earnings":"36%",
-//			        "purchaser":"Mr.Sofar",
-//			        "unit":"北京点触",
-//			        "status":"<span class=''>申购中</span>",
-//			        "operation":'<a href="" class="text-success">同意</a><a href="" class="text-danger">驳回</a>'
-//			    },
-//			    {
-//			    	"name":"Mr.Sofar",
-//			        "id": 0,
-//			        "share":"100股",
-//			        "possession":"10%",
-//			        "last_time": "2016-10-11",
-//			        "guarantee":"北京点触",
-//			        "earnings":"36%",
-//			        "purchaser":"Mr.Sofar",
-//			        "unit":"北京点触",
-//			        "status":"<span class=''>申购中</span>",
-//			        "operation":'<a href="" class="text-success">同意</a>'
-//			    }
-//			];
-//    		$("#table2").bootstrapTable({
-//                data:table2
-//            });
-            // 上传照片
-            $("#file-1").fileinput({
-		    	language: 'zh', //设置语言
-		        uploadUrl: '#', // you must set a valid URL here else you will get an error
-		        allowedFileExtensions : ['jpg', 'png','gif'],
-		        overwriteInitial: false,
-		        // maxFileSize: 1000,
-		        maxFileSize: 10000,
-		        maxFileCount: 2,
-		        minFilesNum: 1,
-		        maxFilesNum: 3,
-		        browseClass: "btn btn-primary", //按钮样式   
-		        slugCallback: function(filename) {
-		            return filename.replace('(', '_').replace(']', '_');
-		        }
-			});
-			// 表单检验&提交
-			$('#myModal1').bootstrapValidator({
-		        message: 'This value is not valid',
-		        feedbackIcons: {
-		            valid: 'glyphicon glyphicon-ok',
-		            invalid: 'glyphicon glyphicon-remove',
-		            validating: 'glyphicon glyphicon-refresh'
-		        },
-		        fields: {
-		            telephone: {
-		                validators: {
-		                    notEmpty: {
-		                        message: '申诉内容不能为空'
-		                    }
-		                }
-		            },
-		        }
-		    }).on('success.form.bv', function(e) {
-				e.preventDefault();
-				// 注册事件
-				// 申诉内容： $("#complaintContent").val()
-				// ajax 提交
-			});
-            // 支付图片上传事件
-            $("#payImage").on('click', function(event) {
-            	event.preventDefault();
-            	/* Act on the event */
-            	if($(".kv-preview-data").length>0){
-            		// 上传事件
-            	}else{
-            		alert("请上传图片");
-            	}
 
-            });
+		function complete(orderId) {
+			$.ajax({
+				url : "../assetOrder/"+orderId+"/finishOrder",
+				type : "post",
+				data : {"result":true},
+				success: function(result){
+					console.log(result);
+					if(result.meta.code==200){
+						$("#modalAlert",parent.document).click();
+						$(".modal-body",parent.document).html("交易成功");
+					}else{
+						$("#modalAlert",parent.document).click();
+						$(".modal-body",parent.document).html(result.meta.message);
+					}
+				}
+			})
+		}
+		function pay(orderId) {
+			$.ajax({
+				url : "../assetOrder/"+orderId+"/obligation",
+				type : "post",
+				data : {"result":true},
+				success: function(result){
+					console.log(result);
+					if(result.meta.code==200){
+						$("#modalAlert",parent.document).click();
+						$(".modal-body",parent.document).html("支付成功");
+					}else{
+						$("#modalAlert",parent.document).click();
+						$(".modal-body",parent.document).html(result.meta.message);
+					}
+				}
+			})
+		}
+		// 上传照片
+		$("#file-1").fileinput({
+			language: 'zh', //设置语言
+			uploadUrl: '#', // you must set a valid URL here else you will get an error
+			allowedFileExtensions : ['jpg', 'png','gif'],
+			overwriteInitial: false,
+			// maxFileSize: 1000,
+			maxFileSize: 10000,
+			maxFileCount: 2,
+			minFilesNum: 1,
+			maxFilesNum: 3,
+			browseClass: "btn btn-success", //按钮样式
+			slugCallback: function(filename) {
+				return filename.replace('(', '_').replace(']', '_');
+			}
+		});
+		// 表单检验&提交
+		$('#appeal').bootstrapValidator({
+			message: 'This value is not valid',
+			feedbackIcons: {
+				valid: 'glyphicon glyphicon-ok',
+				invalid: 'glyphicon glyphicon-remove',
+				validating: 'glyphicon glyphicon-refresh'
+			},
+			fields: {
+				appeal: {
+					validators: {
+						notEmpty: {
+							message: '申诉内容不能为空'
+						}
+					}
+				},
+			}
+		}).on('success.form.bv', function(e) {
+			e.preventDefault();
+			// 注册事件
+			// 申诉内容： $("#complaintContent").val()
+			// ajax 提交
+		});
+		// 支付图片上传事件
+		$("#payImage").on('click', function(event) {
+			event.preventDefault();
+			/* Act on the event */
+			if($(".kv-preview-data").length>0){
+				// 上传事件
+			}else{
+				alert("请上传图片");
+			}
+
+		});
     </script>
 </body>
 </html>
