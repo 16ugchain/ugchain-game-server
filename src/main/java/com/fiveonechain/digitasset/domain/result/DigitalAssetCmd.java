@@ -12,11 +12,11 @@ public class DigitalAssetCmd {
     private String holderName;
     private int tradeShare;//流通份额
     private int holdShare;//持有份额
-    private int lockedShare;
+    private int lockedShare;//锁定份额
     private Date endTime;
     private String guarName;
     private String statusStr;
-    private boolean isWhollyOwner;
+    private boolean isWhollyOwner;//是不是百分百持股
 
     private String percent;//占资比例  持有份额／资产估价
 

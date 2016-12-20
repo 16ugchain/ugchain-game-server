@@ -4,7 +4,6 @@ import com.fiveonechain.digitasset.auth.UserContext;
 import com.fiveonechain.digitasset.domain.*;
 import com.fiveonechain.digitasset.domain.result.OrderCenterCmd;
 import com.fiveonechain.digitasset.service.*;
-import com.fiveonechain.digitasset.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -60,14 +59,11 @@ public class OrderCenterController {
                 continue;
             }else{
                 //我发起的
-                String endTimeStr = DateUtil.formatDate(assetOrder.getEndTime(),DateUtil.HC_DATETIME);
                 orderCenterCmd.setOrderId(assetOrder.getOrderId());
                 orderCenterCmd.setAssetName(asset.get().getName());
                 orderCenterCmd.setAssetId(asset.get().getAssetId());
-                orderCenterCmd.setEndTimeStr(endTimeStr);
                 orderCenterCmd.setApplicationShare(assetOrder.getAmount());
                 orderCenterCmd.setPercent(String.valueOf(assetOrder.getAmount()*100/asset.get().getEvalValue()));
-                orderCenterCmd.setEndTime(assetOrder.getEndTime());
                 Optional<GuaranteeCorp> guaranteeCorp = guaranteeCorpService.getGuarOptByGuarId(asset.get().getGuarId());
                 if(guaranteeCorp.isPresent()){
                     orderCenterCmd.setGuarName(guaranteeCorp.get().getCorpName());

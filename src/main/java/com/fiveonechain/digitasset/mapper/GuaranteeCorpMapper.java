@@ -3,6 +3,8 @@ package com.fiveonechain.digitasset.mapper;
 import com.fiveonechain.digitasset.domain.GuaranteeCorp;
 import org.apache.ibatis.annotations.*;
 
+import java.util.List;
+
 /**
  * Created by yuanshichao on 2016/11/14.
  */
@@ -32,6 +34,10 @@ public interface GuaranteeCorpMapper {
     @ResultMap("GuaranteeCorp")
     @Select("select * from guarantee_corp where guaranteecorp_id=#{guarId}")
     GuaranteeCorp findByGuarId(@Param("guarId")int guarId);
+
+    @ResultMap("GuaranteeCorp")
+    @Select("select guaranteecorp_id,user_id,corp_name,juristic_person,main_business,status from guarantee_corp" )
+    List<GuaranteeCorp> findAvalibleList();
 }
 
 

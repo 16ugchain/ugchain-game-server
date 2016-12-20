@@ -2,6 +2,7 @@ package com.fiveonechain.digitasset.service;
 
 import com.fiveonechain.digitasset.domain.GuaranteeCorp;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -15,6 +16,8 @@ public interface GuaranteeCorpService {
     int insertCorp(GuaranteeCorp guaranteeCorp);
 
     GuaranteeCorp findByUserId(int userId);
+
+    List<GuaranteeCorp> findAvilableList();
 
     Optional<GuaranteeCorp> getGuarOptional(int userId);
 

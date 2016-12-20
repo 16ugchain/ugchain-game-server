@@ -208,7 +208,7 @@
 			data[i]["assigneer"] = result.data[i]["proposerName"];
 			data[i]["last_time"] = result.data[i]["endTimeStr"];
 			data[i]["status"] = result.data[i]["status"]["message"];
-			data[i]["operations"] = "<a href=\"javaScript:void(0)\" onclick=\"delivery(" + result.data[i].assetId + ")\">完成</a>";
+			data[i]["operation"] = "<a href=\"javaScript:void(0)\" onclick=\"delivery(" + result.data[i].assetId + ")\">完成</a>";
 		}
 		console.log(data);
 		$("#table").bootstrapTable("load", {

@@ -221,7 +221,7 @@ public class AssetServiceImpl implements AssetService {
 
     @Override
     public void updateAssetIssueInfo(Asset asset) {
-
+        assetMapper.updateAssetIssueInfoByAssetId(asset);
     }
 
     @Override

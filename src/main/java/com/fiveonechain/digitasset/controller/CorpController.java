@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.security.KeyPair;
 import java.security.cert.Certificate;
+import java.util.List;
 
 /**
  * Created by fanjl on 2016/12/7.
@@ -81,6 +82,19 @@ public class CorpController {
             return result;
         }
         GuaranteeCorp guaranteeCorp = iGuaranteeCorpService.findByUserId(userContext.getUserId());
+        Result result = ResultUtil.success(guaranteeCorp);
+        return result;
+    }
+    @RequestMapping(value = "/getCorpList", method = RequestMethod.GET)
+    public Result getCorpList(@AuthenticationPrincipal UserContext userContext
+    ) {
+        //验证identity后设置status
+        User user = iUserService.getUserByUserId(userContext.getUserId());
+        if (user == null) {
+            Result result = ResultUtil.buildErrorResult(ErrorInfo.USER_NOT_FOUND);
+            return result;
+        }
+        List<GuaranteeCorp> guaranteeCorp = iGuaranteeCorpService.findAvilableList();
         Result result = ResultUtil.success(guaranteeCorp);
         return result;
     }

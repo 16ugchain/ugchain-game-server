@@ -6,6 +6,7 @@ import com.fiveonechain.digitasset.mapper.SequenceMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -38,6 +39,11 @@ public class GuaranteeCorpServiceImpl implements GuaranteeCorpService {
     @Override
     public GuaranteeCorp findByUserId(int userId) {
         return guaranteeCorpMapper.findByUserId(userId);
+    }
+
+    @Override
+    public List<GuaranteeCorp> findAvilableList() {
+        return guaranteeCorpMapper.findAvalibleList();
     }
 
     @Override

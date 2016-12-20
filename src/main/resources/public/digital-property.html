@@ -29,7 +29,9 @@
 	<!-- Bootstrap.js -->
 	<script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
 
-	
+	<script src="//cdn.bootcss.com/bootstrap-validator/0.5.3/js/bootstrapValidator.min.js"></script>
+
+	<script src="http://malsup.github.com/jquery.form.js"></script>
 
 	<!-- vue.js -->
 	<script src="//cdn.bootcss.com/vue/1.0.24/vue.js"></script>
@@ -102,7 +104,12 @@
 					<td>${digitalAssetCmd.endTimeStr!""}</td>
 					<td>${digitalAssetCmd.guarName!""}</td>
 					<td>${digitalAssetCmd.statusStr!""}</td>
-					<td><label><input type="checkbox" name="" value="" data-toggle="modal" data-target="#myModal2">申请认购</label></td>
+
+						<#if digitalAssetCmd.tradeShare!=0  >
+							<td><label><input type="checkbox" value="${digitalAssetCmd.tradeShare}"  onclick="selfModal(${digitalAssetCmd.assetId},${digitalAssetCmd.tradeShare})" checked="checked"  name=""  data-toggle="modal" data-target="#myModal2">是否允许认购</label></td>
+						<#else>
+							<td><label><input type="checkbox"  value="0" name="" onclick="selfModal(${digitalAssetCmd.assetId},0)"  data-toggle="modal" data-target="#myModal2">是否允许认购</label></td>
+						</#if>
 					</tr>
 				</#list>
 
@@ -112,7 +119,7 @@
 			<div class="modal-dialog">
 				<div class="modal-content animated flipInX">
 					<div class="modal-body">
-						<form class="form-horizontal" role="form" id="trade">
+						<form class="form-horizontal" role="form" id="tradeModal">
 							<!-- 认购份额 -->
 							<div class="form-group">
 								<label for="registerNmae" class="col-xs-3 control-label">允许认购份额</label>
@@ -126,10 +133,17 @@
 								</div>
 							</div>
 							<div class="form-group">
+								<label for="registerNmae" class="col-xs-3 control-label">锁定份额</label>
+								<div class="col-xs-6" style="line-height: 30px;">
+									<strong id="lockShare">0</strong>股
+								</div>
+							</div>
+							<input type="hidden" id="assetId" value=""/>
+							<div class="form-group">
 								<label for="registerNmae" class="col-xs-3 control-label"></label>
 								<div class="col-xs-6">
 									<div class="row">
-										<button class="col-xs-4 col-xs-offset-1 btn btn-default">
+										<button data-dismiss="modal" class="col-xs-4 col-xs-offset-1 btn btn-default">
 											取消
 										</button>
 										<button class="col-xs-4 col-xs-offset-1 btn btn-success">
@@ -205,8 +219,13 @@
 //    		$("#table").bootstrapTable({
 //                data:aaa
 //            });
-
-$('#trade').bootstrapValidator({
+function selfModal(assetId,tradeShare) {
+	console.log(assetId);
+	console.log(tradeShare);
+	$("#lockShare").text(tradeShare);
+	$("#assetId").val(assetId);
+}
+$('#tradeModal').bootstrapValidator({
 	message: 'This value is not valid',
 	feedbackIcons: {
 		valid: 'glyphicon glyphicon-ok',
@@ -214,80 +233,28 @@ $('#trade').bootstrapValidator({
 		validating: 'glyphicon glyphicon-refresh'
 	},
 	fields: {
-		opinion: {
+		tradeBalance: {
 			validators: {
 				notEmpty: {
-					message: '评估意见不能为空'
-				}
-			}
-		},
-		worth: {
-			validators: {
-				notEmpty: {
-					message: '评估价值不能为空'
-				},
-				stringLength: {
-					min: 4,
-					max: 9,
-					message: '请输入大于4位数小于9位数的数字'
-				},
-				regexp: {
-					regexp: /^(0|[1-9][0-9]*)$/,
-					message: '请输入大于0的整数'
-				}
-			}
-		},
-		charge: {
-			validators: {
-				notEmpty: {
-					message: '服务收费不能为空'
-				},
-				stringLength: {
-					min: 2,
-					max: 5,
-					message: '请输入大于2位数小于5位数的数字'
-				},
-				regexp: {
-					regexp: /^(0|[1-9][0-9]*)$/,
-					message: '请输入大于0的整数'
-				}
-			}
-		},
-		earnings: {
-			validators: {
-				notEmpty: {
-					message: '预期收益不能为空'
-				},
-				stringLength: {
-					min: 1,
-					max: 4,
-					message: '请输入大于1位数小于4位数的数字'
-				},
-				regexp: {
-					regexp: /([1-9]\d*(\.\d*[1-9])?)|(0\.\d*[1-9])/,
-					message: '请输入大于0的数字'
+					message: '份额不能为空'
 				}
 			}
 		}
-
 	}
 }).on('success.form.bv', function(e) {
 	e.preventDefault();
 	// 资产评估事件
-
+	console.log($("#assetId").val());
 	$.ajax({
-		url : "assets/"+assetId+"/evaluate",
-		type : "post",
-		data : {"result":false,
-			"conclusion":$("#opinion"),
-			"value":$("#worth"),
-			"fee":$("#charge"),
-			"earnings":$("#earnings")},
+		url : "/users/self/digitassets/"+$("#assetId").val()+"/tradebalance",
+		type : "PUT",
+		data : {
+			"amount":$("#tradeBalance").val()},
 		success: function(result){
 			console.log(result);
 			if(result.meta.code==200){
 				$("#modalAlert",parent.document).click();
-				$(".modal-body",parent.document).html("评估成功");
+				$(".modal-body",parent.document).html("修改成功");
 				location.reload();
 			}else{
 				$("#modalAlert",parent.document).click();

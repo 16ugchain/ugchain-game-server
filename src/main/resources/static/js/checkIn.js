@@ -1,3 +1,26 @@
+$(document).ready(function(){
+
+    $.ajax({
+        url : "/corp/getCorpList",
+        type : "get",
+
+        success: function(result){
+            console.log(result);
+            if(result.meta.code==200){
+                for(var i=0;i<result.data.length;i++){
+                    $("#guarantee_company").append("<option  value="+result.data[i].guaranteecorpId+">"+result.data[i].corpName+"</option>");
+                }
+            }
+        }
+    })
+    $("input[type='radio'][name='asset_guarantee'][value='option2']").click(function(){
+        $("#corp_list").hide();
+    });
+    $("input[type='radio'][name='asset_guarantee'][value='option1']").click(function(){
+        $("#corp_list").show();
+    });
+
+});
 var asset = new Vue({
     el: "#asset",
     data: {
@@ -114,15 +137,6 @@ $('form').bootstrapValidator({
                 }
             }
         },
-        // 担保公司
-        guarantee_company: {
-            message: '资产名称验证失败',
-            validators: {
-                notEmpty: {
-                    message: '资产名称不能为空'
-                }
-            }
-        },
     }
 }).on('success.form.bv', function (e) {
     // 全部验证通过，提交校验
@@ -131,6 +145,11 @@ $('form').bootstrapValidator({
     var photosStr = asset.userInfo.assetImgId.join(",");
     console.log(certStr);
     console.log(photosStr);
+    var radioValue=$('input:radio[name="asset_guarantee"]:checked').val();
+    var guarId;
+    if(radioValue=="option1"){
+        guarId = $("#guarantee_company").val();
+    }
     $.post(asset.api.createAsset, {
         name: asset.assetData.assetName,
         desc: asset.assetData.assetDescription,
@@ -138,7 +157,7 @@ $('form').bootstrapValidator({
         value: asset.assetData.assetAppraisement,
         cycle: asset.assetData.assetCycle,
         photos: photosStr,
-        guarId: asset.assetData.guaranteeCompany
+        guarId: guarId
     }, function (data) {
         console.log(data);
         if (data.meta.code === 200) {

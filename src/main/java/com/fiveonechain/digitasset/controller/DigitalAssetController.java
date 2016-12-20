@@ -44,6 +44,7 @@ public class DigitalAssetController {
             Optional<Asset> assetOpt = assetService.getAssetOptional(userAsset.getAssetId());
             if(assetOpt.isPresent()){
                 Asset asset = assetOpt.get();
+                digitalAssetCmd.setTradeShare(userAsset.getTradeBalance());
                 digitalAssetCmd.setAssetName(asset.getName());
                 digitalAssetCmd.setEndTime(asset.getEndTime());
                 UserInfo userInfo = userInfoService.getUserInfoByUserId(asset.getUserId());

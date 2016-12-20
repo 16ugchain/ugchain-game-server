@@ -120,11 +120,7 @@
             }else{
                 data[i]["guarantee"]="";
             }
-            if(window.parent.roleNum==1){
-                data[i]["name"]="<a href=" + "/assetsDetail/publish/"+result.data[i].assetId+">" + result.data[i].assetName + "";
-            }else if(window.parent.roleNum==2){
-                data[i]["name"]="<a href=" + "/assetsDetail/assign/"+result.data[i].assetId+">" + result.data[i].assetName + "";
-            }
+            data[i]["name"]="<a href=" + "/assetsDetail/assign/"+result.data[i].assetId+">" + result.data[i].assetName + "";
             data[i]["id"]=result.data[i].assetId;
             data[i]["share"]=result.data[i]["availShare"];
             data[i]["proportion"]=result.data[i]["percent"];

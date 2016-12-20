@@ -149,10 +149,11 @@
 							</div>
 						</div>
 						<!-- 担保公司 -->
-						<div class="form-group">
-							<label for="guarantee_company" class="col-sm-4 control-label">担保公司</label>
+						<div class="form-group" id="corp_list">
+							<label for="guarantee_company"  class="col-sm-4 control-label">担保公司</label>
 							<div class="col-sm-8">
-								<input type="text" class="form-control" id="guarantee_company" name="guarantee_company" placeholder="请输入担保公司" v-model="assetData.guaranteeCompany">
+								<select id="guarantee_company" name="guarantee_company" placeholder="请输入担保公司" v-model="assetData.guaranteeCompany">
+								</select>
 							</div>
 						</div>
 						<!-- 提交按钮 -->

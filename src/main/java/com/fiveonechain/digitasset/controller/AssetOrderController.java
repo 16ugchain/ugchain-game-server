@@ -18,9 +18,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.Optional;
 
 /**
@@ -42,7 +39,7 @@ public class AssetOrderController {
     @Autowired
     private UserService userService;
 
-    @RequestMapping(value = "createOrder", method = RequestMethod.POST)
+    @RequestMapping(value = "/createOrder", method = RequestMethod.POST)
     public Result sellOrder(
             @AuthenticationPrincipal UserContext host,
             @RequestParam("userId") int userId,

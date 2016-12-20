@@ -138,9 +138,6 @@
 											<th data-field="possession" data-sortable="true">
 												占资比例
 											</th>
-											<th data-field="last_time" data-sortable="true">
-												到期时间
-											</th>
 											<th data-field="guarantee" data-sortable="true">
 												担保公司
 											</th>
@@ -158,13 +155,13 @@
 											</th>
 										</tr>
 									</thead>
-									<tr>
+
 										<#list orderCenterCmds as orderCenterCmd>
+											<tr>
 											<td>${orderCenterCmd.assetName!""}</td>
 											<td>${orderCenterCmd.assetId!""}</td>
 											<td>${orderCenterCmd.ApplicationShare!""}</td>
 											<td>${orderCenterCmd.percent!""}</td>
-											<td>${orderCenterCmd.endTime?date}</td>
 											<td>${orderCenterCmd.guarName!""}</td>
 											<td>${orderCenterCmd.holderName!""}</td>
 											<td>${orderCenterCmd.startTime!""}</td>
@@ -176,10 +173,10 @@
                                                     </#list>
 												</td>
 
-
+											</tr>
 										</#list>
 
-									</tr>
+
 								</table>
 						 	<!-- </div> -->
 						</div>
@@ -204,9 +201,6 @@
 											<th data-field="possession" data-sortable="true">
 												占资比例
 											</th>
-											<th data-field="last_time" data-sortable="true">
-												到期时间
-											</th>
 											<th data-field="guarantee" data-sortable="true">
 												担保公司
 											</th>
@@ -228,13 +222,13 @@
 											
 										</tr>
 									</thead>
-									<tr>
+
 										<#list orderCenterCmdsAssign as orderCenterCmdAssign>
+											<tr>
 											<td>${orderCenterCmdAssign.assetName!""}</td>
 											<td>${orderCenterCmdAssign.assetId!""}</td>
 											<td>${orderCenterCmdAssign.ApplicationShare!""}</td>
 											<td>${orderCenterCmdAssign.percent!""}</td>
-											<td>${orderCenterCmdAssign.endTime?date}</td>
 											<td>${orderCenterCmdAssign.guarName!""}</td>
 											<td>${orderCenterCmdAssign.expEarning!""}</td>
 											<td>${orderCenterCmdAssign.buyerName!""}</td>
@@ -245,8 +239,9 @@
                                                     <a href="javascript:void(0);" onclick="handlerOrder(${op.code},${orderCenterCmdAssign.orderId})">${op.message!"查看"}</a>
 												</#list>
 											</td>
+											</tr>
 										</#list>
-									</tr>
+
 								</table>
 						 	<!-- </div> -->
 						</div>
@@ -314,7 +309,8 @@
             switch (operationCode){
                 case 1: flag = true;break;
                 case 2: flag = false;break;
-                case 6: return false;
+                case 6: return;break;
+				default : return;
             }
                 $.ajax({
                     url : "../assetOrder/"+assetId+"/apply",

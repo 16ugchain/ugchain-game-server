@@ -47,6 +47,9 @@ public class AssetController {
     private ImageUrlService imageUrlService;
 
     @Autowired
+    private AssetOrderService assetOrderService;
+
+    @Autowired
     private UserService userService;
 
     @Autowired
@@ -480,6 +483,9 @@ public class AssetController {
             AssetItem item = new AssetItem();
             item.setAssetId(asset.getAssetId());
             item.setAssetName(asset.getName());
+            if(asset.getEndTime()==null){
+                continue;
+            }
             item.setEndTime(DateUtil.formatDate(asset.getEndTime(),DateUtil.HC_DATETIME));
 
             boolean isGuar = assetService.isAssetGuaranteed(asset);
@@ -709,7 +715,8 @@ public class AssetController {
     @RequestMapping(value = "assets/{assetId}/applydelivery", method = RequestMethod.POST)
     public Result applyDelivery(
             @AuthenticationPrincipal UserContext host,
-            @PathVariable("assetId") int assetId) {
+            @PathVariable("assetId") int assetId
+            ) {
 
         Optional<Asset> assetOpt = assetService.getAssetOptional(assetId);
         if (!assetOpt.isPresent()) {
@@ -722,6 +729,10 @@ public class AssetController {
 
         if (!userAssetService.hasEnoughDigitAsset(host.getUserId(), assetId, asset.getEvalValue())) {
             return ResultUtil.buildErrorResult(ErrorInfo.DIGIT_ASSET_NOT_ENOUGH);
+        }
+        AssetOrder assetOrder = new AssetOrder();
+        if(asset.getEndTime()==null){
+            return ResultUtil.buildErrorResult(ErrorInfo.ASSET_EXPIRE_TO_ISSUE);
         }
         assetService.applyAssetDelivery(host, asset);
 

@@ -34,7 +34,11 @@ $.ajax({
                 data[i].operation.push("<a href=\"javascript:void(0);\" onclick=\"issueAssets("+result.data[i].assetId+","+result.data[i]["operation"][j]["code"]+")\">"+result.data[i]["operation"][j]["message"]+"</a>");
             }
 //						data[i].can_trade = ""+result.data[i]["tradeShare"]+"";
-            data[i].guarantee = ""+result.data[i]["guarName"]+"";
+            if(result.data[i]["guaranteed"]==true){
+                data[i].guarantee = ""+result.data[i]["guarName"]+"";
+            }else{
+                data[i].guarantee = "无";
+            }
             data[i].status = ""+result.data[i]["statusStr"]+"";
         }
     }

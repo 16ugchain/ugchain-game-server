@@ -2,6 +2,7 @@ package com.fiveonechain.digitasset.mapper;
 
 import com.fiveonechain.digitasset.domain.AssetOrder;
 import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.type.JdbcType;
 
 import java.util.List;
 
@@ -24,6 +25,9 @@ public interface AssetOrderMapper {
             @Result(property = "userId", column = "user_id"),
             @Result(property = "unitPrices", column = "unit_prices"),
             @Result(property = "buyerId", column = "buyer_id"),
+            @Result(property = "endTime", column = "end_time",jdbcType = JdbcType.TIMESTAMP,javaType = java.sql.Timestamp.class),
+            @Result(property = "createTime", column = "create_time",jdbcType = JdbcType.TIMESTAMP,javaType = java.sql.Timestamp.class),
+            @Result(property = "updateTime", column = "update_time",jdbcType = JdbcType.TIMESTAMP,javaType = java.sql.Timestamp.class),
     })
     @Select("select " + all_columns + " from asset_order where order_id=#{orderId}")
     AssetOrder findByOrderId(@Param("orderId") int orderId);
