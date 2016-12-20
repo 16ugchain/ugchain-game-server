@@ -270,8 +270,8 @@ public class AssetController {
                 if(asset.getEndTime()!=null){
                     assetDetail.setEndTime(DateUtil.formatDate(asset.getEndTime(),DateUtil.HC_DATETIME));
                 }
-                int availShare = userAssetService.sumTradeBalanceByAsset(asset.getAssetId());
-                assetDetail.setTradeShare(availShare);
+                //int availShare = userAssetService.sumTradeBalanceByAsset(asset.getAssetId());
+                //assetDetail.setTradeShare(availShare);
                 assetDetail.setStatusStr(AssetStatus.fromValue(asset.getStatus()).getMessage());
                 UserRoleEnum userRoleEnum = UserRoleEnum.fromValue(user.get().getRole());
                 List<AssetOperation> operations = assetService.getAvailableOperation(AssetStatus.fromValue(asset.getStatus()),userRoleEnum);

@@ -80,7 +80,7 @@ public class OrderCenterController {
                 orderCenterCmd.setStatus(assetOrder.getStatus());
                 orderCenterCmd.setStatusStr(AssetOrderStatusEnum.fromValue(assetOrder.getStatus()).getName());
                 orderCenterCmd.setExpEarning(String.valueOf(asset.get().getExpEarnings()));
-                List<AssetOrderOperation> assetOrderOperations = iAssetOrderService.getOperationByStatusAndRole(AssetOrderStatusEnum.fromValue(assetOrder.getStatus()),userRoleEnum);
+                List<AssetOrderOperation> assetOrderOperations = iAssetOrderService.getOperationByStatusAndRole(AssetOrderStatusEnum.fromValue(assetOrder.getStatus()),isBuyer);
                 orderCenterCmd.setOperation(assetOrderOperations);
             }
             orderCenterCmds.add(orderCenterCmd);
