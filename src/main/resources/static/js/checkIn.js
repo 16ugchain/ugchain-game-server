@@ -163,6 +163,9 @@ $('form').bootstrapValidator({
         if (data.meta.code === 200) {
             console.log(data.meta.message);
             window.location.href="/physical-assets.html";
+        }else{
+            $("#modalAlert",parent.document).click();
+            $(".modal-body",parent.document).html(result.meta.message);
         }
     })
     // post 请求
