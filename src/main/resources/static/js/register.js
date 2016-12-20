@@ -152,8 +152,8 @@ $("#file-1").on("change", function () {
 // 图片上传
 function saveImg(){
     $("#upload").ajaxSubmit(function(message) {
-        console.log(message);
-        register.userInfo.imageId = message.data;
+        var json = JSON.parse(message);
+        register.userInfo.imageId = json.data;
     });
     return false;
 }

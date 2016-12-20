@@ -104,6 +104,9 @@ public class AssetController {
             throw new IllegalArgumentException("资产估值异常");
         }
 
+        if (!userInfoService.isExistsUserAuth(userContext.getUserId())) {
+            return ResultUtil.buildErrorResult(ErrorInfo.USER_INFO_NOT_FOUND);
+        }
 
         boolean needGuar = false;
         if (guarId != null) {
