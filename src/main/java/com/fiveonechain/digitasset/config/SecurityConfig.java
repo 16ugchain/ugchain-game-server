@@ -1,5 +1,6 @@
 package com.fiveonechain.digitasset.config;
 
+import com.fiveonechain.digitasset.auth.JwtAuthenticationEntryPoint;
 import com.fiveonechain.digitasset.auth.JwtAuthenticationFilter;
 import com.fiveonechain.digitasset.auth.JwtAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,12 +27,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring()
-                .antMatchers("/auth/**")
                 .antMatchers("/index")
-                .antMatchers("/test_page")
                 .antMatchers("/login.html")
                 .antMatchers("/register.html")
-                .antMatchers("/js/*").antMatchers("/css/*")
+                .antMatchers("/js/*")
+                .antMatchers("/css/*")
                 .antMatchers("/images/*")
                 .antMatchers("/user/register")
                 .antMatchers("/user/sendVerification")
@@ -44,11 +44,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        AuthenticationEntryPoint entryPoint = new Http401AuthenticationEntryPoint("CHC");
+        AuthenticationEntryPoint entryPoint = new JwtAuthenticationEntryPoint();
         http.headers().frameOptions().disable();
         http
-                .authorizeRequests().antMatchers("/admin/**").hasRole("ADMIN")
-                .and()
                 .authorizeRequests().anyRequest().authenticated()
                 .and()
                 .addFilterBefore(new JwtAuthenticationFilter(authenticationManager(), entryPoint), BasicAuthenticationFilter.class)
