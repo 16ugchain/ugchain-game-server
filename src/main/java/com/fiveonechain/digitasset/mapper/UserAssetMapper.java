@@ -21,7 +21,7 @@ public interface UserAssetMapper {
     String ALL_COLUMN = "asset_id, user_id, contract_id, "
             + "balance, trade_balance, lock_balance ";
 
-    @Insert("INSERT INTO user_asset(" + INSERT_COLUMN + ") VALUES (" + INSERT_PROPERTY +")")
+    @Insert("INSERT IGNORE INTO user_asset(" + INSERT_COLUMN + ") VALUES (" + INSERT_PROPERTY +")")
     int insert(UserAsset userAsset);
 
     @Results(id = "userasset", value = {

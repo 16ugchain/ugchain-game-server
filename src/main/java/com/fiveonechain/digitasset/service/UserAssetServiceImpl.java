@@ -59,6 +59,18 @@ public class UserAssetServiceImpl implements UserAssetService {
     }
 
     @Override
+    public void createUserAsset(int assetId, int userId) {
+        UserAsset userAsset = new UserAsset();
+        userAsset.setAssetId(assetId);
+        userAsset.setUserId(userId);
+        userAsset.setBalance(0);
+        userAsset.setTradeBalance(0);
+        userAsset.setLockBalance(0);
+        userAsset.setContractId(1);
+        userAssetMapper.insert(userAsset);
+    }
+
+    @Override
     @Transactional
     public void lockDigitAssetShare(int ownerId, int assetId, int amount) {
         UserAsset userAsset = userAssetMapper.selectForUpdate(assetId, ownerId);

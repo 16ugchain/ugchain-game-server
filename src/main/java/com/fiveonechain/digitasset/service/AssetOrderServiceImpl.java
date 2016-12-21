@@ -105,6 +105,7 @@ public class AssetOrderServiceImpl implements AssetOrderService {
     @Transactional
     public void confirmOrderApply(UserContext host, AssetOrder order) {
         userAssetService.lockDigitAssetShare(order.getUserId(), order.getAssetId(), order.getAmount());
+        userAssetService.createUserAsset(order.getAssetId(), order.getBuyerId());
         updateAssetOrderStatus(order.getOrderId(), AssetOrderStatusEnum.OBLIGATIONS);
     }
 
