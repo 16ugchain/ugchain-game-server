@@ -61,6 +61,42 @@ public class UserAssetController {
     }
     */
 
+    @RequestMapping(value = "/assets/{assetId}/digitassets", method = RequestMethod.GET)
+    public Result getDigitAssetListByAsset(
+            @AuthenticationPrincipal UserContext userContext,
+            @PathVariable("assetId") int assetId) {
+
+        Optional<Asset> assetOpt = assetService.getAssetOptional(assetId);
+        if (!assetOpt.isPresent()) {
+            return ResultUtil.buildErrorResult(ErrorInfo.ASSET_NOT_FOUND);
+        }
+        Asset asset = assetOpt.get();
+
+        List<UserAsset> userAssetList = userAssetService.getDigitAssetListByAsset(assetId);
+        if (userAssetList.isEmpty()) {
+            return ResultUtil.success(Collections.emptyList());
+        }
+        List<DigitAssetItem> shareList = new  LinkedList<>();
+        for (UserAsset userAsset : userAssetList) {
+            DigitAssetItem share = new DigitAssetItem();
+            share.setAssetId(assetId);
+            share.setAvailShare(userAsset.getBalance());
+            share.setOwnerId(userAsset.getUserId());
+            float num= (float)(userAsset.getBalance()*100)/asset.getEvalValue();
+            DecimalFormat df = new DecimalFormat("0.00");//格式化小数
+            String percent = df.format(num);
+            share.setPercent(percent);
+            Optional<User> userOpt = userService.getUserOptional(userAsset.getUserId());
+            if (!userOpt.isPresent()) {
+                LOGGER.error("{} user {} NOT FOUND", ErrorInfo.SERVER_ERROR, userAsset.getUserId());
+                return ResultUtil.buildErrorResult(ErrorInfo.SERVER_ERROR);
+            }
+            share.setOwnerName(userOpt.get().getUserName());
+            shareList.add(share);
+        }
+        return ResultUtil.success(shareList);
+    }
+
     @RequestMapping(value = "/assets/{assetId}/tradedigitassets", method = RequestMethod.GET)
     public Result getAvailDigitAssetListByAsset(
             @AuthenticationPrincipal UserContext userContext,
