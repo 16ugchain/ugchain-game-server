@@ -48,6 +48,11 @@ public class UserServiceImpl implements UserService {
         return userMapper.updateMobile(user);
     }
 
+    @Override
+    public boolean updatePassword(String newPwd,int userId) {
+        return userMapper.updatePassword(newPwd,userId);
+    }
+
 
     @Override
     public User getUserByUserId(int userId) {

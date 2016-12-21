@@ -14,9 +14,11 @@ public class DigitalAssetCmd {
     private int holdShare;//持有份额
     private int lockedShare;//锁定份额
     private Date endTime;
+    private String endTimeStr;
     private String guarName;
+    private int status;
     private String statusStr;
-    private boolean isWhollyOwner;//是不是百分百持股
+    private boolean whollyOwner;//是不是百分百持股
 
     private String percent;//占资比例  持有份额／资产估价
 
@@ -101,11 +103,11 @@ public class DigitalAssetCmd {
     }
 
     public boolean isWhollyOwner() {
-        return isWhollyOwner;
+        return whollyOwner;
     }
 
     public void setWhollyOwner(boolean whollyOwner) {
-        isWhollyOwner = whollyOwner;
+        this.whollyOwner = whollyOwner;
     }
 
     public int getLockedShare() {
@@ -114,6 +116,22 @@ public class DigitalAssetCmd {
 
     public void setLockedShare(int lockedShare) {
         this.lockedShare = lockedShare;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public String getEndTimeStr() {
+        return endTimeStr;
+    }
+
+    public void setEndTimeStr(String endTimeStr) {
+        this.endTimeStr = endTimeStr;
     }
 }
 

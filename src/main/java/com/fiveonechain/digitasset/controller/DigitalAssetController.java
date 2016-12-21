@@ -7,6 +7,7 @@ import com.fiveonechain.digitasset.service.AssetService;
 import com.fiveonechain.digitasset.service.GuaranteeCorpService;
 import com.fiveonechain.digitasset.service.UserAssetService;
 import com.fiveonechain.digitasset.service.UserInfoService;
+import com.fiveonechain.digitasset.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -47,6 +48,9 @@ public class DigitalAssetController {
                 digitalAssetCmd.setTradeShare(userAsset.getTradeBalance());
                 digitalAssetCmd.setAssetName(asset.getName());
                 digitalAssetCmd.setEndTime(asset.getEndTime());
+
+                digitalAssetCmd.setEndTimeStr(DateUtil.formatDate(asset.getEndTime(),DateUtil.HC_DATETIME));
+                digitalAssetCmd.setStatus(asset.getStatus());
                 UserInfo userInfo = userInfoService.getUserInfoByUserId(asset.getUserId());
                 digitalAssetCmd.setPublishName(userInfo.getRealName());
                 digitalAssetCmd.setStatusStr(AssetStatus.fromValue(asset.getStatus()).getMessage());

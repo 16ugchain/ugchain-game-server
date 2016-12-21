@@ -12,11 +12,13 @@ import java.util.Optional;
 
 public interface UserService {
 
-    public User insertAndGetUser(User user);
+    User insertAndGetUser(User user);
 
     boolean updateMobile(User user);
 
-    public User getUserByUserId(int userId);
+    boolean updatePassword(String newPwd,int userId);
+
+    User getUserByUserId(int userId);
 
     boolean isExistsUserName(String userName);
 
