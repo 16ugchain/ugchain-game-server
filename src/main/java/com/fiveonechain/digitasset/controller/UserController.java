@@ -218,6 +218,10 @@ public class UserController {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.USER_ROLE_NOT_MATCH);
             return result;
         }
+        if (role != UserRoleEnum.CORP.getId() && user.getRole() == UserRoleEnum.CORP.getId()) {
+            Result result = ResultUtil.buildErrorResult(ErrorInfo.USER_ROLE_NOT_MATCH);
+            return result;
+        }
         if (user.getStatus() != UserStatusEnum.ACTIVE.getId()) {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.USER_STATUS_ERROR);
             return result;

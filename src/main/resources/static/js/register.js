@@ -67,7 +67,7 @@ var register = new Vue({
             if (this.tabIndex > 3) {
                 this.tabIndex = 3;
                 // 跳转首页
-                window.location = "/login.html";
+                window.location = "/index.html";
             }
             $(".nav-tabs > li").removeClass('active').eq(register.tabIndex).addClass('active');
             $(".tab-content > div").removeClass('active').eq(register.tabIndex).addClass('active');

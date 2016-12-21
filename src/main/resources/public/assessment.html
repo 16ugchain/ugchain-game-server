@@ -41,7 +41,10 @@
         .modal-dialog {
             z-index: 10000!important;
         }
-
+        .tab-content {
+            margin-top: 10px;
+            padding: 30px 40px;
+        }
     </style>
     <!-- 表格 -->
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.css">
@@ -75,7 +78,7 @@
             <div id="myTabContent" class="tab-content panel panel-default">
                 <!-- 待评估 -->
                 <div class="tab-pane fade active in" id="tab1">
-                    <!--<div class="row">-->
+                    <div class="row">
                         <!-- <div class="col-sm-12"> -->
                         <table id="table1" data-toggle="table" data-pagination="true" data-search="true"
                                data-use-row-attr-func="true" data-reorderable-rows="true">
@@ -125,12 +128,12 @@
                             </tr>
                         </table>
                         <!-- </div> -->
-                    <!--</div>-->
+                    </div>
 
                 </div>
                 <!-- 我收到 -->
                 <div class="tab-pane fade" id="tab2">
-                    <!--<div class="row">-->
+                    <div class="row">
                         <!-- <div class="col-sm-12"> -->
                         <table id="table2" data-toggle="table" data-pagination="true" data-search="true"
                                data-use-row-attr-func="true" data-reorderable-rows="true">
@@ -161,7 +164,7 @@
                             <!--</tr>-->
                         </table>
                         <!-- </div> -->
-                    <!--</div>-->
+                    </div>
                 </div>
 
             </div>
@@ -387,61 +390,61 @@
             validating: 'glyphicon glyphicon-refresh'
         },
         fields: {
-            opinion: {
-                validators: {
-                    notEmpty: {
-                        message: '评估意见不能为空'
-                    }
-                }
-            },
-            worth: {
-                validators: {
-                    notEmpty: {
-                        message: '评估价值不能为空'
-                    },
-                    stringLength: {
-                        min: 4,
-                        max: 9,
-                        message: '请输入大于4位数小于9位数的数字'
-                    },
-                    regexp: {
-                        regexp: /^(0|[1-9][0-9]*)$/,
-                        message: '请输入大于0的整数'
-                    }
-                }
-            },
-            charge: {
-                validators: {
-                    notEmpty: {
-                        message: '服务收费不能为空'
-                    },
-                    stringLength: {
-                        min: 2,
-                        max: 5,
-                        message: '请输入大于2位数小于5位数的数字'
-                    },
-                    regexp: {
-                        regexp: /^(0|[1-9][0-9]*)$/,
-                        message: '请输入大于0的整数'
-                    }
-                }
-            },
-            earnings: {
-                validators: {
-                    notEmpty: {
-                        message: '预期收益不能为空'
-                    },
-                    stringLength: {
-                        min: 1,
-                        max: 4,
-                        message: '请输入大于1位数小于4位数的数字'
-                    },
-                    regexp: {
-                        regexp: /([1-9]\d*(\.\d*[1-9])?)|(0\.\d*[1-9])/,
-                        message: '请输入大于0的数字'
-                    }
-                }
-            }
+//            opinion: {
+//                validators: {
+//                    notEmpty: {
+//                        message: '评估意见不能为空'
+//                    }
+//                }
+//            },
+//            worth: {
+//                validators: {
+//                    notEmpty: {
+//                        message: '评估价值不能为空'
+//                    },
+//                    stringLength: {
+//                        min: 4,
+//                        max: 9,
+//                        message: '请输入大于4位数小于9位数的数字'
+//                    },
+//                    regexp: {
+//                        regexp: /^(0|[1-9][0-9]*)$/,
+//                        message: '请输入大于0的整数'
+//                    }
+//                }
+//            },
+//            charge: {
+//                validators: {
+//                    notEmpty: {
+//                        message: '服务收费不能为空'
+//                    },
+//                    stringLength: {
+//                        min: 2,
+//                        max: 5,
+//                        message: '请输入大于2位数小于5位数的数字'
+//                    },
+//                    regexp: {
+//                        regexp: /^(0|[1-9][0-9]*)$/,
+//                        message: '请输入大于0的整数'
+//                    }
+//                }
+//            },
+//            earnings: {
+//                validators: {
+//                    notEmpty: {
+//                        message: '预期收益不能为空'
+//                    },
+//                    stringLength: {
+//                        min: 1,
+//                        max: 4,
+//                        message: '请输入大于1位数小于4位数的数字'
+//                    },
+//                    regexp: {
+//                        regexp: /([1-9]\d*(\.\d*[1-9])?)|(0\.\d*[1-9])/,
+//                        message: '请输入大于0的数字'
+//                    }
+//                }
+//            }
 
         }
     }).on('success.form.bv', function(e) {
