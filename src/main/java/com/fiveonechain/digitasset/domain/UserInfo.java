@@ -19,6 +19,7 @@ public class UserInfo {
     private String fixedLine;
     private String email;
     private String imageId;
+    private String iconId;
     private int status;
 
     public int getId() {
@@ -131,5 +132,13 @@ public class UserInfo {
 
     public void setImageId(String imageId) {
         this.imageId = imageId;
+    }
+
+    public String getIconId() {
+        return iconId;
+    }
+
+    public void setIconId(String iconId) {
+        this.iconId = iconId;
     }
 }

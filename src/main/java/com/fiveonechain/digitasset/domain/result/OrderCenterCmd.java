@@ -15,7 +15,7 @@ public class OrderCenterCmd {
     private String assetName;//资产名称
     private int assetId;//资产编号
     private int orderId;//订单编号
-    private int ApplicationShare;//申购份额
+    private int applicationShare;//申购份额
     private String percent;//占资比例
     private Date endTime;
     private String endTimeStr;
@@ -46,11 +46,11 @@ public class OrderCenterCmd {
     }
 
     public int getApplicationShare() {
-        return ApplicationShare;
+        return applicationShare;
     }
 
     public void setApplicationShare(int applicationShare) {
-        ApplicationShare = applicationShare;
+        this.applicationShare = applicationShare;
     }
 
     public String getPercent() {

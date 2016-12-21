@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -45,6 +46,25 @@ public class UserInfoController {
     public String index(@AuthenticationPrincipal UserContext userContext,
                         Model model
     ) {
+        UserInfo userInfo = userInfoService.getUserInfoByUserId(userContext.getUserId());
+        User user = userService.getUserByUserId(userContext.getUserId());
+        String[] imgs = userInfo.getImageId().split(",");
+        List<Integer> imgIds = new LinkedList<>();
+        for(String img : imgs){
+            imgIds.add(Integer.parseInt(img));
+        }
+        List<String> imageUrls = imageUrlService.getUrlListByImageIds(imgIds);
+        List<Integer> iconId = new LinkedList<>();
+        String icon = "";
+        if(userInfo.getIconId()!=null){
+            iconId.add(Integer.parseInt(userInfo.getIconId()));
+            List<String> icons = imageUrlService.getUrlListByImageIds(iconId);
+            icon += icons.get(0);
+        }
+        model.addAttribute("imageUrls",imageUrls);
+        model.addAttribute("icon",icon);
+        model.addAttribute("userInfo",userInfo);
+        model.addAttribute("user",user);
         return "my-info";
     }
     @ResponseBody
@@ -97,6 +117,18 @@ public class UserInfoController {
     ) {
         UserInfo userInfo = userInfoService.getUserInfoByUserId(userContext.getUserId());
         // TODO: 2016/12/7 update userinfo
+        Result result = ResultUtil.success();
+        return result;
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/updateUserIcon")
+    public Result updateUserIcon(@AuthenticationPrincipal UserContext userContext,
+                                 @RequestParam("imgId") int imgId
+    ) {
+        UserInfo userInfo = userInfoService.getUserInfoByUserId(userContext.getUserId());
+        // TODO: 2016/12/7 update userinfo
+        userInfoService.updateIcon(imgId,userContext.getUserId());
         Result result = ResultUtil.success();
         return result;
     }

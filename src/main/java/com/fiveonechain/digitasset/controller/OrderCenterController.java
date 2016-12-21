@@ -40,10 +40,10 @@ public class OrderCenterController {
     @RequestMapping("/index")
     public String index(@AuthenticationPrincipal UserContext userContext,
                         Model model){
-        List<AssetOrder> assetOrders = iAssetOrderService.getAssetOrderListByOwner(userContext.getUserId());
-        List<AssetOrder> assetOrderAssign = iAssetOrderService.getAssetOrderListByBuyerId(userContext.getUserId());
-        List<OrderCenterCmd> orderCenterCmdsOwner = orderCenterCmdPlay(assetOrders, false);
-        List<OrderCenterCmd> orderCenterCmdsBuyer = orderCenterCmdPlay(assetOrderAssign, true);
+        List<AssetOrder> assetOrders = iAssetOrderService.getAssetOrderListByOwner(userContext.getUserId());//我收到的
+        List<AssetOrder> assetOrderAssign = iAssetOrderService.getAssetOrderListByBuyerId(userContext.getUserId());//我发起的
+        List<OrderCenterCmd> orderCenterCmdsOwner = orderCenterCmdPlay(assetOrders, false);//我收到的
+        List<OrderCenterCmd> orderCenterCmdsBuyer = orderCenterCmdPlay(assetOrderAssign, true);//我发起的
 
         model.addAttribute("orderCenterCmdsAssign", orderCenterCmdsOwner);
         model.addAttribute("orderCenterCmds", orderCenterCmdsBuyer);
@@ -71,6 +71,10 @@ public class OrderCenterController {
                 Optional<UserInfo> userInfo = userInfoService.getUserInfoOptional(assetOrder.getBuyerId());
                 if(userInfo.isPresent()){
                     orderCenterCmd.setBuyerName(userInfo.get().getRealName());
+                }
+                Optional<UserInfo> holderInfo = userInfoService.getUserInfoOptional(assetOrder.getUserId());
+                if(holderInfo.isPresent()){
+                    orderCenterCmd.setHolderName(holderInfo.get().getRealName());
                 }
                 Optional<GuaranteeCorp> guaranteeCorpBuyer = guaranteeCorpService.getGuarOptional(assetOrder.getBuyerId());
                 if(guaranteeCorpBuyer.isPresent()){

@@ -160,7 +160,7 @@
 											<tr>
 											<td>${orderCenterCmd.assetName!""}</td>
 											<td>${orderCenterCmd.assetId!""}</td>
-											<td>${orderCenterCmd.ApplicationShare!""}</td>
+											<td>${orderCenterCmd.applicationShare!""}</td>
 											<td>${orderCenterCmd.percent!""}</td>
 											<td>${orderCenterCmd.guarName!""}</td>
 											<td>${orderCenterCmd.holderName!""}</td>
@@ -227,7 +227,7 @@
 											<tr>
 											<td>${orderCenterCmdAssign.assetName!""}</td>
 											<td>${orderCenterCmdAssign.assetId!""}</td>
-											<td>${orderCenterCmdAssign.ApplicationShare!""}</td>
+											<td>${orderCenterCmdAssign.applicationShare!""}</td>
 											<td>${orderCenterCmdAssign.percent!""}</td>
 											<td>${orderCenterCmdAssign.guarName!""}</td>
 											<td>${orderCenterCmdAssign.expEarning!""}</td>
@@ -344,9 +344,11 @@
 					if(result.meta.code==200){
 						$("#modalAlert",parent.document).click();
 						$(".modal-body",parent.document).html("交易成功");
+						location.reload();
 					}else{
 						$("#modalAlert",parent.document).click();
 						$(".modal-body",parent.document).html(result.meta.message);
+						location.reload();
 					}
 				}
 			})
@@ -361,9 +363,11 @@
 					if(result.meta.code==200){
 						$("#modalAlert",parent.document).click();
 						$(".modal-body",parent.document).html("支付成功");
+						location.reload();
 					}else{
 						$("#modalAlert",parent.document).click();
 						$(".modal-body",parent.document).html(result.meta.message);
+						location.reload();
 					}
 				}
 			})
@@ -431,6 +435,7 @@
 						}else{
 							$("#modalAlert",parent.document).click();
 							$(".modal-body",parent.document).html(result.meta.message);
+							location.reload();
 						}
 					}
 				})

@@ -25,7 +25,8 @@ public interface UserInfoMapper {
             @Result(property = "creditCardId", column = "credit_card_id"),
             @Result(property = "creditCardOwner", column = "credit_card_owner"),
             @Result(property = "creditCardBank", column = "credit_card_bank"),
-            @Result(property = "imageId", column = "image_id" )
+            @Result(property = "imageId", column = "image_id" ),
+            @Result(property = "iconId", column = "icon_id" )
     })
     @Select("SELECT * FROM user_info WHERE user_id = #{userId}")
     UserInfo findUserInfoByUserId(int userId);
@@ -40,6 +41,8 @@ public interface UserInfoMapper {
             "where user_id = #{userId}")
     boolean bindCreditCard(UserInfo userInfo);
 
+    @Update("update user_info set icon_id=#{imgId} where user_id = #{userId}")
+    boolean updateUserIcon(@Param("imgId") int imgId,@Param("userId") int userId);
 
 }
 

@@ -29,7 +29,7 @@
 	<!-- Bootstrap.js -->
 	<script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
 
-	
+
 
 	<!-- vue.js -->
 	<script src="//cdn.bootcss.com/vue/1.0.24/vue.js"></script>
@@ -38,465 +38,536 @@
 	<script src="//cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.js"></script>
 	<script src="//cdn.bootcss.com/vue-router/0.7.10/vue-router.min.js"></script>
 
-    <!--[if lt IE 9]>
-    <meta http-equiv="refresh" content="0;ie.html" />
-    <![endif]-->
+	<!--[if lt IE 9]>
+	<meta http-equiv="refresh" content="0;ie.html" />
+	<![endif]-->
 	<!-- <link href="/css/font-awesome.min.css?v=4.4.0" rel="stylesheet"> -->
-    <link href="../css/animate.css" rel="stylesheet">
-    <link href="../css/style.css?v=4.1.0" rel="stylesheet">
+	<link href="/css/animate.css" rel="stylesheet">
+	<link href="/css/style.css?v=4.1.0" rel="stylesheet">
 
-    <!-- 上传照片 -->
-	<link rel="stylesheet" href="//cdn.bootcss.com/bootstrap-fileinput/4.3.5/css/fileinput.min.css">	
+	<!-- 上传照片 -->
+	<link rel="stylesheet" href="//cdn.bootcss.com/bootstrap-fileinput/4.3.5/css/fileinput.min.css">
 	<script src="//cdn.bootcss.com/bootstrap-fileinput/4.3.5/js/fileinput.js"></script>
 	<script src="//cdn.bootcss.com/bootstrap-fileinput/4.3.5/js/locales/zh.min.js"></script>
 	<!-- bootstrapValidator.js 表单验证-->
 	<script src="//cdn.bootcss.com/bootstrap-validator/0.5.3/js/bootstrapValidator.min.js"></script>
 	<style>
 		.bs-callout-success {
-    		border-left: 3px solid #20b062;
-    		padding-left: 5px;
-    		font-weight: bold;
-    		font-size: 18px;
-    	}
-    	.modal-dialog {
-    		z-index: 10000!important;
-    	}
-/*    	.tabs-container .panel-body,
-    	.tabs-container .nav-tabs > li.active > a, .tabs-container .nav-tabs > li.active > a:hover, .tabs-container .nav-tabs > li.active > a:focus {
-    		background: transparent;
-    	}
-    	.tabs-container .panel-body {
-    		border: none;
+			border-left: 3px solid #20b062;
+			padding-left: 5px;
+			font-weight: bold;
+			font-size: 18px;
+		}
+		.modal-dialog {
+			z-index: 10000!important;
+		}
+		/*    	.tabs-container .panel-body,
+                .tabs-container .nav-tabs > li.active > a, .tabs-container .nav-tabs > li.active > a:hover, .tabs-container .nav-tabs > li.active > a:focus {
+                    background: transparent;
+                }
+                .tabs-container .panel-body {
+                    border: none;
 
-    	}*/
-    	.tab-content {
-    	    margin-top: 10px;
-    		padding: 30px 40px;
-    	}
-    	.nav-tabs > li.active > a, 
-    	.nav-tabs > li.active > a:hover, 
-    	.nav-tabs > li.active > a:focus {
-    		color: #20b062;
-    	}
-    	#tab4 .col-sm-8,
-    	#tab3 .col-sm-8,
-    	#tab2 .col-sm-8 {
+                }*/
+		.tab-content {
+			margin-top: 10px;
+			padding: 30px 40px;
+		}
+		.nav-tabs > li.active > a,
+		.nav-tabs > li.active > a:hover,
+		.nav-tabs > li.active > a:focus {
+			color: #20b062;
+		}
+		#tab4 .col-sm-8,
+		#tab3 .col-sm-8,
+		#tab2 .col-sm-8 {
 			padding-top: 7px;
-    	}
+		}
 	</style>
 </head>
 <body class="gray-bg">
-    <div class="wrapper wrapper-content animated fadeIn container-fluid">
-        <div class="row">
-            <div class="col-sm-12">
-                <h3 class="bs-callout-success">
-                	我的信息
-                </h3>
+<div class="wrapper wrapper-content animated fadeIn container-fluid">
+	<div class="row">
+		<div class="col-sm-12">
+			<h3 class="bs-callout-success">
+				我的信息
+			</h3>
 
-            </div>
-            
-            <div class="col-sm-12">
-				<ul id="myTab" class="nav nav-tabs" role="tablist">
-					<li role="presentation" class="active">
-						<a href="#tab1" id="" data-toggle="tab" aria-expanded="true">
-							个人信息
-						</a>
-					</li>
-					<li role="presentation" class="">
-						<a href="#tab2" id="" data-toggle="tab" aria-expanded="false">
-							证件信息
-						</a>
-					</li>
-					<li role="presentation" class="">
-						<a href="#tab3" id="" data-toggle="tab" aria-expanded="false">
-							我的账户
-						</a>
-					</li>
-					<li role="presentation" class="">
-						<a href="#tab4" id="" data-toggle="tab" aria-expanded="false">
-							账户安全
-						</a>
-					</li>
-				</ul>
-				<div id="myTabContent" class="tab-content panel panel-default">
-					<!-- 个人信息 -->
-					<div  class="tab-pane fade active in" id="tab1" >
-						<div class="row">
-						 	<div class="col-sm-6">
-						 		<form class="form-horizontal" role="form">
-						 			<div class="form-group">
-										<label for="username" class="col-sm-4 control-label">头像：</label>
-										<div class="col-sm-8">
-											<div class="row">
-												<div class="col-xs-6">
+		</div>
+
+		<div class="col-sm-12">
+			<ul id="myTab" class="nav nav-tabs" role="tablist">
+				<li role="presentation" class="active">
+					<a href="#tab1" id="" data-toggle="tab" aria-expanded="true">
+						个人信息
+					</a>
+				</li>
+				<li role="presentation" class="">
+					<a href="#tab2" id="" data-toggle="tab" aria-expanded="false">
+						证件信息
+					</a>
+				</li>
+				<li role="presentation" class="">
+					<a href="#tab3" id="" data-toggle="tab" aria-expanded="false">
+						我的账户
+					</a>
+				</li>
+				<li role="presentation" class="">
+					<a href="#tab4" id="" data-toggle="tab" aria-expanded="false">
+						账户安全
+					</a>
+				</li>
+			</ul>
+			<div id="myTabContent" class="tab-content panel panel-default">
+				<!-- 个人信息 -->
+				<div  class="tab-pane fade active in" id="tab1" >
+					<div class="row">
+						<div class="col-sm-6">
+							<form class="form-horizontal" role="form">
+								<div class="form-group">
+									<label for="username" class="col-sm-4 control-label">头像：</label>
+									<div class="col-sm-8">
+										<div class="row">
+											<div class="col-xs-6">
+												<#if icon == "">
 													<div class="" style="width: 88px;height: 88px;border:1px solid #aaa;margin-bottom:10px;">
 														<img src="/images/user-img.png" alt="" class="img-responsive">
 													</div>
-													
-												</div>
-											</div>
-											<div class="row">
-												<div class="col-xs-6">
-													<button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal1">	
-														更换头像
-													</button>
-												</div>
-												<div class="col-xs-6 text-muted">*仅支持jpg、png图片,大小不能超过1M*</div>
-											</div>
-											
-										</div>
-									</div>
-									<!-- 用户名 -->
-									<div class="form-group">
-										<label for="username" class="col-sm-4 control-label">用户名：</label>
-										<div class="col-sm-8">
-											<input type="text" class="form-control" id="username" name="username" placeholder="请输入用户名" v-model="userData.name">
-										</div>
-									</div>
-									<!-- 性别： -->
-									<div class="form-group">
-										<label for="inputPassword3" class="col-sm-4 control-label">性别：</label>
-										<div class="col-sm-8">
-											<label>
-												<input type="radio" name="optionsRadios" id="optionsRadios1" value="1" v-model="userInfo.registerType" checked  v-model="userData.sex"> 男
-											</label>
-											<label>
-												<input type="radio" name="optionsRadios" id="optionsRadios2" value="2" v-model="userInfo.registerType"  v-model="userData.sex"> 女
-											</label>
-										</div>
-									</div>
-									<!-- 简介 -->
-									<div class="form-group">
-										<label for="intro" class="col-sm-4 control-label">简介：</label>
-										<div class="col-sm-8">
-											<textarea name="intro" id="intro" rows="5" placeholder="请填写您的个人简介..." class="panel panel-default" style="resize:none;padding: 10px;width:100%" v-model="userData.intro"></textarea>
-										</div>
-									</div>
-									<div class="form-group">
-										<label for="inputPassword3" class="col-sm-4 control-label"></label>
-										<div class="col-sm-8">
-											<div class="row">
-												<button type="button" class="btn btn-default col-xs-4 col-xs-offset-1">取消修改</button>
-												<button type="submit" class="btn btn-success col-xs-4 col-xs-offset-2">保存修改</button>
-											</div>
-											
-										</div>
-									</div>
-								</form>
-						 	</div>
-						</div>
-						
-					</div>
-					<!-- 证件信息 -->
-					<div  class="tab-pane fade" id="tab2" >
-						<div class="row">
-						 	<div class="col-sm-6">
-						 		<form class="form-horizontal" role="form">
-						 			<div class="form-group">
-										<label for="username" class="col-sm-4 control-label">姓名：</label>
-										<div class="col-sm-8">
-											周吴郑
-										</div>
-									</div>
-									<!-- 用户名 -->
-									<div class="form-group">
-										<label for="username" class="col-sm-4 control-label">证件类型：</label>
-										<div class="col-sm-8">
-											居民身份证
-										</div>
-									</div>
-									<!-- 性别： -->
-									<div class="form-group">
-										<label for="username" class="col-sm-4 control-label">证件号码：</label>
-										<div class="col-sm-8">
-											1212121212***1554545
-										</div>
-									</div>
-									<!-- 简介 -->
-									<div class="form-group">
-										<label for="username" class="col-sm-4 control-label">证件照片：</label>
-										<div class="col-sm-8">
-											<div class="row">
-												<div class="col-sm-6">
-													<img src="/images/1.jpg" alt="" class="img-responsive">
-												</div>	
-												<div class="col-sm-6">
-													<img src="/images/1.jpg" alt="" class="img-responsive">
-												</div>
-											</div>
-											<div class="col-sm-12 text-muted">
-												*51区块严格保证您的身份信息安全，使用加密，水印多种方法避免用于其他用户*
+													<#else>
+														<div class="" style="width: 88px;height: 88px;border:1px solid #aaa;margin-bottom:10px;">
+															<img src="${icon}" alt="" class="img-responsive">
+														</div>
+												</#if>
+
+
 											</div>
 										</div>
+										<div class="row">
+											<div class="col-xs-6">
+												<button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal1">
+													更换头像
+												</button>
+											</div>
+											<div class="col-xs-6 text-muted">*仅支持jpg、png图片,大小不能超过1M*</div>
+										</div>
+
 									</div>
-									
-								</form>
-						 	</div>
+								</div>
+								<!-- 用户名 -->
+								<div class="form-group">
+									<label for="username" class="col-sm-4 control-label">用户名：</label>
+									<div class="col-sm-8">
+										<span  class="form-control" id="username" >${user.userName}</span>
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="realName" class="col-sm-4 control-label">真实姓名：</label>
+									<div class="col-sm-8">
+										<input type="text" class="form-control" id="realName" name="realName" placeholder="${userInfo.realName}" v-model="userData.realName">
+									</div>
+								</div>
+								<!-- 性别： -->
+								<div class="form-group">
+									<label for="inputPassword3" class="col-sm-4 control-label">性别：</label>
+									<div class="col-sm-8">
+										<label>
+											<input type="radio" name="optionsRadios" id="optionsRadios1" value="1" v-model="userData.sex" checked  v-model="userData.sex"> 男
+										</label>
+										<label>
+											<input type="radio" name="optionsRadios" id="optionsRadios2" value="2" v-model="userData.sex"  v-model="userData.sex"> 女
+										</label>
+									</div>
+								</div>
+								<!-- 简介 -->
+								<div class="form-group">
+									<label for="intro" class="col-sm-4 control-label">简介：</label>
+									<div class="col-sm-8">
+										<textarea name="intro" id="intro" rows="5" placeholder="请填写您的个人简介..." class="panel panel-default" style="resize:none;padding: 10px;width:100%" v-model="userData.intro"></textarea>
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="inputPassword3" class="col-sm-4 control-label"></label>
+									<div class="col-sm-8">
+										<div class="row">
+											<button type="button" class="btn btn-default col-xs-4 col-xs-offset-1">取消修改</button>
+											<button type="submit" class="btn btn-success col-xs-4 col-xs-offset-2">保存修改</button>
+										</div>
+
+									</div>
+								</div>
+							</form>
 						</div>
 					</div>
-					<!-- 我的账户 -->
-					<div  class="tab-pane fade" id="tab3" >
-						<div class="row">
-						 	<div class="col-sm-6">
-							 	<form class="form-horizontal" role="form">
-						 			<div class="form-group">
-										<label for="username" class="col-sm-4 control-label">账户余额：</label>
-										<div class="col-sm-8">
-											<h3 class="text-success">
-												$0.00
-												<a href="" class="text-success"  data-toggle="modal" data-target="#myModal1"><i>账户明细 >></i></a>
-											</h3>
+
+				</div>
+				<!-- 证件信息 -->
+				<div  class="tab-pane fade" id="tab2" >
+					<div class="row">
+						<div class="col-sm-6">
+							<form class="form-horizontal" role="form">
+								<div class="form-group">
+									<label for="username" class="col-sm-4 control-label">姓名：</label>
+									<div class="col-sm-8">
+										${userInfo.realName}
+									</div>
+								</div>
+								<!-- 用户名 -->
+								<div class="form-group">
+									<label for="username" class="col-sm-4 control-label">证件类型：</label>
+									<div class="col-sm-8">
+										身份证
+									</div>
+								</div>
+								<!-- 性别： -->
+								<div class="form-group">
+									<label for="username" class="col-sm-4 control-label">证件号码：</label>
+									<div class="col-sm-8">
+										${userInfo.creditCardId}
+									</div>
+								</div>
+								<!-- 简介 -->
+								<div class="form-group">
+									<label for="username" class="col-sm-4 control-label">证件照片：</label>
+									<div class="col-sm-8">
+										<div class="row">
+											<div class="col-sm-6">
+												<img src="/images/1.jpg" alt="" class="img-responsive">
+											</div>
+											<div class="col-sm-6">
+												<img src="/images/1.jpg" alt="" class="img-responsive">
+											</div>
+										</div>
+										<div class="col-sm-12 text-muted">
+											*51区块严格保证您的身份信息安全，使用加密，水印多种方法避免用于其他用户*
 										</div>
 									</div>
-									<!-- 用户名 -->
-									<div class="form-group">
-										<label for="username" class="col-sm-4 control-label">我的银行卡：</label>
-										<div class="col-sm-8">
-											<div>
-												<i>⚠️</i>
-												还没有绑定银行卡
-												<a href="" class="text-success" data-toggle="modal" data-target="#myModal2">
-													立即绑定>>
-												</a>
-											</div>
-											
-											<div class="text-muted">
-												绑定银行卡才能在51区块进行资产交易，绑定的银行卡将用于资产赎回兑付等。51区块讲严格保证您的账户信息安全，不会泄露您的银行卡信息。
-											</div>
-										</div>
-									</div>
-									<!-- 性别： -->
-								</form>
-						 	</div>
-						 </div>
+								</div>
+
+							</form>
+						</div>
 					</div>
-					<!-- 账户安全 -->
-					<div  class="tab-pane fade" id="tab4" >
-						<div class="row">
-						 	<div class="col-sm-6">
-							 	<form class="form-horizontal" role="form">
-							 		<!-- 密码 -->
-						 			<div class="form-group">
-										<label for="username" class="col-sm-4 control-label">账户密码：</label>
-										<div class="col-sm-8">
-											<div class="row">
-												<div class="col-xs-6">
-													********
-												</div>
-												<a class="col-xs-6 text-success"  data-toggle="modal" data-target="#myModal1">
-													重置>>
-												</a>
-											</div>
+				</div>
+				<!-- 我的账户 -->
+				<div  class="tab-pane fade" id="tab3" >
+					<div class="row">
+						<div class="col-sm-6">
+							<form class="form-horizontal" role="form">
+								<div class="form-group">
+									<label for="username" class="col-sm-4 control-label">账户余额：</label>
+									<div class="col-sm-8">
+										<h3 class="text-success">
+											$0.00
+											<a href="" class="text-success"  data-toggle="modal" data-target="#myModal1"><i>账户明细 >></i></a>
+										</h3>
+									</div>
+								</div>
+								<!-- 用户名 -->
+								<div class="form-group">
+									<label for="username" class="col-sm-4 control-label">我的银行卡：</label>
+									<div class="col-sm-8">
+										<div>
+											<i>⚠️</i>
+											还没有绑定银行卡
+											<a href="" class="text-success" data-toggle="modal" data-target="#myModal2">
+												立即绑定>>
+											</a>
+										</div>
+
+										<div class="text-muted">
+											绑定银行卡才能在51区块进行资产交易，绑定的银行卡将用于资产赎回兑付等。51区块讲严格保证您的账户信息安全，不会泄露您的银行卡信息。
 										</div>
 									</div>
-									<!-- 绑定手机 -->
-									<div class="form-group">
-										<label for="username" class="col-sm-4 control-label">绑定手机：</label>
-										<div class="col-sm-8">
-											<div class="row">
-												<div class="col-xs-6">
-													158********454
-												</div>
-												<a class="col-xs-6 text-success"  data-toggle="modal" data-target="#myModal1">
-													修改 >>
-												</a>
+								</div>
+								<!-- 性别： -->
+							</form>
+						</div>
+					</div>
+				</div>
+				<!-- 账户安全 -->
+				<div  class="tab-pane fade" id="tab4" >
+					<div class="row">
+						<div class="col-sm-6">
+							<form class="form-horizontal" role="form">
+								<!-- 密码 -->
+								<div class="form-group">
+									<label for="username" class="col-sm-4 control-label">账户密码：</label>
+									<div class="col-sm-8">
+										<div class="row">
+											<div class="col-xs-6">
+												********
 											</div>
+											<a class="col-xs-6 text-success"  data-toggle="modal" data-target="#myModal1">
+												重置>>
+											</a>
 										</div>
 									</div>
-									<!-- 绑定邮箱： -->
-									<div class="form-group">
-										<label for="username" class="col-sm-4 control-label" >绑定邮箱：</label>
-										<div class="col-sm-8">
-											<div class="row">
-												<div class="col-xs-6">
-													未绑定
-												</div>
-												<a class="col-xs-6 text-success"  data-toggle="modal" data-target="#myModal1">
-													去绑定 >>
-												</a>
+								</div>
+								<!-- 绑定手机 -->
+								<div class="form-group">
+									<label for="username" class="col-sm-4 control-label">绑定手机：</label>
+									<div class="col-sm-8">
+										<div class="row">
+											<div class="col-xs-6">
+												158********454
 											</div>
+											<a class="col-xs-6 text-success"  data-toggle="modal" data-target="#myModal1">
+												修改 >>
+											</a>
 										</div>
 									</div>
-								</form>
-						 	</div>
-						 </div>
+								</div>
+								<!-- 绑定邮箱： -->
+								<div class="form-group">
+									<label for="username" class="col-sm-4 control-label" >绑定邮箱：</label>
+									<div class="col-sm-8">
+										<div class="row">
+											<div class="col-xs-6">
+												未绑定
+											</div>
+											<a class="col-xs-6 text-success"  data-toggle="modal" data-target="#myModal1">
+												去绑定 >>
+											</a>
+										</div>
+									</div>
+								</div>
+							</form>
+						</div>
 					</div>
 				</div>
 			</div>
-        </div>
+		</div>
+	</div>
 
-    </div>
-    <!-- 正在开发窗口模态框 -->
-	<div class="modal inmodal" id="myModal1" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content animated flipInX">
-                
-                <!-- </div> -->
-                <div class="modal-body">
-                	正在马不停蹄的开发中~
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- 银行模态框  -->
-	<div class="modal inmodal" id="myModal2" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content animated flipInX">
-                <div class="modal-body">
-                	<form role="form" id="cardForm">
-						<div class="form-group">
-						    <label for="cardUsername">持卡人姓名</label>
-						    <input type="text" class="form-control" id="cardUsername" name="cardUsername" placeholder="请输入持卡人姓名" v-model="userInfo.cardUsername">
-						</div>
-						<div class="form-group">
-						    <label for="cardNumber">银行卡号</label>
-						    <input type="text" class="form-control" id="cardNumber" name="cardNumber" placeholder="请输入银行卡号" v-model="userInfo.cardNumber">
-						</div>
-						<div class="form-group">
-						    <label for="bank">开户银行</label>
-						    <input type="text" class="form-control" id="bank" name="bank" placeholder="请输入开户银行" v-model="userInfo.bank">
-						</div>
-						<div class="form-group">
-							<button type="submit" class="btn btn-success btn-absolutely">
-								完成
-							</button>
-						</div>
-					</form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- 全局js -->
-    <script src="../js/plugins/jquery.metisMenu.js"></script>
-    <!-- 滚动条 -->
-    <script src="../js/plugins/jquery.slimscroll.min.js"></script>
-    <!-- 公共js文件 -->
-    <script src="../js/public.js"></script>
-    <!-- 第三方插件 -->
-    <script src="../js/plugins/pace.min.js"></script>
-    <script>
-    	var userInfo = new Vue({
-    		el: "#myTabContent",
-    		data: {
-    			userData: {
-    				name: "",
-    				sex: "",
-    				intro: ""
-    			},
-    			saveApi:"/",
-    			findUserName: "/user/findUserName"
-    		}
-    	})
-		$.get('/userInfo/info', function (result) {
+</div>
+<!-- 头像 -->
+<div class="modal inmodal" id="myModal1" tabindex="1" role="dialog" aria-hidden="true" z-index=1000000>
+	<div class="modal-dialog">
+		<div class="modal-content animated flipInX">
+			<!-- <div class="modal-header"> -->
+			<!-- <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <h4 class="modal-title">窗口标题</h4> -->
+			<input type="hidden" value="" id="orderId">
+			<h3 class="font-bold row text-center">上传头像</h3>
+			<!-- </div> -->
+			<div class="modal-body">
+				<input id="file-1" name="imageUrl" type="file" multiple class="file" data-overwrite-initial="false" data-min-file-count="1">
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+				<button type="button" class="btn btn-success" id="payImage">提交</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- 银行模态框  -->
+<div class="modal inmodal" id="myModal2" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content animated flipInX">
+			<div class="modal-body">
+				<form role="form" id="cardForm">
+					<div class="form-group">
+						<label for="cardUsername">持卡人姓名</label>
+						<input type="text" class="form-control" id="cardUsername" name="cardUsername" placeholder="请输入持卡人姓名" v-model="userInfo.cardUsername">
+					</div>
+					<div class="form-group">
+						<label for="cardNumber">银行卡号</label>
+						<input type="text" class="form-control" id="cardNumber" name="cardNumber" placeholder="请输入银行卡号" v-model="userInfo.cardNumber">
+					</div>
+					<div class="form-group">
+						<label for="bank">开户银行</label>
+						<input type="text" class="form-control" id="bank" name="bank" placeholder="请输入开户银行" v-model="userInfo.bank">
+					</div>
+					<div class="form-group">
+						<button type="submit" class="btn btn-success btn-absolutely">
+							完成
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- 全局js -->
+<script src="../js/plugins/jquery.metisMenu.js"></script>
+<!-- 滚动条 -->
+<script src="../js/plugins/jquery.slimscroll.min.js"></script>
+<!-- 公共js文件 -->
+<script src="../js/public.js"></script>
+<!-- 第三方插件 -->
+<script src="../js/plugins/pace.min.js"></script>
+<script>
 
-				// 点击资产名称跳连接
+
+
+
+	var userInfo = new Vue({
+		el: "#myTabContent",
+		data: {
+			userData: {
+				realName: "",
+				sex: "",
+				intro: "",
+				imgId:""
+			},
+			saveApi:"/",
+			findUserName: "/user/findUserName"
+		}
+	})
+
+	// 上传照片
+	$("#file-1").fileinput({
+		language: 'zh', //设置语言
+		uploadUrl: '/image/upload', // you must set a valid URL here else you will get an error
+		allowedFileExtensions : ['jpg', 'png','gif'],
+		overwriteInitial: false,
+		// maxFileSize: 1000,
+		maxFileSize: 10000,
+		maxFileCount: 1,
+		minFilesNum: 1,
+		maxFilesNum: 1,
+		browseClass: "btn btn-success", //按钮样式
+		slugCallback: function(filename) {
+			return filename.replace('(', '_').replace(']', '_');
+		}
+	});
+	$("#file-1").on("fileuploaded", function (event, data, previewId, index) {
+		var da = data.response;
+		console.log(da);
+		userInfo.userData.imgId = da.data;
+	});
+	$("#payImage").on('click', function(event) {
+		// 上传事件
+		var imageIdStr = userInfo.userData.imgId;
+		$.ajax({
+			url : "/userInfo/updateUserIcon",
+			type : "post",
+			data : {"imgId":imageIdStr},
+			success: function(result){
 				console.log(result);
+				if(result.meta.code==200){
+					$("#modalAlert",parent.document).click();
+					$(".modal-body",parent.document).html("上传成功");
+					location.reload();
+				}else{
+					$("#modalAlert",parent.document).click();
+					$(".modal-body",parent.document).html(result.meta.message);
+				}
+			}
 		})
-    	$(function(){
-    		// 个人信息表单验证
-	    	$('#tab1').bootstrapValidator({
-		        message: 'This value is not valid',
-		        feedbackIcons: {
-		            valid: 'glyphicon glyphicon-ok',
-		            invalid: 'glyphicon glyphicon-remove',
-		            validating: 'glyphicon glyphicon-refresh'
-		        },
-		        fields: {
-		            username: {
-		                message: '用户名验证失败',
-		                validators: {
-		                    notEmpty: {
-		                        message: '用户名不能为空'
-		                    },
-		                    stringLength: {
-		                        min: 6,
-		                        max: 18,
-		                        message: '用户名长度必须在6到18位之间'
-		                    },
-		                    regexp: {
-		                        regexp: /^[a-zA-Z0-9_]+$/,
-		                        message: '用户名只能包含大写、小写、数字和下划线'
-		                    },
-		                    threshold :  6,
-		                    remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}  
-		                        url: userInfo.findUserName,//验证地址
-		                        message: '用户已存在',//提示消息
-		                        delay :  1000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
-		                        type: 'POST'//请求方式
-		                    },
-		                }
-		            }
-		        }
-		    }).on('success.form.bv', function(e) {
-				e.preventDefault();
-				// 修改用户信息事件
-				// api: userInfo.userDatasaveApi
-				// 用户名: userInfo.userData.name
-				// 性别： userInfo.userData.sex
-				// 简介： userInfo.userData.intro
-				// $.post(userInfo.saveApi,{...},function(data){
-					// 修改用户名ajax
-				// })
-			});
-			$('#cardForm').bootstrapValidator({
-			    message: 'This value is not valid',
-			    feedbackIcons: {
-			        valid: 'glyphicon glyphicon-ok',
-			        invalid: 'glyphicon glyphicon-remove',
-			        validating: 'glyphicon glyphicon-refresh'
-			    },
-			    fields: {
-			        cardUsername: {
-			            message: '持卡人姓名错误',
-			            validators: {
-			                notEmpty: {
-			                    message: '持卡人姓名不能为空'
-			                }
-			            }
-			        },
-			        cardNumber: {
-			        	message: '银行卡号错误',
-			            validators: {
-			                notEmpty: {
-			                    message: '银行卡号码不能为空'
-			                },
-			                stringLength: {
-			                    min: 16,
-			                    max: 19,
-			                    message: '银行卡号格式错误'
-			                },
-			                regexp: {
-			                    regexp: /^\d{16}|\d{19}$/,
-			                    message: '请输入正确的银行卡号'
-			                }
-			            }
-			        },
-			        bank: {
-			            message: '开户银行错误',
-			            validators: {
-			                notEmpty: {
-			                    message: '开户银行不能为空'
-			                }
-			            }
-			        },
-			    }
-			}).on('success.form.bv', function(e) {
-				e.preventDefault();
-				// 银行卡绑定事件
-				$.post("/test",{
-					cardUsername:register.userInfo.cardUsername,
-					cardNumber:register.userInfo.cardNumber,
-					bank:register.userInfo.bank
-				},function(data){
+	});
+	$(function(){
+		// 个人信息表单验证
+		$('#tab1').bootstrapValidator({
+			message: 'This value is not valid',
+			feedbackIcons: {
+				valid: 'glyphicon glyphicon-ok',
+				invalid: 'glyphicon glyphicon-remove',
+				validating: 'glyphicon glyphicon-refresh'
+			},
+			fields: {
+				username: {
+					message: '用户名验证失败',
+					validators: {
+						notEmpty: {
+							message: '用户名不能为空'
+						},
+						stringLength: {
+							min: 6,
+							max: 18,
+							message: '用户名长度必须在6到18位之间'
+						},
+						regexp: {
+							regexp: /^[a-zA-Z0-9_]+$/,
+							message: '用户名只能包含大写、小写、数字和下划线'
+						},
+						threshold :  6,
+						remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
+							url: userInfo.findUserName,//验证地址
+							message: '用户已存在',//提示消息
+							delay :  1000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+							type: 'POST'//请求方式
+						},
+					}
+				},
+				realName: {
+					message: '真实姓名验证失败',
+					validators: {
+						notEmpty: {
+							message: '用户名不能为空'
+						}
+					}
+				}
+			}
+		}).on('success.form.bv', function(e) {
+			e.preventDefault();
+			// 修改用户信息事件
+			// api: userInfo.userDatasaveApi
+			// 用户名: userInfo.userData.name
+			// 性别： userInfo.userData.sex
+			// 简介： userInfo.userData.intro
+			// $.post(userInfo.saveApi,{...},function(data){
+			// 修改用户名ajax
+			// })
+		});
+		$('#cardForm').bootstrapValidator({
+			message: 'This value is not valid',
+			feedbackIcons: {
+				valid: 'glyphicon glyphicon-ok',
+				invalid: 'glyphicon glyphicon-remove',
+				validating: 'glyphicon glyphicon-refresh'
+			},
+			fields: {
+				cardUsername: {
+					message: '持卡人姓名错误',
+					validators: {
+						notEmpty: {
+							message: '持卡人姓名不能为空'
+						}
+					}
+				},
+				cardNumber: {
+					message: '银行卡号错误',
+					validators: {
+						notEmpty: {
+							message: '银行卡号码不能为空'
+						},
+						stringLength: {
+							min: 16,
+							max: 19,
+							message: '银行卡号格式错误'
+						},
+						regexp: {
+							regexp: /^\d{16}|\d{19}$/,
+							message: '请输入正确的银行卡号'
+						}
+					}
+				},
+				bank: {
+					message: '开户银行错误',
+					validators: {
+						notEmpty: {
+							message: '开户银行不能为空'
+						}
+					}
+				},
+			}
+		}).on('success.form.bv', function(e) {
+			e.preventDefault();
+			// 银行卡绑定事件
+			$.post("/test",{
+				cardUsername:register.userInfo.cardUsername,
+				cardNumber:register.userInfo.cardNumber,
+				bank:register.userInfo.bank
+			},function(data){
 
-					console.log("绑定银行卡");
-					console.log(data);
-		            register.tabFun();
-				})
-				
-			});
-    	})
-    	
-    </script>
+				console.log("绑定银行卡");
+				console.log(data);
+				register.tabFun();
+			})
+
+		});
+	})
+
+</script>
 </body>
 </html>
