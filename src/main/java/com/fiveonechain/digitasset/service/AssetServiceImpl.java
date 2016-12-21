@@ -129,6 +129,11 @@ public class AssetServiceImpl implements AssetService {
     }
 
     @Override
+    public List<Asset> getAssetListByStatusAndEndTimeBefore(AssetStatus status, Date time) {
+        return null;
+    }
+
+    @Override
     public List<Asset> getAssetListByOwner(int userId) {
         return assetMapper.selectByUserId(userId);
     }
