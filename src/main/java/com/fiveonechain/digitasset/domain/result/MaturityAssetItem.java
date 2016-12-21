@@ -13,6 +13,7 @@ public class MaturityAssetItem {
     private String assetName;
     private CodeMessagePair status;
     private Date endTime;
+    private String endTimeStr;
     private int issuerId;
     private String issuerName;
     private List<CodeMessagePair> operations = Collections.emptyList();
@@ -71,6 +72,14 @@ public class MaturityAssetItem {
 
     public void setOperations(List<CodeMessagePair> operations) {
         this.operations = operations;
+    }
+
+    public String getEndTimeStr() {
+        return endTimeStr;
+    }
+
+    public void setEndTimeStr(String endTimeStr) {
+        this.endTimeStr = endTimeStr;
     }
 }
 

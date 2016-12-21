@@ -393,6 +393,8 @@ public class AssetController {
             assetItem.setAssetId(asset.getAssetId());
             assetItem.setAssetName(asset.getName());
             assetItem.setIssuerId(asset.getUserId());
+            String endTimeStr = DateUtil.formatDate(asset.getEndTime(),DateUtil.HC_DATETIME);
+            assetItem.setEndTimeStr(endTimeStr);
 
             Optional<UserInfo> userInfoOpt = userInfoService.getUserInfoOptional(asset.getUserId());
             if (!userInfoOpt.isPresent()) {

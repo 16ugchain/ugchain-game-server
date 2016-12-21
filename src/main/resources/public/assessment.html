@@ -73,9 +73,9 @@
                 </li>
             </ul>
             <div id="myTabContent" class="tab-content panel panel-default">
-                <!-- 我发行 -->
+                <!-- 待评估 -->
                 <div class="tab-pane fade active in" id="tab1">
-                    <div class="row">
+                    <!--<div class="row">-->
                         <!-- <div class="col-sm-12"> -->
                         <table id="table1" data-toggle="table" data-pagination="true" data-search="true"
                                data-use-row-attr-func="true" data-reorderable-rows="true">
@@ -125,12 +125,12 @@
                             </tr>
                         </table>
                         <!-- </div> -->
-                    </div>
+                    <!--</div>-->
 
                 </div>
                 <!-- 我收到 -->
                 <div class="tab-pane fade" id="tab2">
-                    <div class="row">
+                    <!--<div class="row">-->
                         <!-- <div class="col-sm-12"> -->
                         <table id="table2" data-toggle="table" data-pagination="true" data-search="true"
                                data-use-row-attr-func="true" data-reorderable-rows="true">
@@ -157,28 +157,11 @@
 
                             </tr>
                             </thead>
-                            <tr>
-                                <!--<#list orderCenterCmdsAssign as orderCenterCmdAssign>-->
-                                <!--<td>${orderCenterCmdAssign.assetName!""}</td>-->
-                                <!--<td>${orderCenterCmdAssign.assetId!""}</td>-->
-                                <!--<td>${orderCenterCmdAssign.ApplicationShare!""}</td>-->
-                                <!--<td>${orderCenterCmdAssign.percent!""}</td>-->
-                                <!--<td>${orderCenterCmdAssign.endTime?date}</td>-->
-                                <!--<td>${orderCenterCmdAssign.guarName!""}</td>-->
-                                <!--<td>${orderCenterCmdAssign.expEarning!""}</td>-->
-                                <!--<td>${orderCenterCmdAssign.buyerName!""}</td>-->
-                                <!--<td>${orderCenterCmdAssign.buyerCorp!""}</td>-->
-                                <!--<td>${orderCenterCmdAssign.statusStr!""}</td>-->
-                                <!--<td id="assignOperation" value="${orderCenterCmdAssign.status}">-->
-                                <!--<#list orderCenterCmdAssign.operation as op>-->
-                                <!--<a href="javascript:void(0);" onclick="handlerOrder(${op.code},${orderCenterCmdAssign.orderId})">${op.message!"查看"}</a>-->
-                                <!--</#list>-->
-                                <!--</td>-->
-                                <!--</#list>-->
-                            </tr>
+                            <!--<tr>-->
+                            <!--</tr>-->
                         </table>
                         <!-- </div> -->
-                    </div>
+                    <!--</div>-->
                 </div>
 
             </div>
@@ -292,7 +275,7 @@
                 data1[i] = new Array();
                 data1[i]["name-hasEvl"] = result.data[i].assetName;
                 data1[i]["desc-hasEvl"] = result.data[i]["desc"];
-                data1[i]["detail-hasEvl"] = "<a href=" + "/assetsDetail/publish/" + result.data[i].assetId + ">点击查看";
+                data1[i]["detail-hasEvl"] = "<a href=" + "/assetsDetail/corp/" + result.data[i].assetId + ">点击查看";
                 data1[i]["status-hasEvl"] = result.data[i]["status"]["message"];
                 data1[i]["update-hasEvl"] = result.data[i]["updateTimeStr"];
                 data1[i]["operations-hasEvl"] = new Array();

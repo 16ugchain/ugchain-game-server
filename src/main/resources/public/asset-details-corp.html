@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico">
+    <!-- 网站作者 -->
+    <meta name="author" content="51区块研发团队">
+    <!-- 网站关键词 -->
+    <meta name="keywords" content="51区块,数字资产">
+    <!-- 网站描述 -->
+    <meta name="description" content="51区块">
+
+    <title>资产详情| 51区块</title>
+
+    <!-- Bootstrap.css -->
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
+
+    <!-- bootstrapValidator.css -->
+    <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap-validator/0.5.3/css/bootstrapValidator.min.css">
+
+    <!-- public.css -->
+    <link rel="stylesheet" href="/css/public.css">
+
+    <!-- jQuery.js 1.11.1-->
+    <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+
+    <!-- Bootstrap.js -->
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+
+    <!-- vue.js -->
+    <script src="//cdn.bootcss.com/vue/1.0.24/vue.js"></script>
+    <script src="//cdn.bootcss.com/vue-router/0.7.10/vue-router.min.js"></script>
+
+    <!-- jquery.cookie.js -->
+    <script src="//cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+    <link href="/css/animate.css" rel="stylesheet">
+    <link href="/css/style.css?v=4.1.0" rel="stylesheet">
+    <!-- 表格 -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/locale/bootstrap-table-zh-CN.min.js"></script>
+    <style>
+        .bs-callout-success {
+            border-left: 3px solid #20b062;
+            padding-left: 5px;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        .img-responsive,
+        .thumbnail>img,
+        .thumbnail a>img,
+        .carousel-inner>.item>img,
+        .carousel-inner>.item>a>img {
+            width: 100%;
+            max-width: 1000px;
+            margin-right: auto;
+            margin-left: auto;
+            min-height: 300px;
+        }
+        .fixed-table-toolbar {
+            display: none;
+        }
+    </style>
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeIn container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <h3 class="bs-callout-success">
+                <a href="" class="text-success">
+                    交易中心
+                </a>
+                &nbsp;>&nbsp;
+                <span>
+	                		资产详情
+	                	</span>
+                <input type="hidden" value="${assetId}" id="assetId">
+            </h3>
+        </div>
+    </div>
+    <div class="row">
+        <!-- 资产图片 -->
+        <div class="col-sm-8">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>资产图片</h5>
+                </div>
+                <div class="ibox-content">
+                    <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+                        <ol class="carousel-indicators">
+                            <li data-target="#carousel-example-generic" data-slide-to="0" class=""></li>
+                            <li data-target="#carousel-example-generic" data-slide-to="1" class=""></li>
+                            <li data-target="#carousel-example-generic" data-slide-to="2" class="active"></li>
+                        </ol>
+                        <div class="carousel-inner" role="listbox" id="assetImg">
+                        </div>
+                        <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+                            <span class="glyphicon glyphicon-chevron-left"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+                            <span class="glyphicon glyphicon-chevron-right"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 资产基本信息 -->
+        <div class="col-sm-4">
+            <div class="row">
+                <div class="col-xs-12">
+                    <!-- 资产信息 -->
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>资产信息</h5>
+                        </div>
+                        <div class="ibox-content">
+                            <h1 id="assetName"></h1>
+                            <p>
+                                <strong>资产详情:</strong>
+                                <span id="assetDescription"></span>
+                            </p>
+                            <p>
+                                <strong>资产估计:</strong>
+                                <span><i class="text-danger"><span id="assetEval"></span></i>元</span>
+                            </p>
+                            <p>
+                                <strong>担保公司:</strong>
+                                <span id="guaranteeCorp"></span>
+                            </p>
+                            <!--<p>-->
+                                <!--<strong>合同模板:</strong>-->
+                                <!--<span>数字资产.doc <a href="" class=" text-info">下载</a></span>-->
+                            <!--</p>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var tableData = new Array();
+    var assetId =$("#assetId").val();
+    $.ajax({
+        url : "../../assets/"+assetId+"",
+        type : "get",
+        async: false,
+        success: function(result){
+            console.log(result["data"]["desc"]);
+            $("#assetDescription").text(result["data"]["desc"]);
+            if(result["data"]["guaranteed"]){
+                $("#guaranteeCorp").text(result["data"]["guarName"]);
+            }else{
+                $("#guaranteeCorp").text("无");
+            }
+            $("#assetEval").text(result["data"]["value"]);
+            $("#assetName").text(result["data"]["name"]);
+            var html = "<div class=\"item active\"><img data-src=\"holder.js/900x500/auto/#777:#555/text:First slide\" alt=\"First slide [900x500]\" src=\""+result["data"]["photoList"][0]+"\" data-holder-rendered=\"true\"></div>"
+            $("#assetImg").append(html);
+            for(var i = 1; i < result.data.photoList.length;i++){
+                var html = "<div class=\"item \"><img data-src=\"holder.js/900x500/auto/#777:#555/text:Second slide\" alt=\"First slide [900x500]\" src=\""+result["data"]["photoList"][i]+"\" data-holder-rendered=\"true\"></div>"
+                $("#assetImg").append(html);
+            }
+        }
+    })
+
+    console.log(tableData[0]);
+    $("#table").bootstrapTable({
+        data: tableData
+    });
+</script>
+</body>
+</html>

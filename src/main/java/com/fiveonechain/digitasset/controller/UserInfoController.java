@@ -51,19 +51,26 @@ public class UserInfoController {
     ) {
         UserInfo userInfo = userInfoService.getUserInfoByUserId(userContext.getUserId());
         User user = userService.getUserByUserId(userContext.getUserId());
-        String[] imgs = userInfo.getImageId().split(",");
-        List<Integer> imgIds = new LinkedList<>();
-        for(String img : imgs){
-            imgIds.add(Integer.parseInt(img));
-        }
-        List<String> imageUrls = imageUrlService.getUrlListByImageIds(imgIds);
-        List<Integer> iconId = new LinkedList<>();
+        List<String> imageUrls = new LinkedList<>();
         String icon = "";
-        if(userInfo.getIconId()!=null){
-            iconId.add(Integer.parseInt(userInfo.getIconId()));
-            List<String> icons = imageUrlService.getUrlListByImageIds(iconId);
-            icon += icons.get(0);
+        if(userInfo != null){
+            if(userInfo.getImageId()!=null){
+                String[] imgs = userInfo.getImageId().split(",");
+                List<Integer> imgIds = new LinkedList<>();
+                for(String img : imgs){
+                    imgIds.add(Integer.parseInt(img));
+                }
+                imageUrls = imageUrlService.getUrlListByImageIds(imgIds);
+
+            }
+            List<Integer> iconId = new LinkedList<>();
+            if(userInfo.getIconId()!=null){
+                iconId.add(Integer.parseInt(userInfo.getIconId()));
+                List<String> icons = imageUrlService.getUrlListByImageIds(iconId);
+                icon += icons.get(0);
+            }
         }
+
         model.addAttribute("imageUrls",imageUrls);
         model.addAttribute("icon",icon);
         model.addAttribute("userInfo",userInfo);
