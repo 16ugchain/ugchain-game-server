@@ -76,7 +76,7 @@ public interface UserAssetMapper {
             @Result(property = "tradeBalance", column = "trade_balance"),
             @Result(property = "lockBalance", column = "lock_balance"),
     })
-    @Select("SELECT " + ALL_COLUMN + " FROM user_asset WHERE AND asset_id = #{assetId}")
+    @Select("SELECT " + ALL_COLUMN + " FROM user_asset WHERE  asset_id = #{assetId}")
     List<UserAsset> selectByAssetId(@Param("assetId") int assetId);
 
     @Update("UPDATE user_asset SET trade_balance = trade_balance - #{amount}, lock_balance = lock_balance + #{amount} "
