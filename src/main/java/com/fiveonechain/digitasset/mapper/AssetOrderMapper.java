@@ -74,7 +74,6 @@ CREATE TABLE `asset_order` (
   `status` tinyint(4) NOT NULL default '0',
 
   PRIMARY KEY (`id`),
-  UNIQUE KEY `idx_assetid_userid` (`asset_id`, `user_id`)
 
 ) DEFAULT CHARSET=utf8 COLLATE = utf8_bin
 

@@ -56,7 +56,8 @@ public class DigitalAssetController {
                 }
                 digitalAssetCmd.setHoldShare(userAsset.getBalance());
                 digitalAssetCmd.setLockedShare(userAsset.getLockBalance());
-                if (asset.getStatus() == AssetStatus.ISSUE.getCode()) {
+                if (asset.getStatus() == AssetStatus.ISSUE.getCode()
+                        && userContext.getUserId() != userAsset.getUserId()) {
                     digitalAssetCmd.setWhollyOwner(userAssetService.hasEnoughDigitAsset(userAsset, asset.getEvalValue()));
                 }
 
