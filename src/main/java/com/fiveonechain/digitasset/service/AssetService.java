@@ -3,6 +3,7 @@ package com.fiveonechain.digitasset.service;
 import com.fiveonechain.digitasset.auth.UserContext;
 import com.fiveonechain.digitasset.domain.*;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +25,8 @@ public interface AssetService {
     List<Asset> getAssetListByOwner(int userId);
 
     List<Asset> getAssetListByStatus(AssetStatus status);
+
+    List<Asset> getAssetListByStatusAndEndTimeBefore(AssetStatus status, Date time);
 
     List<Asset> getAssetListByGuarAndStatus(int guarId, AssetStatus status);
 

@@ -31,8 +31,7 @@ CREATE TABLE `user_asset_record` (
   `contract_id` int(11) NOT NULL,
   `create_time` timestamp NOT NULL default CURRENT_TIMESTAMP,
 
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `idx_assetid_userid` (`asset_id`, `user_id`)
+  PRIMARY KEY (`id`)
 
 )
 
