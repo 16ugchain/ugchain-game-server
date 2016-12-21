@@ -43,6 +43,5 @@ CREATE TABLE `asset_record` (
   `user_id` int(11) NOT NULL,
   `status` tinyint(11) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `idx_assetid` (`asset_id`)
 )
 */
