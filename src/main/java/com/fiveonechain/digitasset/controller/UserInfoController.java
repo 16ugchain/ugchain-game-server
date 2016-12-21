@@ -17,6 +17,7 @@ import com.fiveonechain.digitasset.service.UserService;
 import com.fiveonechain.digitasset.util.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -41,6 +42,8 @@ public class UserInfoController {
     private ImageUploadService imageUploadService;
     @Autowired
     private ImageUrlService imageUrlService;
+
+    Pbkdf2PasswordEncoder passwordEncoder = new Pbkdf2PasswordEncoder();
 
     @RequestMapping(value = "/index")
     public String index(@AuthenticationPrincipal UserContext userContext,
@@ -117,6 +120,23 @@ public class UserInfoController {
     ) {
         UserInfo userInfo = userInfoService.getUserInfoByUserId(userContext.getUserId());
         // TODO: 2016/12/7 update userinfo
+        Result result = ResultUtil.success();
+        return result;
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/updatePassword")
+    public Result updatePassword(@AuthenticationPrincipal UserContext userContext,
+                                 @RequestParam("oldPassword") String oldPwd,
+                                 @RequestParam("newPassword") String newPwd
+    ) {
+        User user = userService.getUserByUserId(userContext.getUserId());
+        if (!userService.checkUserLogin(user.getUserName(), oldPwd)) {
+            Result result = ResultUtil.buildErrorResult(ErrorInfo.PASSWORD_ERROR);
+            return result;
+        }
+        String md5Pwd = passwordEncoder.encode(newPwd);
+        userService.updatePassword(md5Pwd,userContext.getUserId());
         Result result = ResultUtil.success();
         return result;
     }

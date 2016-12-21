@@ -167,34 +167,34 @@
 									</div>
 								</div>
 								<!-- 性别： -->
-								<div class="form-group">
-									<label for="inputPassword3" class="col-sm-4 control-label">性别：</label>
-									<div class="col-sm-8">
-										<label>
-											<input type="radio" name="optionsRadios" id="optionsRadios1" value="1" v-model="userData.sex" checked  v-model="userData.sex"> 男
-										</label>
-										<label>
-											<input type="radio" name="optionsRadios" id="optionsRadios2" value="2" v-model="userData.sex"  v-model="userData.sex"> 女
-										</label>
-									</div>
-								</div>
-								<!-- 简介 -->
-								<div class="form-group">
-									<label for="intro" class="col-sm-4 control-label">简介：</label>
-									<div class="col-sm-8">
-										<textarea name="intro" id="intro" rows="5" placeholder="请填写您的个人简介..." class="panel panel-default" style="resize:none;padding: 10px;width:100%" v-model="userData.intro"></textarea>
-									</div>
-								</div>
-								<div class="form-group">
-									<label for="inputPassword3" class="col-sm-4 control-label"></label>
-									<div class="col-sm-8">
-										<div class="row">
-											<button type="button" class="btn btn-default col-xs-4 col-xs-offset-1">取消修改</button>
-											<button type="submit" class="btn btn-success col-xs-4 col-xs-offset-2">保存修改</button>
-										</div>
+								<!--<div class="form-group">-->
+									<!--<label for="inputPassword3" class="col-sm-4 control-label">性别：</label>-->
+									<!--<div class="col-sm-8">-->
+										<!--<label>-->
+											<!--<input type="radio" name="optionsRadios" id="optionsRadios1" value="1" v-model="userData.sex" checked  v-model="userData.sex"> 男-->
+										<!--</label>-->
+										<!--<label>-->
+											<!--<input type="radio" name="optionsRadios" id="optionsRadios2" value="2" v-model="userData.sex"  v-model="userData.sex"> 女-->
+										<!--</label>-->
+									<!--</div>-->
+								<!--</div>-->
+								<!--&lt;!&ndash; 简介 &ndash;&gt;-->
+								<!--<div class="form-group">-->
+									<!--<label for="intro" class="col-sm-4 control-label">简介：</label>-->
+									<!--<div class="col-sm-8">-->
+										<!--<textarea name="intro" id="intro" rows="5" placeholder="请填写您的个人简介..." class="panel panel-default" style="resize:none;padding: 10px;width:100%" v-model="userData.intro"></textarea>-->
+									<!--</div>-->
+								<!--</div>-->
+								<!--<div class="form-group">-->
+									<!--<label for="inputPassword3" class="col-sm-4 control-label"></label>-->
+									<!--<div class="col-sm-8">-->
+										<!--<div class="row">-->
+											<!--<button type="button" class="btn btn-default col-xs-4 col-xs-offset-1">取消修改</button>-->
+											<!--<button type="submit" class="btn btn-success col-xs-4 col-xs-offset-2">保存修改</button>-->
+										<!--</div>-->
 
-									</div>
-								</div>
+									<!--</div>-->
+								<!--</div>-->
 							</form>
 						</div>
 					</div>
@@ -222,7 +222,7 @@
 								<div class="form-group">
 									<label for="username" class="col-sm-4 control-label">证件号码：</label>
 									<div class="col-sm-8">
-										${userInfo.creditCardId}
+										${userInfo.identity!"未绑定"}
 									</div>
 								</div>
 								<!-- 简介 -->
@@ -230,12 +230,11 @@
 									<label for="username" class="col-sm-4 control-label">证件照片：</label>
 									<div class="col-sm-8">
 										<div class="row">
+											<#list imageUrls as imageUrl>
 											<div class="col-sm-6">
-												<img src="/images/1.jpg" alt="" class="img-responsive">
+												<img src="${imageUrl}" alt="" class="img-responsive">
 											</div>
-											<div class="col-sm-6">
-												<img src="/images/1.jpg" alt="" class="img-responsive">
-											</div>
+											</#list>
 										</div>
 										<div class="col-sm-12 text-muted">
 											*51区块严格保证您的身份信息安全，使用加密，水印多种方法避免用于其他用户*
@@ -252,26 +251,47 @@
 					<div class="row">
 						<div class="col-sm-6">
 							<form class="form-horizontal" role="form">
-								<div class="form-group">
-									<label for="username" class="col-sm-4 control-label">账户余额：</label>
-									<div class="col-sm-8">
-										<h3 class="text-success">
-											$0.00
-											<a href="" class="text-success"  data-toggle="modal" data-target="#myModal1"><i>账户明细 >></i></a>
-										</h3>
-									</div>
-								</div>
+								<!--<div class="form-group">-->
+									<!--<label for="username" class="col-sm-4 control-label">账户余额：</label>-->
+									<!--<div class="col-sm-8">-->
+										<!--<h3 class="text-success">-->
+											<!--$0.00-->
+											<!--<a href="" class="text-success"  data-toggle="modal" data-target="#myModal1"><i>账户明细 >></i></a>-->
+										<!--</h3>-->
+									<!--</div>-->
+								<!--</div>-->
 								<!-- 用户名 -->
 								<div class="form-group">
 									<label for="username" class="col-sm-4 control-label">我的银行卡：</label>
 									<div class="col-sm-8">
+										<#if userInfo.creditCardId??>
 										<div>
-											<i>⚠️</i>
-											还没有绑定银行卡
-											<a href="" class="text-success" data-toggle="modal" data-target="#myModal2">
-												立即绑定>>
-											</a>
+											<div class="form-group">
+												<label for="cardUsername">持卡人姓名:&nbsp&nbsp<span> ${userInfo.creditCardOwner!""}</span></label>
+
+												<!-- 错误提示 -->
+											</div>
+											<div class="form-group">
+												<label for="cardNumber">银行卡号:&nbsp&nbsp&nbsp<span   > ${userInfo.creditCardId!""}</span></label>
+
+												<!-- 错误提示 -->
+											</div>
+											<div class="form-group">
+												<label for="bank">开户银行:&nbsp&nbsp&nbsp<span> ${userInfo.creditCardBank!""}</span></label>
+
+												<!-- 错误提示 -->
+											</div>
+
 										</div>
+											<#else>
+												<i>⚠️</i>
+												还没有绑定银行卡
+												<a href="" class="text-success" data-toggle="modal" data-target="#myModal2">
+													立即绑定>>
+												</a>
+										</#if>
+
+
 
 										<div class="text-muted">
 											绑定银行卡才能在51区块进行资产交易，绑定的银行卡将用于资产赎回兑付等。51区块讲严格保证您的账户信息安全，不会泄露您的银行卡信息。
@@ -308,7 +328,7 @@
 									<div class="col-sm-8">
 										<div class="row">
 											<div class="col-xs-6">
-												158********454
+												${user.telephone!""}
 											</div>
 											<a class="col-xs-6 text-success"  data-toggle="modal" data-target="#myModal1">
 												修改 >>
@@ -322,7 +342,7 @@
 									<div class="col-sm-8">
 										<div class="row">
 											<div class="col-xs-6">
-												未绑定
+												${userInfo.email!""}
 											</div>
 											<a class="col-xs-6 text-success"  data-toggle="modal" data-target="#myModal1">
 												去绑定 >>
@@ -367,19 +387,47 @@
 				<form role="form" id="cardForm">
 					<div class="form-group">
 						<label for="cardUsername">持卡人姓名</label>
-						<input type="text" class="form-control" id="cardUsername" name="cardUsername" placeholder="请输入持卡人姓名" v-model="userInfo.cardUsername">
+						<input type="text" class="form-control" id="cardUsername" name="cardUsername" placeholder="请输入持卡人姓名" v-model="userInfo.userData.cardUsername">
 					</div>
 					<div class="form-group">
 						<label for="cardNumber">银行卡号</label>
-						<input type="text" class="form-control" id="cardNumber" name="cardNumber" placeholder="请输入银行卡号" v-model="userInfo.cardNumber">
+						<input type="text" class="form-control" id="cardNumber" name="cardNumber" placeholder="请输入银行卡号" v-model="userInfo.userData.cardNumber">
 					</div>
 					<div class="form-group">
 						<label for="bank">开户银行</label>
-						<input type="text" class="form-control" id="bank" name="bank" placeholder="请输入开户银行" v-model="userInfo.bank">
+						<input type="text" class="form-control" id="bank" name="bank" placeholder="请输入开户银行" v-model="userInfo.userData.bank">
 					</div>
 					<div class="form-group">
 						<button type="submit" class="btn btn-success btn-absolutely">
 							完成
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- 修改密码-->
+<div class="modal inmodal" id="myModal3" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content animated flipInX">
+			<div class="modal-body">
+				<form role="form" >
+					<div class="form-group">
+						<label for="username">旧密码</label>
+						<input type="text" class="form-control" id="oldpassword" placeholder="请输入旧密码" name="username" >
+					</div>
+					<div class="form-group">
+						<label for="password">密码</label>
+						<input type="password" class="form-control" id="password" placeholder="请输入新密码" name="password" >
+					</div>
+					<div class="form-group">
+						<label for="repassword">确认密码</label>
+						<input type="password" class="form-control" id="repassword" placeholder="请再次输入新密码" name="repassword">
+					</div>
+					<div class="form-group">
+						<button type="button" onclick="updatePwd()" class="btn btn-success btn-absolutely">
+							确认
 						</button>
 					</div>
 				</form>
@@ -407,13 +455,42 @@
 				realName: "",
 				sex: "",
 				intro: "",
-				imgId:""
+				imgId:"",
+				cardUsername:"",
+				cardNumber:"",
+				bank:""
 			},
 			saveApi:"/",
 			findUserName: "/user/findUserName"
 		}
 	})
+	function updatePwd() {
+		var oldPwd = $("#oldpassword").val();
+		var newPwd = $("#password").val();
+		var renewPwd = $("#repassword").val();
+		if(newPwd!=renewPwd){
+			$("#modalAlert",parent.document).click();
+			$(".modal-body",parent.document).html("两次输入密码不一致");
+			return ;
+		}
+		$.ajax({
+			url : "/userInfo/updateUserIcon",
+			type : "post",
+			data : {"imgId":imageIdStr},
+			success: function(result){
+				console.log(result);
+				if(result.meta.code==200){
+					$("#modalAlert",parent.document).click();
+					$(".modal-body",parent.document).html("上传成功");
+					location.reload();
+				}else{
+					$("#modalAlert",parent.document).click();
+					$(".modal-body",parent.document).html(result.meta.message);
+				}
+			}
+		})
 
+	}
 	// 上传照片
 	$("#file-1").fileinput({
 		language: 'zh', //设置语言
@@ -554,15 +631,13 @@
 		}).on('success.form.bv', function(e) {
 			e.preventDefault();
 			// 银行卡绑定事件
-			$.post("/test",{
-				cardUsername:register.userInfo.cardUsername,
-				cardNumber:register.userInfo.cardNumber,
-				bank:register.userInfo.bank
+			$.post("/userInfo/bindCreditCard",{
+				"creditCardOwner":$("#cardUsername").val(),
+				"creditCardId":$("#cardNumber").val(),
+				"creditCardBank":$("#bank").val()
 			},function(data){
-
-				console.log("绑定银行卡");
 				console.log(data);
-				register.tabFun();
+				location.reload();
 			})
 
 		});

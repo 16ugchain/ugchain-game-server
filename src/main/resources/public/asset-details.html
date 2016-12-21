@@ -36,7 +36,7 @@
 		<!-- jquery.cookie.js -->
 		<script src="//cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.js"></script>
 		<link href="/css/animate.css" rel="stylesheet">
-	    <link href="/css/style.css?v=4.1.0" rel="stylesheet">
+	    <!--<link href="/css/style.css?v=4.1.0" rel="stylesheet">-->
 	      <!-- 表格 -->
 		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.css">
 		<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.js"></script>
@@ -201,10 +201,18 @@
 							</div>
 							<div class="form-group">
 								<label for="registerNmae" class="col-xs-3 control-label">每股出价(元)</label>
-								<input type="text" class="form-control" id="unitPrice" placeholder="请输入认购单价，不低于1元/股">
-								<span class="input-group-btn">
+								<!--<input type="text" class="form-control" id="unitPrice" placeholder="请输入认购单价，不低于1元/股">-->
+								<div class="col-xs-6">
+									<div class="input-group">
+										<input type="text" class="form-control" id="unitPrice" placeholder="请输入认购单价，不低于1元/股">
+										<span class="input-group-btn">
 								        	<button class="btn btn-default" type="button">元</button>
 								     	</span>
+									</div>
+								</div>
+								<!--<span class="input-group-btn">-->
+								        	<!--<button class="btn btn-default" type="button">元</button>-->
+								     	<!--</span>-->
 							</div>
 							<div class="form-group">
 								<label for="registerNmae" class="col-xs-3 control-label"></label>

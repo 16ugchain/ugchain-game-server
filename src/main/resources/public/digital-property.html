@@ -102,15 +102,22 @@
 					<td>${digitalAssetCmd.publishName!""}</td>
 					<td>${digitalAssetCmd.holdShare?c!""}</td>
 					<td>${digitalAssetCmd.endTimeStr!""}</td>
-					<!--<td>${digitalAssetCmd.lockedShare!""}</td>-->
+					<!--<td>${digitalAssetCmd.status?c}</td>-->
 					<td>${digitalAssetCmd.guarName!""}</td>
 					<td>${digitalAssetCmd.statusStr!""}</td>
+						<#if digitalAssetCmd.status==8 || digitalAssetCmd.status==9 ||digitalAssetCmd.status==10>
+							<td><label>-</label></td>
+						<#elseif digitalAssetCmd.whollyOwner>
+							<td><label><a href="#" onclick="applyDelivery(${digitalAssetCmd.assetId})" >申请交割</label></td>
+							<#elseif digitalAssetCmd.tradeShare!=0>
+									<td><input type="checkbox" checked="checked"  disabled="disabled" ><label><a href="#" value="${digitalAssetCmd.lockedShare}"  onclick="selfModal(${digitalAssetCmd.assetId},${digitalAssetCmd.lockedShare?c})"   data-toggle="modal" data-target="#myModal2">是否允许认购</label></td>
 
-						<#if digitalAssetCmd.tradeShare!=0  >
-							<td><input type="checkbox" checked="checked"  disabled="disabled" ><label><a href="#" value="${digitalAssetCmd.lockedShare}"  onclick="selfModal(${digitalAssetCmd.assetId},${digitalAssetCmd.lockedShare?c})"   data-toggle="modal" data-target="#myModal2">是否允许认购</label></td>
-						<#else>
-							<td><input type="checkbox" disabled="disabled" ><label ><a href="#" onclick="selfModal(${digitalAssetCmd.assetId},0)"  data-toggle="modal" data-target="#myModal2">是否允许认购</a></label></td>
+									<#else>
+										<td><input type="checkbox" disabled="disabled" ><label ><a href="#" onclick="selfModal(${digitalAssetCmd.assetId},0)"  data-toggle="modal" data-target="#myModal2">是否允许认购</a></label></td>
 						</#if>
+
+
+
 					</tr>
 				</#list>
 
@@ -225,6 +232,24 @@ function selfModal(assetId,tradeShare) {
 	console.log(tradeShare);
 	$("#lockShare").text(tradeShare);
 	$("#assetId").val(assetId);
+}
+function applyDelivery(assetId) {
+	$.ajax({
+		url : "/assets/"+assetId+"/applydelivery",
+		type : "post",
+		success: function(result){
+			console.log(result);
+			if(result.meta.code==200){
+				$("#modalAlert",parent.document).click();
+				$(".modal-body",parent.document).html("申请交割成功");
+				location.reload();
+			}else{
+				$("#modalAlert",parent.document).click();
+				$(".modal-body",parent.document).html(result.meta.message);
+				location.reload();
+			}
+		}
+	})
 }
 $('#tradeModal').bootstrapValidator({
 	message: 'This value is not valid',
