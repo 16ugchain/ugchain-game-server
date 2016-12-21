@@ -169,7 +169,7 @@
 
 												<td id="operation" value="${orderCenterCmd.status}">
                                                     <#list orderCenterCmd.operation as op>
-                                                        <a href="javascript:void(0);" onclick="handlerOrder(${op.code},${orderCenterCmd.orderId})">${op.message!"查看"}</a>
+                                                        <a href="javascript:void(0);" onclick="handlerOrder(${op.code},${orderCenterCmd.orderId},${orderCenterCmd.assetId})">${op.message!"-"}</a>
                                                     </#list>
 												</td>
 
@@ -236,7 +236,7 @@
 											<td>${orderCenterCmdAssign.statusStr!""}</td>
 											<td id="assignOperation" value="${orderCenterCmdAssign.status}">
 												<#list orderCenterCmdAssign.operation as op>
-                                                    <a href="javascript:void(0);" onclick="handlerOrder(${op.code},${orderCenterCmdAssign.orderId})">${op.message!"查看"}</a>
+                                                    <a href="javascript:void(0);" onclick="handlerOrder(${op.code},${orderCenterCmdAssign.orderId},${orderCenterCmdAssign.assetId})">${op.message!"-"}</a>
 												</#list>
 											</td>
 											</tr>
@@ -300,19 +300,19 @@
     <!-- 第三方插件 -->
     <script src="../js/plugins/pace.min.js"></script>
     <script>
-        function handlerOrder(operationCode,assetId){
+        function handlerOrder(operationCode,orderId,assetId){
             var flag = false;
             switch (operationCode){
                 case 1: flag = true;break;
                 case 2: flag = false;break;
-                case 3: complete(assetId);return;break;
-				case 4: pay(assetId);return;break;
-				case 5: appeal(assetId);return;break;
+                case 3: complete(orderId);return;break;
+				case 4: pay(orderId);return;break;
+				case 5: appeal(orderId);return;break;
                 case 6: location.href="../assetsDetail/assign/"+assetId;return;break;
 				default : return;
             }
                 $.ajax({
-                    url : "../assetOrder/"+assetId+"/apply",
+                    url : "../assetOrder/"+orderId+"/apply",
                     type : "post",
                     data : {"result":flag},
                     success: function(result){

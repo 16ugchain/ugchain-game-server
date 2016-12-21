@@ -102,11 +102,12 @@
 					<td>${digitalAssetCmd.publishName!""}</td>
 					<td>${digitalAssetCmd.holdShare!""}</td>
 					<td>${digitalAssetCmd.endTimeStr!""}</td>
+					<!--<td>${digitalAssetCmd.lockedShare!""}</td>-->
 					<td>${digitalAssetCmd.guarName!""}</td>
 					<td>${digitalAssetCmd.statusStr!""}</td>
 
 						<#if digitalAssetCmd.tradeShare!=0  >
-							<td><input type="checkbox" checked="checked"  disabled="disabled" ><label><a href="#" value="${digitalAssetCmd.tradeShare}"  onclick="selfModal(${digitalAssetCmd.assetId},${digitalAssetCmd.lockedShare})"   data-toggle="modal" data-target="#myModal2">是否允许认购</label></td>
+							<td><input type="checkbox" checked="checked"  disabled="disabled" ><label><a href="#" value="${digitalAssetCmd.lockedShare}"  onclick="selfModal(${digitalAssetCmd.assetId},${digitalAssetCmd.lockedShare?c})"   data-toggle="modal" data-target="#myModal2">是否允许认购</label></td>
 						<#else>
 							<td><input type="checkbox" disabled="disabled" ><label ><a href="#" onclick="selfModal(${digitalAssetCmd.assetId},0)"  data-toggle="modal" data-target="#myModal2">是否允许认购</a></label></td>
 						</#if>
