@@ -59,6 +59,16 @@ public class TradeCenterController {
         return "asset-details-corp";
     }
 
+    @RequestMapping("/assetsDetail/redemption/{assetId}")
+    public String assetsDetailRedemption(@AuthenticationPrincipal UserContext userContext,
+                                   @PathVariable("assetId") int assetId,
+                                   Model model) {
+        model.addAttribute("assetId", assetId);
+        return "asset-details-redemption";
+    }
+
+
+
     @RequestMapping("/tradeCenter/index")
     public String assetsDetail(@AuthenticationPrincipal UserContext userContext
                                ) {

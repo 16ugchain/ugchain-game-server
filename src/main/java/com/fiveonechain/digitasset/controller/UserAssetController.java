@@ -4,12 +4,14 @@ import com.fiveonechain.digitasset.auth.UserContext;
 import com.fiveonechain.digitasset.domain.Asset;
 import com.fiveonechain.digitasset.domain.User;
 import com.fiveonechain.digitasset.domain.UserAsset;
+import com.fiveonechain.digitasset.domain.UserInfo;
 import com.fiveonechain.digitasset.domain.result.DigitAssetItem;
 import com.fiveonechain.digitasset.domain.result.ErrorInfo;
 import com.fiveonechain.digitasset.domain.result.Result;
 import com.fiveonechain.digitasset.exception.DigitAssetNotFoundException;
 import com.fiveonechain.digitasset.service.AssetService;
 import com.fiveonechain.digitasset.service.UserAssetService;
+import com.fiveonechain.digitasset.service.UserInfoService;
 import com.fiveonechain.digitasset.service.UserService;
 import com.fiveonechain.digitasset.util.ResultUtil;
 import org.slf4j.Logger;
@@ -38,6 +40,9 @@ public class UserAssetController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserInfoService userInfoService;
 
     @Autowired
     private UserAssetService userAssetService;
@@ -92,6 +97,13 @@ public class UserAssetController {
                 return ResultUtil.buildErrorResult(ErrorInfo.SERVER_ERROR);
             }
             share.setOwnerName(userOpt.get().getUserName());
+            share.setTelephone(userOpt.get().getTelephone());
+            Optional<UserInfo> userInfoOpt = userInfoService.getUserInfoOptional(userAsset.getUserId());
+            if (!userInfoOpt.isPresent()) {
+                LOGGER.error("{} userInfo {} NOT FOUND", ErrorInfo.SERVER_ERROR, userAsset.getUserId());
+                return ResultUtil.buildErrorResult(ErrorInfo.SERVER_ERROR);
+            }
+            share.setUserInfo(userInfoOpt.get());
             shareList.add(share);
         }
         return ResultUtil.success(shareList);

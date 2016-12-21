@@ -97,7 +97,7 @@
 			//成功返回表格数据
 			for (var i = 0; i < result.data.length; i++) {
 				data[i] = new Array();
-				data[i]["name"]="<a href=" + "/assetsDetail/assign/"+result.data[i].assetId+">" + result.data[i].assetName + "";
+				data[i]["name"]="<a href=" + "/assetsDetail/redemption/"+result.data[i].assetId+">" + result.data[i].assetName + "";
 				data[i]["id"]=result.data[i].assetId;
 				data[i]["time"]=result.data[i]["endTimeStr"];
 				data[i]["status"]=result.data[i]["status"]["message"];

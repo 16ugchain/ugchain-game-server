@@ -171,7 +171,7 @@
     var tableData = new Array();
     var assetId =$("#assetId").val();
     $.ajax({
-        url : "../../assets/"+assetId+"/digitassets",
+        url : "../../assets/"+assetId+"",
         type : "get",
         async: false,
         success: function(result){
