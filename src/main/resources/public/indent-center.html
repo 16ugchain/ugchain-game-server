@@ -158,13 +158,19 @@
 
 										<#list orderCenterCmds as orderCenterCmd>
 											<tr>
-											<td>${orderCenterCmd.assetName!""}</td>
+												<td><a href="/assetsDetail/orderCenter/${orderCenterCmd.assetId}">${orderCenterCmd.assetName!""}</a></td>
 											<td>${orderCenterCmd.assetId!""}</td>
 											<td>${orderCenterCmd.applicationShare!""}</td>
 											<td>${orderCenterCmd.percent!""}</td>
 											<td>${orderCenterCmd.guarName!""}</td>
-											<td>${orderCenterCmd.holderName!""}</td>
-											<td>${orderCenterCmd.startTime!""}</td>
+											<!--<td>${orderCenterCmd.holderName!""}</td>-->
+
+												<#if orderCenterCmd.holderInfo??>
+													<td><div class="btn-group"><button type="button" onclick='alertUserInfo("${orderCenterCmd.holderInfo.realName!""}","${orderCenterCmd.holderInfo.identity!""}","${orderCenterCmd.holderTel!""}","${orderCenterCmd.holderInfo.email!""}")' class="btn btn-default">${orderCenterCmd.holderName!""}</button> </div></td>
+													<#else>
+														<td>${orderCenterCmd.holderName!""}</td>
+												</#if>
+												<td>${orderCenterCmd.startTime!""}</td>
 											<td>${orderCenterCmd.statusStr!""}</td>
 
 												<td id="operation" value="${orderCenterCmd.status}">
@@ -225,13 +231,20 @@
 
 										<#list orderCenterCmdsAssign as orderCenterCmdAssign>
 											<tr>
-											<td>${orderCenterCmdAssign.assetName!""}</td>
+											<!--<td>${orderCenterCmdAssign.assetName!""}</td>-->
+											<td><a href="/assetsDetail/orderCenter/${orderCenterCmdAssign.assetId}">${orderCenterCmdAssign.assetName!""}</a></td>
 											<td>${orderCenterCmdAssign.assetId!""}</td>
 											<td>${orderCenterCmdAssign.applicationShare!""}</td>
 											<td>${orderCenterCmdAssign.percent!""}</td>
 											<td>${orderCenterCmdAssign.guarName!""}</td>
 											<td>${orderCenterCmdAssign.expEarning!""}</td>
-											<td>${orderCenterCmdAssign.buyerName!""}</td>
+											<!--<td>${orderCenterCmdAssign.buyerName!""}</td>-->
+												<#if orderCenterCmdAssign.buyerInfo??>
+													<td><div class="btn-group"><button type="button" onclick='alertUserInfo("${orderCenterCmdAssign.buyerInfo.realName!""}","${orderCenterCmdAssign.buyerInfo.identity!""}","${orderCenterCmdAssign.buyerTel!""}","${orderCenterCmdAssign.buyerInfo.email!""}")' class="btn btn-default">${orderCenterCmdAssign.buyerName!""}</button> </div></td>
+													<#else>
+														<td>${orderCenterCmdAssign.buyerName!""}</td>
+												</#if>
+
 											<td>${orderCenterCmdAssign.buyerCorp!""}</td>
 											<td>${orderCenterCmdAssign.statusStr!""}</td>
 											<td id="assignOperation" value="${orderCenterCmdAssign.status}">
@@ -291,6 +304,68 @@
             <!--</div>-->
         <!--</div>-->
     </div>
+
+	<!--发行人信息-->
+	<div class="modal inmodal bs-example-modal-sm" id="myModal3" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="mySmallModalLabel">
+		<div class="modal-dialog">
+			<div class="modal-content animated flipInX">
+				<div class="modal-body">
+					<form class="form-horizontal" role="form" >
+						<div class="form-group">
+							<label for="registerNmae" class="col-xs-3 control-label">发行人</label>
+							<div class="col-xs-6">
+								<div class="input-group">
+									<span class="form-control" id="publishMan" ></span>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="registerNmae" class="col-xs-3 control-label">证件类型</label>
+							<div class="col-xs-6">
+								<div class="input-group">
+									<span class="form-control"  >身份证</span>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="registerNmae" class="col-xs-3 control-label">证件号码</label>
+							<div class="col-xs-6">
+								<div class="input-group">
+									<span class="form-control" id="identity" ></span>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="registerNmae" class="col-xs-3 control-label">联系电话</label>
+							<div class="col-xs-6">
+								<div class="input-group">
+									<span class="form-control" id="telephone" ></span>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="registerNmae" class="col-xs-3 control-label">邮箱</label>
+							<div class="col-xs-6">
+								<div class="input-group">
+									<span class="form-control" id="email" ></span>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="registerNmae" class="col-xs-3 control-label"></label>
+							<div class="col-xs-6">
+								<div class="row">
+									<button data-dismiss="modal" class="col-xs-4 col-xs-offset-1 btn ">
+										取消
+									</button>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
     <!-- 全局js -->
     <script src="../js/plugins/jquery.metisMenu.js"></script>
     <!-- 滚动条 -->
@@ -329,6 +404,21 @@
                     }
                 })
         }
+		function alertUserInfo(name,identity,telephone,email) {
+			$("#publishMan").text(name);
+			$("#identity").text(identity);
+			if(telephone=="null"){
+				$("#telephone").text("");
+			}else{
+				$("#telephone").text(telephone);
+			}
+			if(email=="null"){
+				$("#email").text("");
+			}else{
+				$("#email").text(email);
+			}
+			$("#myModal3").show();
+		}
 		function appeal(orderId) {
 			$("#orderId").val(orderId);
 			console.log($("#orderId").val());

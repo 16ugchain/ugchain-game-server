@@ -139,7 +139,15 @@ public class UserAssetController {
                 LOGGER.error("{} user {} NOT FOUND", ErrorInfo.SERVER_ERROR, userAsset.getUserId());
                 return ResultUtil.buildErrorResult(ErrorInfo.SERVER_ERROR);
             }
-            share.setOwnerName(userOpt.get().getUserName());
+            share.setTelephone(userOpt.get().getTelephone());
+
+            Optional<UserInfo> userInfo = userInfoService.getUserInfoOptional(userAsset.getUserId());
+            if (!userInfo.isPresent()) {
+                LOGGER.error("{} user {} NOT FOUND", ErrorInfo.SERVER_ERROR, userAsset.getUserId());
+                return ResultUtil.buildErrorResult(ErrorInfo.SERVER_ERROR);
+            }
+            share.setUserInfo(userInfo.get());
+            share.setOwnerName(userInfo.get().getRealName());
             shareList.add(share);
         }
         return ResultUtil.success(shareList);

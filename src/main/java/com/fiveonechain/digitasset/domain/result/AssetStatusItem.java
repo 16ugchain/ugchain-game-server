@@ -13,6 +13,15 @@ public class AssetStatusItem {
 
     private Date time;
     private String message;
+    private String timeStr;
+
+    public String getTimeStr() {
+        return timeStr;
+    }
+
+    public void setTimeStr(String timeStr) {
+        this.timeStr = timeStr;
+    }
 
     public Date getTime() {
         return time;

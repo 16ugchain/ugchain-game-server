@@ -233,9 +233,11 @@ public class AssetController {
         List<AssetStatusItem> statusList = Lists.newArrayListWithCapacity(assetRecordList.size());
         for (AssetRecord record : assetRecordList) {
             AssetStatusItem item = new AssetStatusItem();
-            item.setTime(record.getCreateTime());
             item.setMessage(AssetStatus.fromValue(record.getStatus()).getMessage());
-
+            item.setTime(record.getCreateTime());
+            if(record.getCreateTime()!=null){
+                item.setTimeStr(DateUtil.formatDate(record.getCreateTime(),DateUtil.HC_DATETIME));
+            }
             statusList.add(item);
         }
 
@@ -323,10 +325,18 @@ public class AssetController {
 
             Optional<UserInfo> userInfoOpt = userInfoService.getUserInfoOptional(asset.getUserId());
             if (!userInfoOpt.isPresent()) {
-                LOGGER.error("{} issuerId {} NOT FOUND", ErrorInfo.SERVER_ERROR, asset.getUserId());
+                LOGGER.error("{} userInfo {} NOT FOUND", ErrorInfo.SERVER_ERROR, asset.getUserId());
+                continue;
+            }
+
+            Optional<User> userOpt = userService.getUserOptional(asset.getUserId());
+            if (!userOpt.isPresent()) {
+                LOGGER.error("{} user {} NOT FOUND", ErrorInfo.SERVER_ERROR, asset.getUserId());
                 continue;
             }
             assetItem.setIssuerName(userInfoOpt.get().getRealName());
+            assetItem.setIssuerInfo(userInfoOpt.get());
+            assetItem.setTelephone(userOpt.get().getTelephone());
             assetItemList.add(assetItem);
         }
 

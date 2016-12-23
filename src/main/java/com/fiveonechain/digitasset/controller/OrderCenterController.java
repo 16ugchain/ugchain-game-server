@@ -31,7 +31,7 @@ public class OrderCenterController {
     private UserInfoService userInfoService;
 
     @Autowired
-    private UserAssetService userAssetService;
+    private UserService userService;
 
     @Autowired
     private GuaranteeCorpService guaranteeCorpService;
@@ -71,11 +71,24 @@ public class OrderCenterController {
                 Optional<UserInfo> userInfo = userInfoService.getUserInfoOptional(assetOrder.getBuyerId());
                 if(userInfo.isPresent()){
                     orderCenterCmd.setBuyerName(userInfo.get().getRealName());
+                    orderCenterCmd.setBuyerInfo(userInfo.get());
                 }
+
+                Optional<User> user = userService.getUserOptional(assetOrder.getBuyerId());
+                if(user.isPresent()){
+                    orderCenterCmd.setBuyerTel(user.get().getTelephone());
+                }
+
                 Optional<UserInfo> holderInfo = userInfoService.getUserInfoOptional(assetOrder.getUserId());
                 if(holderInfo.isPresent()){
                     orderCenterCmd.setHolderName(holderInfo.get().getRealName());
+                    orderCenterCmd.setHolderInfo(holderInfo.get());
                 }
+                Optional<User> holder = userService.getUserOptional(assetOrder.getUserId());
+                if(holder.isPresent()){
+                    orderCenterCmd.setHolderTel(holder.get().getTelephone());
+                }
+
                 Optional<GuaranteeCorp> guaranteeCorpBuyer = guaranteeCorpService.getGuarOptional(assetOrder.getBuyerId());
                 if(guaranteeCorpBuyer.isPresent()){
                     orderCenterCmd.setBuyerCorp(guaranteeCorpBuyer.get().getCorpName());

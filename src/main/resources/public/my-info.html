@@ -167,34 +167,34 @@
 									</div>
 								</div>
 								<!-- 性别： -->
-								<!--<div class="form-group">-->
-									<!--<label for="inputPassword3" class="col-sm-4 control-label">性别：</label>-->
-									<!--<div class="col-sm-8">-->
-										<!--<label>-->
-											<!--<input type="radio" name="optionsRadios" id="optionsRadios1" value="1" v-model="userData.sex" checked  v-model="userData.sex"> 男-->
-										<!--</label>-->
-										<!--<label>-->
-											<!--<input type="radio" name="optionsRadios" id="optionsRadios2" value="2" v-model="userData.sex"  v-model="userData.sex"> 女-->
-										<!--</label>-->
-									<!--</div>-->
-								<!--</div>-->
-								<!--&lt;!&ndash; 简介 &ndash;&gt;-->
-								<!--<div class="form-group">-->
-									<!--<label for="intro" class="col-sm-4 control-label">简介：</label>-->
-									<!--<div class="col-sm-8">-->
-										<!--<textarea name="intro" id="intro" rows="5" placeholder="请填写您的个人简介..." class="panel panel-default" style="resize:none;padding: 10px;width:100%" v-model="userData.intro"></textarea>-->
-									<!--</div>-->
-								<!--</div>-->
-								<!--<div class="form-group">-->
-									<!--<label for="inputPassword3" class="col-sm-4 control-label"></label>-->
-									<!--<div class="col-sm-8">-->
-										<!--<div class="row">-->
-											<!--<button type="button" class="btn btn-default col-xs-4 col-xs-offset-1">取消修改</button>-->
-											<!--<button type="submit" class="btn btn-success col-xs-4 col-xs-offset-2">保存修改</button>-->
-										<!--</div>-->
+								<div class="form-group">
+									<label for="inputPassword3" class="col-sm-4 control-label">性别：</label>
+									<div class="col-sm-8">
+										<label>
+											<input type="radio" name="optionsRadios" id="optionsRadios1" value="1" v-model="userData.sex" checked  v-model="userData.sex"> 男
+										</label>
+										<label>
+											<input type="radio" name="optionsRadios" id="optionsRadios2" value="2" v-model="userData.sex"  v-model="userData.sex"> 女
+										</label>
+									</div>
+								</div>
+								<!-- 简介 -->
+								<div class="form-group">
+									<label for="intro" class="col-sm-4 control-label">简介：</label>
+									<div class="col-sm-8">
+										<textarea name="intro" id="intro" rows="5" placeholder="请填写您的个人简介..." class="panel panel-default" style="resize:none;padding: 10px;width:100%" v-model="userData.intro"></textarea>
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="inputPassword3" class="col-sm-4 control-label"></label>
+									<div class="col-sm-8">
+										<div class="row">
+											<button type="button" class="btn btn-default col-xs-4 col-xs-offset-1">取消修改</button>
+											<button type="submit" class="btn btn-success col-xs-4 col-xs-offset-2">保存修改</button>
+										</div>
 
-									<!--</div>-->
-								<!--</div>-->
+									</div>
+								</div>
 							</form>
 						</div>
 					</div>
@@ -542,30 +542,6 @@
 				validating: 'glyphicon glyphicon-refresh'
 			},
 			fields: {
-				username: {
-					message: '用户名验证失败',
-					validators: {
-						notEmpty: {
-							message: '用户名不能为空'
-						},
-						stringLength: {
-							min: 6,
-							max: 18,
-							message: '用户名长度必须在6到18位之间'
-						},
-						regexp: {
-							regexp: /^[a-zA-Z0-9_]+$/,
-							message: '用户名只能包含大写、小写、数字和下划线'
-						},
-						threshold :  6,
-						remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
-							url: userInfo.findUserName,//验证地址
-							message: '用户已存在',//提示消息
-							delay :  1000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
-							type: 'POST'//请求方式
-						},
-					}
-				},
 				realName: {
 					message: '真实姓名验证失败',
 					validators: {
@@ -585,6 +561,7 @@
 			// $.post(userInfo.saveApi,{...},function(data){
 			// 修改用户名ajax
 			// })
+			userInfo.tabFun();
 		});
 		$('#cardForm').bootstrapValidator({
 			message: 'This value is not valid',

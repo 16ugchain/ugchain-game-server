@@ -1,5 +1,7 @@
 package com.fiveonechain.digitasset.domain.result;
 
+import com.fiveonechain.digitasset.domain.UserInfo;
+
 import java.util.Date;
 
 /**
@@ -19,6 +21,8 @@ public class DigitalAssetCmd {
     private int status;
     private String statusStr;
     private boolean whollyOwner;//是不是百分百持股
+    private UserInfo issuerInfo;
+    private String telephone;
 
     private String percent;//占资比例  持有份额／资产估价
 
@@ -132,6 +136,22 @@ public class DigitalAssetCmd {
 
     public void setEndTimeStr(String endTimeStr) {
         this.endTimeStr = endTimeStr;
+    }
+
+    public UserInfo getIssuerInfo() {
+        return issuerInfo;
+    }
+
+    public void setIssuerInfo(UserInfo issuerInfo) {
+        this.issuerInfo = issuerInfo;
+    }
+
+    public String getTelephone() {
+        return telephone;
+    }
+
+    public void setTelephone(String telephone) {
+        this.telephone = telephone;
     }
 }
 

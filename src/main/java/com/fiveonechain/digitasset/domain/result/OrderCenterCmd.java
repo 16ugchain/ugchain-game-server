@@ -1,6 +1,7 @@
 package com.fiveonechain.digitasset.domain.result;
 
 import com.fiveonechain.digitasset.domain.AssetOrderOperation;
+import com.fiveonechain.digitasset.domain.UserInfo;
 
 import java.util.Date;
 import java.util.List;
@@ -28,7 +29,10 @@ public class OrderCenterCmd {
     private String expEarning;//预期收益
     private String buyerName;//申购人
     private String buyerCorp;//申购单位
-
+    private UserInfo holderInfo;
+    private String holderTel;
+    private UserInfo buyerInfo;
+    private String buyerTel;
     public String getAssetName() {
         return assetName;
     }
@@ -155,5 +159,37 @@ public class OrderCenterCmd {
 
     public void setEndTimeStr(String endTimeStr) {
         this.endTimeStr = endTimeStr;
+    }
+
+    public UserInfo getHolderInfo() {
+        return holderInfo;
+    }
+
+    public void setHolderInfo(UserInfo holderInfo) {
+        this.holderInfo = holderInfo;
+    }
+
+    public UserInfo getBuyerInfo() {
+        return buyerInfo;
+    }
+
+    public void setBuyerInfo(UserInfo buyerInfo) {
+        this.buyerInfo = buyerInfo;
+    }
+
+    public String getHolderTel() {
+        return holderTel;
+    }
+
+    public void setHolderTel(String holderTel) {
+        this.holderTel = holderTel;
+    }
+
+    public String getBuyerTel() {
+        return buyerTel;
+    }
+
+    public void setBuyerTel(String buyerTel) {
+        this.buyerTel = buyerTel;
     }
 }

@@ -243,6 +243,68 @@
         </div>
     </div>
 </div>
+
+<!--发行人信息-->
+<div class="modal inmodal bs-example-modal-sm" id="myModal3" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="mySmallModalLabel">
+    <div class="modal-dialog">
+        <div class="modal-content animated flipInX">
+            <div class="modal-body">
+                <form class="form-horizontal" role="form" >
+                    <div class="form-group">
+                        <label for="registerNmae" class="col-xs-3 control-label">发行人</label>
+                        <div class="col-xs-6">
+                            <div class="input-group">
+                                <span class="form-control" id="publishMan" ></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerNmae" class="col-xs-3 control-label">证件类型</label>
+                        <div class="col-xs-6">
+                            <div class="input-group">
+                                <span class="form-control"  >身份证</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerNmae" class="col-xs-3 control-label">证件号码</label>
+                        <div class="col-xs-6">
+                            <div class="input-group">
+                                <span class="form-control" id="identity" ></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerNmae" class="col-xs-3 control-label">联系电话</label>
+                        <div class="col-xs-6">
+                            <div class="input-group">
+                                <span class="form-control" id="telephone" ></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerNmae" class="col-xs-3 control-label">邮箱</label>
+                        <div class="col-xs-6">
+                            <div class="input-group">
+                                <span class="form-control" id="email" ></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerNmae" class="col-xs-3 control-label"></label>
+                        <div class="col-xs-6">
+                            <div class="row">
+                                <button data-dismiss="modal" class="col-xs-4 col-xs-offset-1 btn ">
+                                    取消
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 <script>
     console.log(window.parent.roleNum);
     var data = new Array();
@@ -253,11 +315,12 @@
             console.log(result.data[i]);
             // 点击资产名称跳连接
             data[i] = new Array();
-            data[i]["name"] = result.data[i].assetName;
+//            data[i]["name"] = result.data[i].assetName;
+            data[i]["name"] = "<a href=" + "/assetsDetail/corp/"+result.data[i].assetId+">" + result.data[i].assetName + "";;
             data[i]["id"] = result.data[i].assetId;
             data[i]["description"] = result.data[i]["desc"];
             data[i]["cycle"] = result.data[i]["cycle"];
-            data[i]["publishName"] = result.data[i]["issuerName"];
+            data[i]["publishName"] = '<div class="btn-group"><button type="button" onclick=\'alertUserInfo("'+result.data[i].issuerInfo.realName+'","'+result.data[i].issuerInfo.identity+'","'+result.data[i].telephone+'","'+result.data[i].issuerInfo.email+'")\' class="btn btn-default">'+result.data[i].issuerName+'</button> </div>',
             data[i]["operations"] = new Array();
             data[i]["operations"][0] = "<a href=\"javaScript:void(0)\" onclick=\"reject(" + result.data[i].assetId + ")\">驳回</a>";
             data[i]["operations"][1] = "<a href=\"javaScript:void(0)\" data-toggle=\"modal\" data-target=\"#myModal\" onclick=\"selfModal("+result.data[i].assetId+")\" \">同意</a>";
@@ -292,6 +355,21 @@
             });
         })
     }
+    function alertUserInfo(name,identity,telephone,email) {
+        $("#publishMan").text(name);
+        $("#identity").text(identity);
+        if(telephone=="null"){
+            $("#telephone").text("");
+        }else{
+            $("#telephone").text(telephone);
+        }
+        if(email=="null"){
+            $("#email").text("");
+        }else{
+            $("#email").text(email);
+        }
+        $("#myModal3").show();
+    }
     function reject(assetId) {
         $.ajax({
             url : "assets/"+assetId+"/evaluate",
@@ -314,29 +392,6 @@
     function selfModal(assetId) {
         $("#assetId").val(assetId);
     }
-//    function agree(assetId) {
-//        $.ajax({
-//            url : "assets/"+assetId+"/evaluate",
-//            type : "post",
-//            data : {"result":false,
-//                    "conclusion":"还行不错",
-//                    "value":40,
-//                    "fee":2,
-//                    "earnings":120},
-//            success: function(result){
-//                console.log(result);
-//                if(result.meta.code==200){
-//                    $("#modalAlert",parent.document).click();
-//                    $(".modal-body",parent.document).html("评估成功");
-//                    location.reload();
-//                }else{
-//                    $("#modalAlert",parent.document).click();
-//                    $(".modal-body",parent.document).html(result.meta.message);
-//                    location.reload();
-//                }
-//            }
-//        })
-//    }
 
     function evledOperation(assetId,operationCode) {
         switch (operationCode){
@@ -390,61 +445,6 @@
             validating: 'glyphicon glyphicon-refresh'
         },
         fields: {
-//            opinion: {
-//                validators: {
-//                    notEmpty: {
-//                        message: '评估意见不能为空'
-//                    }
-//                }
-//            },
-//            worth: {
-//                validators: {
-//                    notEmpty: {
-//                        message: '评估价值不能为空'
-//                    },
-//                    stringLength: {
-//                        min: 4,
-//                        max: 9,
-//                        message: '请输入大于4位数小于9位数的数字'
-//                    },
-//                    regexp: {
-//                        regexp: /^(0|[1-9][0-9]*)$/,
-//                        message: '请输入大于0的整数'
-//                    }
-//                }
-//            },
-//            charge: {
-//                validators: {
-//                    notEmpty: {
-//                        message: '服务收费不能为空'
-//                    },
-//                    stringLength: {
-//                        min: 2,
-//                        max: 5,
-//                        message: '请输入大于2位数小于5位数的数字'
-//                    },
-//                    regexp: {
-//                        regexp: /^(0|[1-9][0-9]*)$/,
-//                        message: '请输入大于0的整数'
-//                    }
-//                }
-//            },
-//            earnings: {
-//                validators: {
-//                    notEmpty: {
-//                        message: '预期收益不能为空'
-//                    },
-//                    stringLength: {
-//                        min: 1,
-//                        max: 4,
-//                        message: '请输入大于1位数小于4位数的数字'
-//                    },
-//                    regexp: {
-//                        regexp: /([1-9]\d*(\.\d*[1-9])?)|(0\.\d*[1-9])/,
-//                        message: '请输入大于0的数字'
-//                    }
-//                }
-//            }
 
         }
     }).on('success.form.bv', function(e) {

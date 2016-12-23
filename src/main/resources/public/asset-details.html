@@ -75,9 +75,7 @@
 	        <div class="row">
 	            <div class="col-sm-12">
 	                <h3 class="bs-callout-success">
-	                	<a href="" class="text-success">
-	                		交易中心
-	                	</a>
+	                	${assetElv}
 	                	&nbsp;>&nbsp;
 	                	<span>
 	                		资产详情
@@ -229,6 +227,69 @@
 				</div>
 			</div>
 		</div>
+
+
+		<!--发行人信息-->
+		<div class="modal inmodal bs-example-modal-sm" id="myModal3" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="mySmallModalLabel">
+			<div class="modal-dialog">
+				<div class="modal-content animated flipInX">
+					<div class="modal-body">
+						<form class="form-horizontal" role="form" >
+							<div class="form-group">
+								<label for="registerNmae" class="col-xs-3 control-label">发行人</label>
+								<div class="col-xs-6">
+									<div class="input-group">
+										<span class="form-control" id="publishMan" ></span>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="registerNmae" class="col-xs-3 control-label">证件类型</label>
+								<div class="col-xs-6">
+									<div class="input-group">
+										<span class="form-control"  >身份证</span>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="registerNmae" class="col-xs-3 control-label">证件号码</label>
+								<div class="col-xs-6">
+									<div class="input-group">
+										<span class="form-control" id="identity" ></span>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="registerNmae" class="col-xs-3 control-label">联系电话</label>
+								<div class="col-xs-6">
+									<div class="input-group">
+										<span class="form-control" id="telephone" ></span>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="registerNmae" class="col-xs-3 control-label">邮箱</label>
+								<div class="col-xs-6">
+									<div class="input-group">
+										<span class="form-control" id="email" ></span>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="registerNmae" class="col-xs-3 control-label"></label>
+								<div class="col-xs-6">
+									<div class="row">
+										<button data-dismiss="modal" class="col-xs-4 col-xs-offset-1 btn ">
+											取消
+										</button>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
 	    <script>
 	    	var tableData = new Array();
 			var assetId =$("#assetId").val();
@@ -264,7 +325,7 @@
 					console.log(result);
 					for (var i = 0; i < result.data.length; i++) {
 						tableData[i] = {
-							"holder":  result.data[i].ownerName,
+							"holder":  '<div class="btn-group"><button type="button" onclick=\'alertUserInfo("'+result.data[i].userInfo.realName+'","'+result.data[i].userInfo.identity+'","'+result.data[i].telephone+'","'+result.data[i].userInfo.email+'")\' class="btn btn-default">'+result.data[i].ownerName+'</button> </div>',
 							"circulation-share": result["data"][i]["availShare"]+"股",
 							"proportion": result["data"][i]["percent"]+"%",
 							"operation": "<a href='#'  class='text-success'  onclick='selfModal("+result.data[i].ownerId+")'  data-toggle='modal' data-target='#myModal2'>申请认购</a>"
@@ -274,6 +335,21 @@
 				}
 			})
 		}
+			function alertUserInfo(name,identity,telephone,email) {
+				$("#publishMan").text(name);
+				$("#identity").text(identity);
+				if(telephone=="null"){
+					$("#telephone").text("");
+				}else{
+					$("#telephone").text(telephone);
+				}
+				if(email=="null"){
+					$("#email").text("");
+				}else{
+					$("#email").text(email);
+				}
+				$("#myModal3").show();
+			}
 		function selfModal(userId) {
 			$("#ownerId").val(userId);
 		}

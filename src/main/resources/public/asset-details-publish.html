@@ -69,9 +69,10 @@
     <div class="row">
         <div class="col-sm-12">
             <h3 class="bs-callout-success">
-                <a href="" class="text-success">
-                    交易中心
-                </a>
+                <!--<a href="/tradeCenter/index" class="text-success">-->
+                    <!--交易中心-->
+                <!--</a>-->
+                ${assetElv}
                 &nbsp;>&nbsp;
                 <span>
 	                		资产详情
@@ -203,7 +204,7 @@
                 for (var i = 0; i < result.data.length; i++) {
                     // 点击资产名称跳连接
                     tableData[i] = {
-                        "time":  result["data"][i]["time"],
+                        "time":  result["data"][i]["timeStr"],
                         "message": result["data"][i]["message"],
 
                     }

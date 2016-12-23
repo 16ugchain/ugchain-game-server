@@ -40,14 +40,30 @@ public class TradeCenterController {
     public String assetsDetailPublish(@AuthenticationPrincipal UserContext userContext,
                                @PathVariable("assetId") int assetId,
                                Model model) {
+        String parentHtmlTag="<a href=\"/physical-assets.html\" class=\"text-success\">" +
+                "实物资产\n</a>";
         model.addAttribute("assetId", assetId);
+        model.addAttribute("assetElv",parentHtmlTag);
         return "asset-details-publish";
     }
     @RequestMapping("/assetsDetail/assign/{assetId}")
     public String assetsDetailAssign(@AuthenticationPrincipal UserContext userContext,
                                @PathVariable("assetId") int assetId,
                                Model model) {
+        String parentHtmlTag="<a href=\"/tradeCenter/index\" class=\"text-success\">" +
+                "交易中心\n</a>";
         model.addAttribute("assetId", assetId);
+        model.addAttribute("assetElv",parentHtmlTag);
+        return "asset-details";
+    }
+    @RequestMapping("/assetsDetail/digitalPropertity/{assetId}")
+    public String assetsDetailDigitalPropertity(@AuthenticationPrincipal UserContext userContext,
+                                     @PathVariable("assetId") int assetId,
+                                     Model model) {
+        String parentHtmlTag="<a href=\"/digitalCenter/index\" class=\"text-success\">" +
+                "数字资产\n</a>";
+        model.addAttribute("assetId", assetId);
+        model.addAttribute("assetElv",parentHtmlTag);
         return "asset-details";
     }
 
@@ -55,15 +71,32 @@ public class TradeCenterController {
     public String assetsDetailCorp(@AuthenticationPrincipal UserContext userContext,
                                      @PathVariable("assetId") int assetId,
                                      Model model) {
+        String parentHtmlTag="<a href=\"/assessment.html\" class=\"text-success\">" +
+                "资产评估\n</a>";
         model.addAttribute("assetId", assetId);
+        model.addAttribute("assetElv",parentHtmlTag);
         return "asset-details-corp";
+    }
+
+    @RequestMapping("/assetsDetail/orderCenter/{assetId}")
+    public String assetsDetailOrder(@AuthenticationPrincipal UserContext userContext,
+                                   @PathVariable("assetId") int assetId,
+                                   Model model) {
+        String parentHtmlTag="<a href=\"/orderCenter/index\" class=\"text-success\">" +
+                "订单中心\n</a>";
+        model.addAttribute("assetId", assetId);
+        model.addAttribute("assetElv",parentHtmlTag);
+        return "asset-details";
     }
 
     @RequestMapping("/assetsDetail/redemption/{assetId}")
     public String assetsDetailRedemption(@AuthenticationPrincipal UserContext userContext,
                                    @PathVariable("assetId") int assetId,
                                    Model model) {
+        String parentHtmlTag="<a href=\"/redemption-payment.html\" class=\"text-success\">" +
+                "赎回兑付\n</a>";
         model.addAttribute("assetId", assetId);
+        model.addAttribute("redemption",parentHtmlTag);
         return "asset-details-redemption";
     }
 
