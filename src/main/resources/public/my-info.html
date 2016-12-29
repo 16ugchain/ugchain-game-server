@@ -167,24 +167,24 @@
 									</div>
 								</div>
 								<!-- 性别： -->
-								<div class="form-group">
-									<label for="inputPassword3" class="col-sm-4 control-label">性别：</label>
-									<div class="col-sm-8">
-										<label>
-											<input type="radio" name="optionsRadios" id="optionsRadios1" value="1" v-model="userData.sex" checked  v-model="userData.sex"> 男
-										</label>
-										<label>
-											<input type="radio" name="optionsRadios" id="optionsRadios2" value="2" v-model="userData.sex"  v-model="userData.sex"> 女
-										</label>
-									</div>
-								</div>
-								<!-- 简介 -->
-								<div class="form-group">
-									<label for="intro" class="col-sm-4 control-label">简介：</label>
-									<div class="col-sm-8">
-										<textarea name="intro" id="intro" rows="5" placeholder="请填写您的个人简介..." class="panel panel-default" style="resize:none;padding: 10px;width:100%" v-model="userData.intro"></textarea>
-									</div>
-								</div>
+								<!--<div class="form-group">-->
+									<!--<label for="inputPassword3" class="col-sm-4 control-label">性别：</label>-->
+									<!--<div class="col-sm-8">-->
+										<!--<label>-->
+											<!--<input type="radio" name="optionsRadios" id="optionsRadios1" value="1" v-model="userData.sex" checked  v-model="userData.sex"> 男-->
+										<!--</label>-->
+										<!--<label>-->
+											<!--<input type="radio" name="optionsRadios" id="optionsRadios2" value="2" v-model="userData.sex"  v-model="userData.sex"> 女-->
+										<!--</label>-->
+									<!--</div>-->
+								<!--</div>-->
+								<!--&lt;!&ndash; 简介 &ndash;&gt;-->
+								<!--<div class="form-group">-->
+									<!--<label for="intro" class="col-sm-4 control-label">简介：</label>-->
+									<!--<div class="col-sm-8">-->
+										<!--<textarea name="intro" id="intro" rows="5" placeholder="请填写您的个人简介..." class="panel panel-default" style="resize:none;padding: 10px;width:100%" v-model="userData.intro"></textarea>-->
+									<!--</div>-->
+								<!--</div>-->
 								<div class="form-group">
 									<label for="inputPassword3" class="col-sm-4 control-label"></label>
 									<div class="col-sm-8">
@@ -316,7 +316,7 @@
 											<div class="col-xs-6">
 												********
 											</div>
-											<a class="col-xs-6 text-success"  data-toggle="modal" data-target="#myModal1">
+											<a class="col-xs-6 text-success"  data-toggle="modal" data-target="#myModal3">
 												重置>>
 											</a>
 										</div>
@@ -330,7 +330,7 @@
 											<div class="col-xs-6">
 												${user.telephone!""}
 											</div>
-											<a class="col-xs-6 text-success"  data-toggle="modal" data-target="#myModal1">
+											<a class="col-xs-6 text-success"  data-toggle="modal" data-target="#myModal4">
 												修改 >>
 											</a>
 										</div>
@@ -344,7 +344,7 @@
 											<div class="col-xs-6">
 												${userInfo.email!""}
 											</div>
-											<a class="col-xs-6 text-success"  data-toggle="modal" data-target="#myModal1">
+											<a class="col-xs-6 text-success"  data-toggle="modal" data-target="#myModal5">
 												去绑定 >>
 											</a>
 										</div>
@@ -415,7 +415,7 @@
 				<form role="form" >
 					<div class="form-group">
 						<label for="username">旧密码</label>
-						<input type="text" class="form-control" id="oldpassword" placeholder="请输入旧密码" name="username" >
+						<input type="password" class="form-control" id="oldpassword" placeholder="请输入旧密码" name="username" >
 					</div>
 					<div class="form-group">
 						<label for="password">密码</label>
@@ -428,6 +428,61 @@
 					<div class="form-group">
 						<button type="button" onclick="updatePwd()" class="btn btn-success btn-absolutely">
 							确认
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- 修改手机-->
+<div class="modal inmodal" id="myModal4" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content animated flipInX">
+			<div class="modal-body">
+				<form role="form" class="form-horizontal" >
+					<div class="form-group">
+						<label for="phone">手机</label>
+						<input type="number" class="form-control" id="phone" name="telephone" placeholder="请输入手机号码" v-model="userInfo.userData.telephone">
+						<!-- 错误提示 -->
+					</div>
+					<div class="form-group">
+						<label for="verify">验证</label>
+						<div class="input-group">
+							<input type="text" class="form-control" id="verify" placeholder="请输入验证码" name="verify" v-model="userInfo.userData.verify">
+							<span class="input-group-btn" >
+										        <button class="btn btn-default" type="button" id="verifyBtn" value="0">发送验证码</button>
+										    </span>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<button type="submit" class="btn btn-success btn-absolutely">
+							绑定
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- 修改邮箱-->
+<div class="modal inmodal" id="myModal5" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content animated flipInX">
+			<div class="modal-body">
+				<form role="form" class="form-horizontal" >
+					<div class="form-group">
+						<label for="phone">邮箱</label>
+						<input type="email" class="form-control" id="email" name="email" placeholder="请输入邮箱" v-model="userInfo.userData.email">
+						<!-- 错误提示 -->
+					</div>
+
+					<div class="form-group">
+						<button type="submit" class="btn btn-success btn-absolutely">
+							绑定
 						</button>
 					</div>
 				</form>
@@ -458,7 +513,10 @@
 				imgId:"",
 				cardUsername:"",
 				cardNumber:"",
-				bank:""
+				bank:"",
+				telephone:"",
+				verify:""
+
 			},
 			saveApi:"/",
 			findUserName: "/user/findUserName"
@@ -474,14 +532,15 @@
 			return ;
 		}
 		$.ajax({
-			url : "/userInfo/updateUserIcon",
+			url : "/userInfo/updatePassword",
 			type : "post",
-			data : {"imgId":imageIdStr},
+			data : {"oldPassword":oldPwd,
+				"newPassword":newPwd},
 			success: function(result){
 				console.log(result);
 				if(result.meta.code==200){
 					$("#modalAlert",parent.document).click();
-					$(".modal-body",parent.document).html("上传成功");
+					$(".modal-body",parent.document).html("修改成功");
 					location.reload();
 				}else{
 					$("#modalAlert",parent.document).click();
@@ -561,7 +620,19 @@
 			// $.post(userInfo.saveApi,{...},function(data){
 			// 修改用户名ajax
 			// })
-			userInfo.tabFun();
+			$.post("/userInfo/updateUserInfo",{
+				"real_name":$("#realName").val(),
+			},function(data){
+				if(data.meta.code==200){
+					$("#modalAlert").click();
+					$(".modal-body").html("修改成功");
+					location.reload();
+				}else{
+					$("#modalAlert").click();
+					$(".modal-body").html(data.meta.message);
+				}
+			})
+
 		});
 		$('#cardForm').bootstrapValidator({
 			message: 'This value is not valid',
@@ -619,6 +690,136 @@
 
 		});
 	})
+	// 绑定手机
+
+	$("#verifyBtn").on('click', function (event) {
+		event.preventDefault();
+		/* Act on the event */
+		var that = $(this);
+		var num = $(this).attr("value");
+		// 手机号码格式不对
+		if ($("#phone").parent().hasClass('has-error') || $("#phone").val().length < 11) {
+			$("#modalAlert").click();
+			$(".modal-body").html(" 请输入正确的手机号码");
+		} else {
+			$(this).attr("value", num + 1);
+			console.log("发送");
+			$.post("/user/sendVerification", {
+				telephone: userInfo.userData.telephone
+			}, function (data) {
+				if (data.meta.code === 200) {
+					console.log("已发送");
+				}
+			})
+			var timer = null;
+			var time = 60;
+			that.addClass('disabled  active');
+			timer = setInterval(function () {
+				time--;
+				if (time <= 0) {
+					clearInterval(timer);
+					that.removeClass('disabled  active');
+					that.text("重新发送");
+				} else {
+					that.text(time + "秒后重新发送");
+				}
+			}, 1000);
+
+		}
+	});
+	$('#myModal4').bootstrapValidator({
+		message: 'This value is not valid',
+		feedbackIcons: {
+			valid: 'glyphicon glyphicon-ok',
+			invalid: 'glyphicon glyphicon-remove',
+			validating: 'glyphicon glyphicon-refresh'
+		},
+		fields: {
+			telephone: {
+				message: '手机格式错误',
+				validators: {
+					notEmpty: {
+						message: '手机号码不能为空'
+					},
+					stringLength: {
+						min: 11,
+						max: 11,
+						message: '请输入11位手机号码'
+					},
+					regexp: {
+						regexp: /^1[3|5|8]{1}[0-9]{9}$/,
+						message: '请输入正确的手机号码'
+					},
+					threshold: 4,
+					remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
+						url: "/user/findMobile",//验证地址
+						message: '手机号码已存在',//提示消息
+						delay: 1000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+						type: 'POST'//请求方式
+					}
+				}
+			},
+			verify: {
+				message: '验证码错误',
+				validators: {
+					notEmpty: {
+						message: '验证码不能为空'
+					},
+					stringLength: {
+						min: 6,
+						max: 6,
+						message: '请输入6位验证码'
+					}
+				}
+			}
+		}
+	}).on('success.form.bv', function (e) {
+		e.preventDefault();
+		if ($("#verifyBtn").attr("value") <= 0) {
+			$("#modalAlert").click();
+			$(".modal-body").html("请点击发送验证码按钮");
+			$('#myModal4').bootstrapValidator('disableSubmitButtons', false);
+			return;
+		} else {
+			$.post("/user/bindMobile", {
+				telephone: userInfo.userData.telephone,
+				verification: userInfo.userData.verify
+			}, function (data) {
+				if (data.meta.code === 200) {
+					console.log("绑定手机成功");
+					console.log(data);
+					register.tabFun();
+				}
+			})
+		}
+	});
+
+	$('#myModal5').bootstrapValidator({
+		message: 'This value is not valid',
+		feedbackIcons: {
+			valid: 'glyphicon glyphicon-ok',
+			invalid: 'glyphicon glyphicon-remove',
+			validating: 'glyphicon glyphicon-refresh'
+		},
+		fields: {
+			email: {
+				message: '电子邮箱错误',
+				validators: {
+					emailAddress: {     //　　邮箱格式校验
+						message: '邮箱格式错误'
+					}
+				}
+			}
+		}
+	}).on('success.form.bv', function (e) {
+		e.preventDefault();
+		$.post("/userInfo/bindEmail",{
+			"email":$("#email").val()
+		},function(data){
+			console.log(data);
+			location.reload();
+		})
+	});
 
 </script>
 </body>

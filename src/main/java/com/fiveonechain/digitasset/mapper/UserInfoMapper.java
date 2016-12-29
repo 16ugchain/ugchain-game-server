@@ -44,6 +44,10 @@ public interface UserInfoMapper {
     @Update("update user_info set icon_id=#{imgId} where user_id = #{userId}")
     boolean updateUserIcon(@Param("imgId") int imgId,@Param("userId") int userId);
 
+    @Update("update user_info set real_name=#{userInfo.realName},email=#{userInfo.email} where user_id = #{userInfo.userId}")
+    boolean updateUserInfo(@Param("userInfo") UserInfo userInfo);
+
+
 }
 
 

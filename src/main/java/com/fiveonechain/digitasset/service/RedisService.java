@@ -21,12 +21,6 @@ public class RedisService {
     @Autowired
     private StringRedisTemplate template;
 
-//    private RedisCache cache;
-//
-//    @PostConstruct
-//    public void init() {
-//        cache = new RedisCache(CACHE_NAME, CACHE_NAME.getBytes(), template, EXPIRE_TIME);
-//    }
 
     // redis set <K,V>
     public void put(String key, String value) {

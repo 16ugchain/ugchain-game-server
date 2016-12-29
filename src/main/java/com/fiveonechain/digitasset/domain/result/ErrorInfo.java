@@ -30,6 +30,7 @@ public enum ErrorInfo {
     TELEPHONE_VERIFY_FAIL(6014,"验证码错误"),
     VERIFY_FREQUENCY_ERROR(6015,"发送太频繁，请等一分钟再试"),
     USER_INFO_NOT_FOUND(6016, "没有实名认证"),
+    USER_REAL_NAME_ERROR(6017, "真实姓名填写错误"),
     ORDER_EXCEPTION(7001,"订单异常"),
     ORDER_NOT_FOUND(7002,"订单不存在"),
     ORDER_APPLY_OUTTIME(7003,"申请操作超时"),

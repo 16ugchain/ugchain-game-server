@@ -20,13 +20,11 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by fanjl on 2016/12/7.
@@ -125,8 +123,20 @@ public class UserInfoController {
     public Result updateUserInfo(@AuthenticationPrincipal UserContext userContext,
                                  @RequestParam("real_name") String realName
     ) {
-        UserInfo userInfo = userInfoService.getUserInfoByUserId(userContext.getUserId());
-        // TODO: 2016/12/7 update userinfo
+        Optional<UserInfo> userInfo = userInfoService.getUserInfoOptional(userContext.getUserId());
+        if(!userInfo.isPresent()){
+//            UserInfo userInfoTmp = new UserInfo();
+//            userInfoTmp.setRealName(realName);
+//            userInfoTmp.setStatus(UserAuthStatusEnum.FAIL.getId());//需要实名认证上传照片后修改状态
+//            userInfoService.insertAndGetUserAuth(userInfoTmp);
+            return ResultUtil.buildErrorResult(ErrorInfo.USER_INFO_NOT_FOUND);
+        }
+        if(realName!=null && realName.trim().length()>0){
+            userInfo.get().setRealName(realName);
+            userInfoService.updateUserInfo(userInfo.get());
+        }else{
+            return ResultUtil.buildErrorResult(ErrorInfo.USER_REAL_NAME_ERROR);
+        }
         Result result = ResultUtil.success();
         return result;
     }
@@ -142,6 +152,9 @@ public class UserInfoController {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.PASSWORD_ERROR);
             return result;
         }
+        if(StringUtils.isEmpty(newPwd)){
+            return ResultUtil.buildErrorResult(ErrorInfo.PASSWORD_ERROR);
+        }
         String md5Pwd = passwordEncoder.encode(newPwd);
         userService.updatePassword(md5Pwd,userContext.getUserId());
         Result result = ResultUtil.success();
@@ -153,9 +166,26 @@ public class UserInfoController {
     public Result updateUserIcon(@AuthenticationPrincipal UserContext userContext,
                                  @RequestParam("imgId") int imgId
     ) {
-        UserInfo userInfo = userInfoService.getUserInfoByUserId(userContext.getUserId());
-        // TODO: 2016/12/7 update userinfo
         userInfoService.updateIcon(imgId,userContext.getUserId());
+        Result result = ResultUtil.success();
+        return result;
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/bindEmail")
+    public Result bindEmail(@AuthenticationPrincipal UserContext userContext,
+                                 @RequestParam("email") String email
+    ) {
+        Optional<UserInfo> userInfo = userInfoService.getUserInfoOptional(userContext.getUserId());
+        if(!userInfo.isPresent()){
+            return ResultUtil.buildErrorResult(ErrorInfo.USER_INFO_NOT_FOUND);
+        }
+        if(email!=null && email.trim().length()>0){
+            userInfo.get().setEmail(email);
+            userInfoService.updateUserInfo(userInfo.get());
+        }else{
+            return ResultUtil.buildErrorResult(ErrorInfo.USER_INFO_NOT_FOUND);
+        }
         Result result = ResultUtil.success();
         return result;
     }

@@ -295,7 +295,6 @@ $(function () {
             return;
         } else {
             console.log(register.userInfo.telephone);
-            console.log($.cookie("Authorization"));
             $.post(register.api.telephoneApi, {
                 telephone: register.userInfo.telephone,
                 verification: register.userInfo.verify

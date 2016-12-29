@@ -20,5 +20,8 @@ public interface UserInfoService {
 
     boolean updateIcon(int imgId,int userId);
 
+    boolean updateUserInfo(UserInfo userInfo);
+
     Optional<UserInfo> getUserInfoOptional(int userId);
+
 }

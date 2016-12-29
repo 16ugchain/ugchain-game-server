@@ -35,6 +35,13 @@ public class UserInfoServiceImpl implements UserInfoService {
         return userInfoMapper.updateUserIcon(imgId,userId);
     }
 
+    @Override
+    public boolean updateUserInfo(UserInfo userInfo) {
+        return userInfoMapper.updateUserInfo(userInfo);
+    }
+
+
+
 
     @Override
     public boolean isExistsSameID(String identity) {

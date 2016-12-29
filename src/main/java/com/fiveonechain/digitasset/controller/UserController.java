@@ -17,6 +17,7 @@ import com.fiveonechain.digitasset.service.UserService;
 import com.fiveonechain.digitasset.util.HttpClientUtil;
 import com.fiveonechain.digitasset.util.RandomCharUtil;
 import com.fiveonechain.digitasset.util.ResultUtil;
+import com.qiniu.util.StringUtils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -183,7 +184,8 @@ public class UserController {
                              @AuthenticationPrincipal UserContext userContext
     ) {
         String value = redisService.get(telephone);
-        if ((!value.equals(verification)) || value == null) {
+        System.out.println(value);
+        if ((!value.equals(verification)) || StringUtils.isNullOrEmpty(value)) {
             Result result = ResultUtil.buildErrorResult(ErrorInfo.TELEPHONE_VERIFY_FAIL);
             return result;
         }
