@@ -3,6 +3,9 @@ package com.fiveonechain.digitasset.util;
 /**
  * Created by fanjl on 2016/11/30.
  */
+
+import java.util.BitSet;
+import java.util.LinkedList;
 import java.util.Random;
 
 public class RandomCharUtil {
@@ -77,6 +80,20 @@ public class RandomCharUtil {
         return sb.toString();
     }
 
+    public static void main(String[] args) {
+        LinkedList<Integer> array = new LinkedList<>();
+        String phone = getRandomNumberChar(8);
+        array.add(Integer.parseInt(phone));
+        array.add(99999999);
+        BitSet bitSet  = new BitSet();
+        //将数组内容组bitmap
+        for(int i=0;i<array.size();i++)
+        {
+            bitSet.set(array.get(i), true);
+        }
+        System.out.println(bitSet.size());
+        System.out.println(bitSet.get(Integer.parseInt(phone)));
+    }
 
 
 }
