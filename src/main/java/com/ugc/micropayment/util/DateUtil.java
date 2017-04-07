@@ -1,6 +1,7 @@
-package com.fiveonechain.digitasset.util;
+package com.ugc.micropayment.util;
 
-import com.qiniu.util.StringUtils;
+
+import com.mysql.jdbc.StringUtils;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

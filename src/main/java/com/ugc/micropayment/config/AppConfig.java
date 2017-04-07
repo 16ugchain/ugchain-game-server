@@ -15,6 +15,16 @@ public class AppConfig {
 
     private BigDecimal fee;
 
+    private String gethLocation;
+
+    public String getGethLocation() {
+        return this.gethLocation;
+    }
+
+    public void setGethLocation(String gethLocation) {
+        this.gethLocation = gethLocation;
+    }
+
     public BigDecimal getFee() {
         return this.fee;
     }

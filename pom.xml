@@ -53,6 +53,12 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.web3j</groupId>
+            <artifactId>core</artifactId>
+            <version>2.1.0</version>
+        </dependency>
 	</dependencies>
 
     <build>
