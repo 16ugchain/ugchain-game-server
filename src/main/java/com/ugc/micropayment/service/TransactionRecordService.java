@@ -1,4 +1,4 @@
-package com.fiveonechain.digitasset.service;
+package com.ugc.micropayment.service;
 
 import java.math.BigDecimal;
 
@@ -6,6 +6,8 @@ import java.math.BigDecimal;
  * Created by fanjl on 2017/4/5.
  */
 public interface TransactionRecordService {
+    int nextTransactionId();
+
     void recharge(String address, BigDecimal amount); //block_record 表插入充值记录;
 
     void transfer(String fromAddress,String toAddress,BigDecimal amount,int nonce,String signedMsg, String msg);//交易记录，需要从account获取nonce,并且验证签名消息

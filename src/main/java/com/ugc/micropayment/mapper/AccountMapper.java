@@ -1,4 +1,4 @@
-package com.fiveonechain.digitasset.mapper;
+package com.ugc.micropayment.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
 

@@ -1,4 +1,4 @@
-package com.fiveonechain.digitasset.mapper;
+package com.ugc.micropayment.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -10,17 +10,11 @@ import org.apache.ibatis.annotations.Select;
 @Mapper
 public interface SequenceMapper {
 
-    String ASSET = "ASSET";
+    String INNER_RECORD = "INNER_RECORD";
 
-    String USER = "USER";
+    String BLOCK_RECORD = "BLOCK_RECORD";
 
-    String ASSET_ORDER = "ASSET_ORDER";
-
-    String IMAGE_URL = "IMAGE_URL";
-
-    String GUARANTEECORP_ID = "GUARANTEE_CORP";
-
-    String CONTRACT = "CONTRACT";
+    String ACCOUNT = "ACCOUNT";
 
 
 

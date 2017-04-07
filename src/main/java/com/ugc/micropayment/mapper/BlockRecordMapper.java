@@ -1,9 +1,33 @@
-package com.fiveonechain.digitasset.mapper;
+package com.ugc.micropayment.mapper;
+
+import com.ugc.micropayment.domain.BlockRecord;
+import org.apache.ibatis.annotations.*;
 
 /**
  * Created by fanjl on 2017/4/6.
  */
+@Mapper
 public interface BlockRecordMapper {
+    final String columns = "block_record_id,transaction_id,target_address,amount,fee,nonce,type,status";
+    final String entity = "#{blockRecord.blockRecordId},#{blockRecord.transactionId},#{blockRecord.targetAddress}" +
+            ",#{blockRecord.amount},#{blockRecord.fee},#{blockRecord.nonce},#{blockRecord.type},#{blockRecord.status}";
+
+
+    @Results(id="blockRecord",value={
+            @Result(property = "blockRecordId", column = "block_record_id"),
+            @Result(property = "fromAddress", column = "from_address"),
+            @Result(property = "toAddress", column = "to_address"),
+            @Result(property = "amount", column = "amount"),
+            @Result(property = "createTime", column = "create_time"),
+            @Result(property = "updateTime", column = "update_time"),
+            @Result(property = "nonce", column = "nonce"),
+            @Result(property = "status", column = "status")
+    })
+    @Select("SELECT * FROM block_record WHERE block_record_id = #{blockRecordId}")
+    BlockRecord getBlockRecordById(int blockRecordId);
+
+    @Insert("INSERT INTO block_record("+columns+") VALUES("+entity+")")
+    int insertBlockRecord(@Param("blockRecord") BlockRecord blockRecord);
 }
 
 /*
@@ -22,7 +46,7 @@ CREATE TABLE `block_record` (
   `status` tinyint(4) NOT NULL default '0',
   PRIMARY KEY (`id`),
 ) DEFAULT CHARSET=utf8 COLLATE = utf8_bin
-//使用transcational 和 for update 保证并发情况下nonce的一致性。充值以及提现必须先从accout查询nonce和amount
+//使用transactional 和 for update 保证并发情况下nonce的一致性。充值以及提现必须先从accout查询nonce和amount
 //充值或者提现后异步从区块链查询交易信息，能查到后更新transaction_id,status.
 //fee：手续费
 //status: 0处理中，1成功，2失败。
