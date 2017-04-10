@@ -1,15 +1,15 @@
-package com.fiveonechain.digitasset.util;
+package com.ugc.micropayment.util;
 
-import com.fiveonechain.digitasset.domain.result.ErrorInfo;
-import com.fiveonechain.digitasset.domain.result.Meta;
-import com.fiveonechain.digitasset.domain.result.Result;
+//import com.fiveonechain.digitasset.domain.result.ErrorInfo;
+//import com.fiveonechain.digitasset.domain.result.Meta;
+//import com.fiveonechain.digitasset.domain.result.Result;
 
 /**
  * Created by yuanshichao on 2016/11/17.
  */
 public class ResultUtil {
 
-    public static Result success(Object data) {
+   /* public static Result success(Object data) {
         Meta meta = new Meta(200, "success");
         return new Result(meta, data);
     }
@@ -22,5 +22,5 @@ public class ResultUtil {
         Meta meta = new Meta(info.getErrorCode(), info.getErrorMessage());
         return new Result(meta);
     }
-
+*/
 }

@@ -1,4 +1,4 @@
-package com.fiveonechain.digitasset.util;
+package com.ugc.micropayment.util;
 
 
 import org.slf4j.Logger;

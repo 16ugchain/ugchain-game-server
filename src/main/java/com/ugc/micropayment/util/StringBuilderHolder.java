@@ -1,4 +1,4 @@
-package com.fiveonechain.digitasset.util;
+package com.ugc.micropayment.util;
 
 /**
  * Created by yuanshichao on 2016/11/17.

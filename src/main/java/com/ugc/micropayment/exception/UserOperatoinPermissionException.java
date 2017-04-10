@@ -1,4 +1,4 @@
-package com.fiveonechain.digitasset.exception;
+package com.ugc.micropayment.exception;
 
 /**
  * Created by yuanshichao on 2016/12/6.

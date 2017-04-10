@@ -3,22 +3,44 @@ package com.ugc.micropayment.service;
 
 import java.math.BigDecimal;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.ugc.micropayment.mapper.AccountMapper;
+
 /**
  * Created by fanjl on 2017/4/6.
  */
 public class AccountServiceImpl implements AccountService {
+	@Autowired
+	private AccountMapper accountMapper;
+	
+	
+	
     @Override
     public void createAccount(String address) {
 
+    	accountMapper.insertAccount(address);
     }
 
     @Override
     public boolean isExistsAddress(String address) {
-        return false;
+    	int i = accountMapper.findAddress(address);
+    	if (i == 0) {			
+    		return false;
+		}else {
+			return true;
+		}
     }
 
     @Override
     public boolean isAmountEnough(String address, BigDecimal amount) {
-        return false;
+    	
+    	int i = accountMapper.queryAmountEnough(address,amount);
+    	
+    	if (i == 0) {			
+    		return false;
+		}else {
+			return true;
+		}
     }
 }
