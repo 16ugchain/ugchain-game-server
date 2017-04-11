@@ -25,6 +25,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public boolean isExistsAddress(String address) {
     	int i = accountMapper.findAddress(address);
+    	//判断查询返回结果：0则不存在
     	if (i == 0) {			
     		return false;
 		}else {
@@ -36,7 +37,7 @@ public class AccountServiceImpl implements AccountService {
     public boolean isAmountEnough(String address, BigDecimal amount) {
     	
     	int i = accountMapper.queryAmountEnough(address,amount);
-    	
+    	//判断返回结果，0则证明账户金额不足
     	if (i == 0) {			
     		return false;
 		}else {
