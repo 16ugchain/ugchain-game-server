@@ -52,11 +52,26 @@ public class AccountServiceImpl implements AccountService {
 
 	@Override
 	public boolean updateAmount(String address, BigInteger amount,int type) {
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		return false;
 	}
 
 	@Override
 	public Optional<Account> getAccountByAddress(String address) {
-		return Optional.ofNullable();
+		return Optional.ofNullable(null);
 	}
 }
