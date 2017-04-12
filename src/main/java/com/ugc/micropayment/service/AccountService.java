@@ -8,6 +8,7 @@ import java.util.Optional;
 /**
  * Created by fanjl on 2017/4/5.
  */
+
 public interface AccountService {
 
     void createAccount(String address);   //account 表插入一条记录;

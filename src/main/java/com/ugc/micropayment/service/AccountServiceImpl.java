@@ -4,14 +4,15 @@ package com.ugc.micropayment.service;
 import com.ugc.micropayment.domain.Account;
 import com.ugc.micropayment.mapper.AccountMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Optional;
 
 /**
  * Created by fanjl on 2017/4/6.
  */
+@Component
 public class AccountServiceImpl implements AccountService {
 	@Autowired
 	private AccountMapper accountMapper;
@@ -54,6 +55,6 @@ public class AccountServiceImpl implements AccountService {
 
 	@Override
 	public Optional<Account> getAccountByAddress(String address) {
-		return Optional.ofNullable();
+		return Optional.empty();
 	}
 }
