@@ -1,4 +1,4 @@
-package com.fiveonechain.digitasset;
+package com.ugc.micropayment;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

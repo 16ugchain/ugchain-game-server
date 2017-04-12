@@ -1,4 +1,4 @@
-package com.fiveonechain.digitasset.mapper.util;
+package com.ugc.micropayment.mapper.util;
 
 import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.scripting.LanguageDriver;
