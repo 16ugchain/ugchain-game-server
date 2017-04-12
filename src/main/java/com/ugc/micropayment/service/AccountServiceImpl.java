@@ -4,13 +4,16 @@ package com.ugc.micropayment.service;
 import java.math.BigDecimal;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.ugc.micropayment.mapper.AccountMapper;
 
 /**
  * Created by fanjl on 2017/4/6.
  */
+@Service
 public class AccountServiceImpl implements AccountService {
+
 	@Autowired
 	private AccountMapper accountMapper;
 	
