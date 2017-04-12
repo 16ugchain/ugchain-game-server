@@ -17,6 +17,36 @@ public class AppConfig {
 
     private String gethLocation;
 
+    private String ugAddress;
+
+    private String walletPassword;
+
+    private String walletPath;
+
+    public String getWalletPassword() {
+        return this.walletPassword;
+    }
+
+    public void setWalletPassword(String walletPassword) {
+        this.walletPassword = walletPassword;
+    }
+
+    public String getWalletPath() {
+        return this.walletPath;
+    }
+
+    public void setWalletPath(String walletPath) {
+        this.walletPath = walletPath;
+    }
+
+    public String getUgAddress() {
+        return this.ugAddress;
+    }
+
+    public void setUgAddress(String ugAddress) {
+        this.ugAddress = ugAddress;
+    }
+
     public String getGethLocation() {
         return this.gethLocation;
     }

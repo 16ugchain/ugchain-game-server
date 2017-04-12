@@ -4,23 +4,34 @@ import com.ugc.micropayment.config.AppConfig;
 import com.ugc.micropayment.domain.BlockRecord;
 import com.ugc.micropayment.domain.OrderStatusEnum;
 import com.ugc.micropayment.domain.OrderTypeEnum;
+import com.ugc.micropayment.domain.contract.UGToken;
 import com.ugc.micropayment.mapper.BlockRecordMapper;
 import com.ugc.micropayment.mapper.InnerRecordMapper;
 import com.ugc.micropayment.mapper.SequenceMapper;
 import com.ugc.micropayment.util.Keccak;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.web3j.crypto.CipherException;
+import org.web3j.crypto.Credentials;
+import org.web3j.crypto.WalletUtils;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.ipc.UnixIpcService;
+import rx.Observable;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 
 import static com.ugc.micropayment.util.Parameters.KECCAK_256;
+import static org.web3j.tx.Contract.GAS_LIMIT;
+import static org.web3j.tx.ManagedTransaction.GAS_PRICE;
 
 /**
  * Created by fanjl on 2017/4/6.
  */
 public class TransactionRecordServiceImpl implements TransactionRecordService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(TransactionRecordServiceImpl.class);
     @Autowired
     private AccountService accountService;
     @Autowired
@@ -36,9 +47,21 @@ public class TransactionRecordServiceImpl implements TransactionRecordService {
 
     private Keccak keccak = new Keccak();
 
+    private UGToken contract;
+
     @Override
     public void initWeb3J() {
         web3 = Web3j.build(new UnixIpcService(appConfig.getGethLocation()));
+        Credentials credentials = null;
+        try {
+            credentials = WalletUtils.loadCredentials(appConfig.getWalletPassword(), appConfig.getWalletPath());
+        } catch (IOException e) {
+            LOGGER.error(e.getMessage());
+        } catch (CipherException e) {
+            LOGGER.error(e.getMessage());
+        }
+        contract = UGToken.load(
+        appConfig.getUgAddress(), web3, credentials, GAS_PRICE, GAS_LIMIT);
     }
 
     @Override
@@ -55,6 +78,7 @@ public class TransactionRecordServiceImpl implements TransactionRecordService {
     @Transactional
     public void recharge(String address, String transactionId,BigDecimal amount) {
         initWeb3J();
+        Observable<UGToken.TransferEventResponse> observable = contract.transferEventObservable();
         // TODO: 2017/4/7 监听收钱合约，为每个充值账户建立托管账户并充值。
         if(accountService.isExistsAddress(address)){
             BlockRecord blockRecord = new BlockRecord();
