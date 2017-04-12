@@ -1,6 +1,8 @@
 package com.ugc.micropayment.service;
 
 import com.ugc.micropayment.config.AppConfig;
+import com.ugc.micropayment.domain.Account;
+import com.ugc.micropayment.domain.AmountChangeTypeEnum;
 import com.ugc.micropayment.domain.BlockRecord;
 import com.ugc.micropayment.domain.OrderStatusEnum;
 import com.ugc.micropayment.domain.OrderTypeEnum;
@@ -13,15 +15,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.web3j.abi.datatypes.Address;
+import org.web3j.abi.datatypes.generated.Uint256;
 import org.web3j.crypto.CipherException;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.WalletUtils;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.ipc.UnixIpcService;
+import org.web3j.protocol.parity.Parity;
 import rx.Observable;
+import rx.functions.Action1;
 
 import java.io.IOException;
-import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.Optional;
 
 import static com.ugc.micropayment.util.Parameters.KECCAK_256;
 import static org.web3j.tx.Contract.GAS_LIMIT;
@@ -45,6 +52,8 @@ public class TransactionRecordServiceImpl implements TransactionRecordService {
 
     private Web3j web3;
 
+    private Parity parity;
+
     private Keccak keccak = new Keccak();
 
     private UGToken contract;
@@ -52,6 +61,7 @@ public class TransactionRecordServiceImpl implements TransactionRecordService {
     @Override
     public void initWeb3J() {
         web3 = Web3j.build(new UnixIpcService(appConfig.getGethLocation()));
+        parity = Parity.build(new UnixIpcService(appConfig.getGethLocation()));
         Credentials credentials = null;
         try {
             credentials = WalletUtils.loadCredentials(appConfig.getWalletPassword(), appConfig.getWalletPath());
@@ -65,7 +75,8 @@ public class TransactionRecordServiceImpl implements TransactionRecordService {
     }
 
     @Override
-    public int nextTransactionId() {
+    public int
+    nextTransactionId() {
         return sequenceMapper.nextId(sequenceMapper.BLOCK_RECORD);
     }
 
@@ -75,33 +86,64 @@ public class TransactionRecordServiceImpl implements TransactionRecordService {
     }
 
     @Override
-    @Transactional
-    public void recharge(String address, String transactionId,BigDecimal amount) {
+    public void recharge(String address, String transactionId,BigInteger amount) {
         initWeb3J();
         Observable<UGToken.TransferEventResponse> observable = contract.transferEventObservable();
-        // TODO: 2017/4/7 监听收钱合约，为每个充值账户建立托管账户并充值。
-        if(accountService.isExistsAddress(address)){
-            BlockRecord blockRecord = new BlockRecord();
-            blockRecord.setAmount(amount);
-            blockRecord.setBlockRecordId(nextTransactionId());
-            blockRecord.setFee(appConfig.getFee());
-            blockRecord.setTargetAddress(address);
-            blockRecord.setType(OrderTypeEnum.RECHARGE.getId());
-            blockRecord.setStatus(OrderStatusEnum.PENDING.getId());
-            blockRecordMapper.insertBlockRecord(blockRecord);
-        }else{
-            accountService.createAccount(address);
+        observable.subscribe(new Action1<UGToken.TransferEventResponse>() {
+            @Override
+            @Transactional(rollbackFor=Exception.class)
+            public void call(UGToken.TransferEventResponse transferEventResponse) {
+                Address fromAddress = transferEventResponse._from;
+                Address toAddress = transferEventResponse._to;
+                Uint256 value = transferEventResponse._value;
+                if(!accountService.isExistsAddress(fromAddress.toString())){
+                    accountService.createAccount(fromAddress.toString());
+                }
+                BlockRecord blockRecord = new BlockRecord();
+                blockRecord.setAmount(value.getValue());
+                blockRecord.setBlockRecordId(nextTransactionId());
+                blockRecord.setFee(appConfig.getFee());
+                blockRecord.setTargetAddress(toAddress.toString());
+                blockRecord.setType(OrderTypeEnum.RECHARGE.getId());
+                blockRecord.setStatus(OrderStatusEnum.SUCCESS.getId());
+                blockRecordMapper.insertBlockRecord(blockRecord);
+                Optional<Account> account = accountService.getAccountByAddress(fromAddress.toString());
+                if(account.isPresent()){
+                    accountService.updateAmount(fromAddress.toString(),value.getValue(),AmountChangeTypeEnum.ADD.getId());
+                }else {
+                    LOGGER.error("Contract Listener get Account While insert error , fromAddress :"+fromAddress.toString()+",value :"+value.getValue());
+                    throw new RuntimeException("Contract Listener get Account While insert error , fromAddress :"+fromAddress.toString()+",value :"+value.getValue());
+                }
+
+            }
+
+        });
+
+    }
+
+    @Override
+    @Transactional(rollbackFor=Exception.class)
+    public void transfer(String fromAddress, String toAddress, BigInteger amount, int nonce, String signedMsg, String msg) {
+        Optional<Account> fromAccount = accountService.getAccountByAddress(fromAddress);
+        Optional<Account> toAccount = accountService.getAccountByAddress(toAddress);
+        if(!fromAccount.isPresent()){
+            LOGGER.info(String.format("Account is not present,fromAddress:%s",fromAddress));
+            return;
+        }
+        if(!toAccount.isPresent()){
+            LOGGER.info(String.format("Account is not present,toAddress:%s",toAddress));
+            return;
+        }
+        if(accountService.isAmountEnough(fromAddress,amount)){
+            accountService.updateAmount(fromAddress,amount, AmountChangeTypeEnum.SUBTRACTION.getId());
+            accountService.updateAmount(toAddress,amount,AmountChangeTypeEnum.ADD.getId());
+        }else {
+            LOGGER.info(String.format("Account amount is not enough , fromAddress:%s",fromAddress));
         }
     }
 
     @Override
-    @Transactional
-    public void transfer(String fromAddress, String toAddress, BigDecimal amount, int nonce, String signedMsg, String msg) {
-
-    }
-
-    @Override
-    public void withDraw(String address, String signedMsg, BigDecimal amount, int nonce, String msg) {
+    public void withDraw(String address, String signedMsg, BigInteger amount, int nonce, String msg) {
         // TODO: 2017/4/7 转账交易sdk，提现即从公司账户向目标账户提现
     }
 

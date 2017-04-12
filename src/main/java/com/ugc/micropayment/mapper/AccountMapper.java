@@ -1,12 +1,12 @@
 package com.ugc.micropayment.mapper;
 
-import java.math.BigDecimal;
-
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
+
+import java.math.BigInteger;
 
 /**
  * Created by fanjl on 2017/4/5.
@@ -34,7 +34,7 @@ public interface AccountMapper {
 	int findAddress(String address);
 	
 	@Select("SELECT count(1) FROM account WHERE address = #{address} and amount < #{account.amount}")
-	int queryAmountEnough(String address, BigDecimal amount);
+	int queryAmountEnough(String address, BigInteger amount);
 }
 /*
 

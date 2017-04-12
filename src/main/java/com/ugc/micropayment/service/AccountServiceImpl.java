@@ -1,11 +1,13 @@
 package com.ugc.micropayment.service;
 
 
-import java.math.BigDecimal;
-
+import com.ugc.micropayment.domain.Account;
+import com.ugc.micropayment.mapper.AccountMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.ugc.micropayment.mapper.AccountMapper;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.Optional;
 
 /**
  * Created by fanjl on 2017/4/6.
@@ -34,7 +36,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public boolean isAmountEnough(String address, BigDecimal amount) {
+    public boolean isAmountEnough(String address, BigInteger amount) {
     	
     	int i = accountMapper.queryAmountEnough(address,amount);
     	//判断返回结果，0则证明账户金额不足
@@ -44,4 +46,14 @@ public class AccountServiceImpl implements AccountService {
 			return true;
 		}
     }
+
+	@Override
+	public boolean updateAmount(String address, BigInteger amount,int type) {
+		return false;
+	}
+
+	@Override
+	public Optional<Account> getAccountByAddress(String address) {
+		return Optional.ofNullable();
+	}
 }

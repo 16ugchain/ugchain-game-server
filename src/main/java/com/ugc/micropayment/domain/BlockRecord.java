@@ -1,6 +1,7 @@
 package com.ugc.micropayment.domain;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Date;
 
 /**
@@ -10,7 +11,7 @@ public class BlockRecord {
     private int blockRecordId;
     private String transactionId;
     private String targetAddress;
-    private BigDecimal amount;
+    private BigInteger amount;
     private BigDecimal fee;
     private int nonce;
     private int type;
@@ -42,11 +43,11 @@ public class BlockRecord {
         this.targetAddress = targetAddress;
     }
 
-    public BigDecimal getAmount() {
+    public BigInteger getAmount() {
         return this.amount;
     }
 
-    public void setAmount(BigDecimal amount) {
+    public void setAmount(BigInteger amount) {
         this.amount = amount;
     }
 
