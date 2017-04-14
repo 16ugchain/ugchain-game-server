@@ -2,9 +2,15 @@ package com.ugc.micropayment.service;
 
 
 import com.ugc.micropayment.domain.Account;
+import com.ugc.micropayment.domain.AccountStatusEnum;
 import com.ugc.micropayment.mapper.AccountMapper;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -13,8 +19,11 @@ import java.util.Optional;
 /**
  * Created by fanjl on 2017/4/6.
  */
-@Service
+@Component
+@EnableTransactionManagement
 public class AccountServiceImpl implements AccountService {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(TransactionRecordServiceImpl.class);
 
 	@Autowired
 	private AccountMapper accountMapper;
@@ -23,8 +32,12 @@ public class AccountServiceImpl implements AccountService {
 	
     @Override
     public void createAccount(String address) {
-
-    	accountMapper.insertAccount(address);
+    	Account account = new Account();
+    	account.setAddress(address);
+    	account.setNonce(0);
+    	account.setStatus(AccountStatusEnum.NORMAL.getId());
+    	account.setAmount(BigInteger.ZERO);
+    	accountMapper.insertAccount(account);
     }
 
     @Override
@@ -51,27 +64,51 @@ public class AccountServiceImpl implements AccountService {
     }
 
 	@Override
+	@Transactional
 	public boolean updateAmount(String address, BigInteger amount,int type) {
 		
+		int i = 0;
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		return false;
+		synchronized (this) {
+			try {
+				Optional<Account> optional = getAccountByAddress(address);
+				Account account = optional.get();
+				BigInteger OldAmount = account.getAmount();
+				int nonce = account.getNonce();
+				if (type==1) {
+					account.setAmount(OldAmount.add(amount));
+					account.setNonce(++nonce);
+					i = accountMapper.updateAmount(account);
+					if (i == 1) {
+						LOGGER.info(String.format("Account is add amount:%s address:%s ", amount,address));
+						return true;
+					} else {
+						return false;
+					}
+				}
+				else {
+					account.setAmount(OldAmount.subtract(amount));
+					account.setNonce(++nonce);
+					i = accountMapper.updateAmount(account);
+					if (i == 1) {
+						LOGGER.info(String.format("Account is subtraction amount:%s address:%s ", amount,address));
+						return true;
+					} else {
+						return false;
+					}
+				}
+			} catch (Exception e) {
+				LOGGER.error(e.getMessage());
+				return false;
+			}
+		}
 	}
 
 	@Override
 	public Optional<Account> getAccountByAddress(String address) {
-		return Optional.ofNullable(null);
+		
+		Optional<Account> optional = accountMapper.getAccountByAddress(address);
+		
+		return optional;
 	}
 }
