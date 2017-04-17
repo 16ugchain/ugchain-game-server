@@ -19,7 +19,7 @@ public class AccountTest {
 	
 	@Test
 	public void testCreatAccount(){
-		accountService.createAccount("adfc0262bbed8c1f4bd24a4a763ac616803a8c54");
+//		accountService.createAccount("adfc0262bbed8c1f4bd24a4a763ac616803a8c54");
 	}
 	
 	@Test

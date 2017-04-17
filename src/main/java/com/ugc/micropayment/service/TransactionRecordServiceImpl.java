@@ -100,18 +100,19 @@ public class TransactionRecordServiceImpl implements TransactionRecordService {
             public void call(Cashier.CollectEventResponse collectEventResponse) {
                 Address fromAddress = collectEventResponse.addr;
                 Uint256 value = collectEventResponse.amount;
-                System.out.println(fromAddress.toString());
                 if(!accountService.isExistsAddress(fromAddress.toString())){
-                    accountService.createAccount(fromAddress.toString());
+                    accountService.createAccount(fromAddress.toString(),value.getValue());
                 }
                 BlockRecord blockRecord = new BlockRecord();
-                blockRecord.setAmount(value.getValue());
+                blockRecord.setAmount(value.getValue().divide(BigInteger.valueOf(1000000000)) );
                 blockRecord.setBlockRecordId(nextTransactionId());
                 blockRecord.setFee(appConfig.getFee());
                 blockRecord.setTargetAddress(appConfig.getUgAddress());
                 blockRecord.setType(OrderTypeEnum.RECHARGE.getId());
                 blockRecord.setStatus(OrderStatusEnum.SUCCESS.getId());
+                System.out.println(value.getValue());
                 blockRecordMapper.insertBlockRecord(blockRecord);
+
                 Optional<Account> account = accountService.getAccountByAddress(fromAddress.toString());
                 if(account.isPresent()){
                     accountService.updateAmount(fromAddress.toString(),value.getValue(), AmountChangeTypeEnum.ADD.getId());

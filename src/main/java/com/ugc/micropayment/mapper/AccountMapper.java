@@ -1,5 +1,6 @@
 package com.ugc.micropayment.mapper;
 
+import com.ugc.micropayment.domain.Account;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -8,11 +9,7 @@ import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
-import com.ugc.micropayment.domain.Account;
-
-import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Optional;
 
 /**
  * Created by fanjl on 2017/4/5.
@@ -43,7 +40,7 @@ public interface AccountMapper {
 	int queryAmountEnough(@Param("address")String address, @Param("amount")BigInteger amount);
 	
 	@Select("SELECT * FROM account WHERE address = #{address}")
-	Optional<Account> getAccountByAddress(String address);
+	Account getAccountByAddress(String address);
 	
 	@Update("update account set amount=#{amount} where address=#{address}")
 	int updateAmount(@Param("account")Account account);

@@ -2,6 +2,10 @@ package com.ugc.micropayment.service;
 
 import com.ugc.micropayment.config.AppConfig;
 import com.ugc.micropayment.configuration.ConfigurationTest;
+import com.ugc.micropayment.domain.BlockRecord;
+import com.ugc.micropayment.domain.OrderStatusEnum;
+import com.ugc.micropayment.domain.OrderTypeEnum;
+import com.ugc.micropayment.mapper.BlockRecordMapper;
 import com.ugc.micropayment.util.Keccak;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,6 +20,8 @@ import org.web3j.protocol.core.methods.response.Web3Sha3;
 import org.web3j.protocol.parity.Parity;
 import org.web3j.protocol.parity.methods.response.PersonalUnlockAccount;
 
+import java.math.BigInteger;
+
 import static com.ugc.micropayment.util.HexUtil.getHex;
 import static com.ugc.micropayment.util.Parameters.KECCAK_256;
 
@@ -28,17 +34,30 @@ import static com.ugc.micropayment.util.Parameters.KECCAK_256;
 public class TransactionRecordServiceImplTest {
     @Autowired
     private AccountService accountService;
+    @Autowired
+    private TransactionRecordService transactionRecordService;
+    @Autowired
+    private AppConfig appConfig;
+    @Autowired
+    private BlockRecordMapper blockRecordMapper;
 
 
     Web3j web3j;
     Parity parity;
     @Test
     public void createAccount() throws Exception {
-        accountService.createAccount("adfc0262bbed8c1f4bd24a4a763ac616803a8c54");
     }
 
     @Test
     public void recharge() throws Exception {
+        BlockRecord blockRecord = new BlockRecord();
+        blockRecord.setAmount(BigInteger.valueOf(30));
+        blockRecord.setBlockRecordId(transactionRecordService.nextTransactionId());
+        blockRecord.setFee(appConfig.getFee());
+        blockRecord.setTargetAddress(appConfig.getUgAddress());
+        blockRecord.setType(OrderTypeEnum.RECHARGE.getId());
+        blockRecord.setStatus(OrderStatusEnum.SUCCESS.getId());
+        blockRecordMapper.insertBlockRecord(blockRecord);
     }
 
     @Test
