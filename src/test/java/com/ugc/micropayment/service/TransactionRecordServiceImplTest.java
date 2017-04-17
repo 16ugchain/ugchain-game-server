@@ -32,11 +32,6 @@ public class TransactionRecordServiceImplTest {
 
     Web3j web3j;
     Parity parity;
-//    @Before
-//    public void initWeb3J() throws Exception {
-//         web3j = Web3j.build(new UnixIpcService("/Users/fanjl/eth/testnet/data/geth.ipc"));
-//         parity = Parity.build(new UnixIpcService("/Users/fanjl/eth/testnet/data/geth.ipc"));
-//    }
     @Test
     public void createAccount() throws Exception {
         accountService.createAccount("adfc0262bbed8c1f4bd24a4a763ac616803a8c54");

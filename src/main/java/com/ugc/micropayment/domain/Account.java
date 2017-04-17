@@ -1,6 +1,6 @@
 package com.ugc.micropayment.domain;
 
-import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Date;
 
 public class Account {
@@ -8,8 +8,8 @@ public class Account {
 	private int accountId;
 	private String address;
 	private int nonce;
-	private BigDecimal amount;
-	private Date creatTime;
+	private BigInteger amount;
+	private Date createTime;
 	private Date updateTime;
 	private int status;
 	public int getAccountId() {
@@ -30,17 +30,17 @@ public class Account {
 	public void setNonce(int nonce) {
 		this.nonce = nonce;
 	}
-	public BigDecimal getAmount() {
+	public BigInteger getAmount() {
 		return amount;
 	}
-	public void setAmount(BigDecimal amount) {
+	public void setAmount(BigInteger amount) {
 		this.amount = amount;
 	}
-	public Date getCreatTime() {
-		return creatTime;
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
 	}
-	public void setCreatTime(Date creatTime) {
-		this.creatTime = creatTime;
+	public Date getCreateTime() {
+		return createTime;
 	}
 	public Date getUpdateTime() {
 		return updateTime;
