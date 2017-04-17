@@ -1,12 +1,13 @@
 package com.ugc.micropayment.service;
 
+
 import com.ugc.micropayment.config.AppConfig;
 import com.ugc.micropayment.domain.Account;
 import com.ugc.micropayment.domain.AmountChangeTypeEnum;
 import com.ugc.micropayment.domain.BlockRecord;
 import com.ugc.micropayment.domain.OrderStatusEnum;
 import com.ugc.micropayment.domain.OrderTypeEnum;
-import com.ugc.micropayment.domain.contract.UGToken;
+import com.ugc.micropayment.domain.contract.Cashier;
 import com.ugc.micropayment.mapper.BlockRecordMapper;
 import com.ugc.micropayment.mapper.InnerRecordMapper;
 import com.ugc.micropayment.mapper.SequenceMapper;
@@ -14,6 +15,7 @@ import com.ugc.micropayment.util.Keccak;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.web3j.abi.datatypes.Address;
 import org.web3j.abi.datatypes.generated.Uint256;
@@ -37,6 +39,7 @@ import static org.web3j.tx.ManagedTransaction.GAS_PRICE;
 /**
  * Created by fanjl on 2017/4/6.
  */
+@Component
 public class TransactionRecordServiceImpl implements TransactionRecordService {
     private static final Logger LOGGER = LoggerFactory.getLogger(TransactionRecordServiceImpl.class);
     @Autowired
@@ -56,7 +59,8 @@ public class TransactionRecordServiceImpl implements TransactionRecordService {
 
     private Keccak keccak = new Keccak();
 
-    private UGToken contract;
+
+     Cashier contract;
 
     @Override
     public void initWeb3J() {
@@ -70,7 +74,7 @@ public class TransactionRecordServiceImpl implements TransactionRecordService {
         } catch (CipherException e) {
             LOGGER.error(e.getMessage());
         }
-        contract = UGToken.load(
+        contract = Cashier.load(
         appConfig.getUgAddress(), web3, credentials, GAS_PRICE, GAS_LIMIT);
     }
 
@@ -86,16 +90,17 @@ public class TransactionRecordServiceImpl implements TransactionRecordService {
     }
 
     @Override
-    public void recharge(String address, String transactionId,BigInteger amount) {
+    public void recharge() {
         initWeb3J();
-        Observable<UGToken.TransferEventResponse> observable = contract.transferEventObservable();
-        observable.subscribe(new Action1<UGToken.TransferEventResponse>() {
+        Observable<Cashier.CollectEventResponse> observable = contract.collectEventObservable();
+
+        observable.subscribe(new Action1<Cashier.CollectEventResponse>() {
             @Override
             @Transactional(rollbackFor=Exception.class)
-            public void call(UGToken.TransferEventResponse transferEventResponse) {
-                Address fromAddress = transferEventResponse._from;
-                Address toAddress = transferEventResponse._to;
-                Uint256 value = transferEventResponse._value;
+            public void call(Cashier.CollectEventResponse collectEventResponse) {
+                Address fromAddress = collectEventResponse.addr;
+                Uint256 value = collectEventResponse.amount;
+                System.out.println(fromAddress.toString());
                 if(!accountService.isExistsAddress(fromAddress.toString())){
                     accountService.createAccount(fromAddress.toString());
                 }
@@ -103,13 +108,13 @@ public class TransactionRecordServiceImpl implements TransactionRecordService {
                 blockRecord.setAmount(value.getValue());
                 blockRecord.setBlockRecordId(nextTransactionId());
                 blockRecord.setFee(appConfig.getFee());
-                blockRecord.setTargetAddress(toAddress.toString());
+                blockRecord.setTargetAddress(appConfig.getUgAddress());
                 blockRecord.setType(OrderTypeEnum.RECHARGE.getId());
                 blockRecord.setStatus(OrderStatusEnum.SUCCESS.getId());
                 blockRecordMapper.insertBlockRecord(blockRecord);
                 Optional<Account> account = accountService.getAccountByAddress(fromAddress.toString());
                 if(account.isPresent()){
-                    accountService.updateAmount(fromAddress.toString(),value.getValue(),AmountChangeTypeEnum.ADD.getId());
+                    accountService.updateAmount(fromAddress.toString(),value.getValue(), AmountChangeTypeEnum.ADD.getId());
                 }else {
                     LOGGER.error("Contract Listener get Account While insert error , fromAddress :"+fromAddress.toString()+",value :"+value.getValue());
                     throw new RuntimeException("Contract Listener get Account While insert error , fromAddress :"+fromAddress.toString()+",value :"+value.getValue());

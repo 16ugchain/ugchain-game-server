@@ -1,18 +1,18 @@
 package com.ugc.micropayment.service;
 
+import com.ugc.micropayment.config.AppConfig;
 import com.ugc.micropayment.configuration.ConfigurationTest;
 import com.ugc.micropayment.util.Keccak;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.Request;
 import org.web3j.protocol.core.methods.response.EthSign;
 import org.web3j.protocol.core.methods.response.Web3Sha3;
-import org.web3j.protocol.ipc.UnixIpcService;
 import org.web3j.protocol.parity.Parity;
 import org.web3j.protocol.parity.methods.response.PersonalUnlockAccount;
 
@@ -24,19 +24,19 @@ import static com.ugc.micropayment.util.Parameters.KECCAK_256;
  */
 @SpringBootTest(classes = {ConfigurationTest.class})
 @RunWith(SpringRunner.class)
+@EnableConfigurationProperties(AppConfig.class)
 public class TransactionRecordServiceImplTest {
-    private TransactionRecordServiceImpl transactionRecordService;
     @Autowired
     private AccountService accountService;
 
 
     Web3j web3j;
     Parity parity;
-    @Before
-    public void initWeb3J() throws Exception {
-         web3j = Web3j.build(new UnixIpcService("/Users/fanjl/eth/testnet/data/geth.ipc"));
-         parity = Parity.build(new UnixIpcService("/Users/fanjl/eth/testnet/data/geth.ipc"));
-    }
+//    @Before
+//    public void initWeb3J() throws Exception {
+//         web3j = Web3j.build(new UnixIpcService("/Users/fanjl/eth/testnet/data/geth.ipc"));
+//         parity = Parity.build(new UnixIpcService("/Users/fanjl/eth/testnet/data/geth.ipc"));
+//    }
     @Test
     public void createAccount() throws Exception {
         accountService.createAccount("adfc0262bbed8c1f4bd24a4a763ac616803a8c54");

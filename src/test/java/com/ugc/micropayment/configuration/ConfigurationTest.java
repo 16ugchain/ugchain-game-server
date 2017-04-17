@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @EnableAutoConfiguration
-@EntityScan(basePackages = {"com.ugc.micropayment.domain"})
+@EntityScan(basePackages = {"com.ugc.micropayment.domain","com.ugc.micropayment.config"})
 @ComponentScan({"com.ugc.micropayment.service"})
 @MapperScan("com.ugc.micropayment.mapper")
 public class ConfigurationTest {
