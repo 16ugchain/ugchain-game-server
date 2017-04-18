@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.*;
 /**
  * Created by fanjl on 2017/4/6.
  */
+@Mapper
 public interface InnerRecordMapper {
     final String columns = "inner_record_id,from_address,to_address,amount,nonce,status";
     final String entity = "#{innerRecord.innerRecordId},#{innerRecord.fromAddress},#{innerRecord.toAddress}" +

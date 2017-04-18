@@ -16,6 +16,7 @@ public class MicroPaymentApplicationTest {
 
     @Test
     public void contextLoads() {
+
     }
 
 }

@@ -37,14 +37,14 @@ CREATE TABLE `block_record` (
   `block_record_id` int(11) NOT NULL ,
   `transaction_id` varchar(50)  ,
   `target_address` varchar(50) NOT NULL,
-  `amount` decimal(10,5) NOT NULL,
+  `amount` bigint(10) NOT NULL,
   `fee` decimal(10,5) NOT NULL,
   `nonce` int(11) NOT NULL,
   `type` tinyint(4) NOT NULL,
   `create_time` timestamp NOT NULL default CURRENT_TIMESTAMP,
   `update_time` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   `status` tinyint(4) NOT NULL default '0',
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`id`)
 ) DEFAULT CHARSET=utf8 COLLATE = utf8_bin
 //使用transactional 和 for update 保证并发情况下nonce的一致性。充值以及提现必须先从accout查询nonce和amount
 //充值或者提现后异步从区块链查询交易信息，能查到后更新transaction_id,status.

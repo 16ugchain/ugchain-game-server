@@ -4,7 +4,6 @@ package com.ugc.micropayment.service;
 import com.ugc.micropayment.domain.Account;
 import com.ugc.micropayment.domain.AccountStatusEnum;
 import com.ugc.micropayment.mapper.AccountMapper;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Optional;
 
@@ -31,12 +29,12 @@ public class AccountServiceImpl implements AccountService {
 	
 	
     @Override
-    public void createAccount(String address) {
+    public void createAccount(String address,BigInteger amount) {
     	Account account = new Account();
     	account.setAddress(address);
     	account.setNonce(0);
     	account.setStatus(AccountStatusEnum.NORMAL.getId());
-    	account.setAmount(BigInteger.ZERO);
+    	account.setAmount(amount);
     	accountMapper.insertAccount(account);
     }
 
@@ -114,8 +112,8 @@ public class AccountServiceImpl implements AccountService {
 	@Override
 	public Optional<Account> getAccountByAddress(String address) {
 		
-		Optional<Account> optional = accountMapper.getAccountByAddress(address);
+		Account account = accountMapper.getAccountByAddress(address);
 		
-		return optional;
+		return Optional.ofNullable(account);
 	}
 }

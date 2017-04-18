@@ -1,14 +1,13 @@
 package com.ugc.micropayment.service;
 
-import java.math.BigInteger;
-
+import com.ugc.micropayment.configuration.ConfigurationTest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.ugc.micropayment.configuration.ConfigurationTest;
+import java.math.BigInteger;
 
 @SpringBootTest(classes = {ConfigurationTest.class})
 @RunWith(SpringRunner.class)
@@ -20,7 +19,7 @@ public class AccountTest {
 	
 	@Test
 	public void testCreatAccount(){
-		accountService.createAccount("adfc0262bbed8c1f4bd24a4a763ac616803a8c54");
+//		accountService.createAccount("adfc0262bbed8c1f4bd24a4a763ac616803a8c54");
 	}
 	
 	@Test

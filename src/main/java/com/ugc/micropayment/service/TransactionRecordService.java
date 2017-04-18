@@ -12,7 +12,7 @@ public interface TransactionRecordService {
 
     String keccakHash(String data);
 
-    void recharge(String address,String transactionId, BigInteger amount); //block_record 表插入充值记录;
+    void recharge(); //block_record 表插入充值记录;
 
     void transfer(String fromAddress,String toAddress,BigInteger amount,int nonce,String signedMsg, String msg);//交易记录，需要从account获取nonce,并且验证签名消息
 

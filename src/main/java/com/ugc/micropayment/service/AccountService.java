@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public interface AccountService {
 
-    void createAccount(String address);   //account 表插入一条记录;
+    void createAccount(String address,BigInteger amount);   //account 表插入一条记录;
 
     boolean isExistsAddress(String address);//account查询账户是否存在;
 
