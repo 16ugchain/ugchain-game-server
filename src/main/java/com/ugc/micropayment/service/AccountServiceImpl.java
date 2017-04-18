@@ -51,6 +51,7 @@ public class AccountServiceImpl implements AccountService {
 		}
     }
 
+    
     @Override
     public boolean isAmountEnough(String address, BigInteger amount) {
     	
@@ -87,15 +88,21 @@ public class AccountServiceImpl implements AccountService {
 					}
 				}
 				else {
-					account.setAmount(OldAmount.subtract(amount));
-					account.setNonce(++nonce);
-					i = accountMapper.updateAmount(account);
-					if (i == 1) {
-						LOGGER.info(String.format("Account is subtraction amount:%s address:%s ", amount,address));
-						return true;
-					} else {
+					boolean enough = isAmountEnough(address, OldAmount);
+					if (enough) {
+						account.setAmount(OldAmount.subtract(amount));
+						account.setNonce(++nonce);
+						i = accountMapper.updateAmount(account);
+						if (i == 1) {
+							LOGGER.info(String.format("Account is subtraction amount:%s address:%s ", amount,address));
+							return true;
+						} else {
+							return false;
+						}
+					}else {
 						return false;
 					}
+					
 				}
 			} catch (Exception e) {
 				LOGGER.error(e.getMessage());

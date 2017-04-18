@@ -45,7 +45,7 @@ public interface AccountMapper {
 	@Select("SELECT * FROM account WHERE address = #{address}")
 	Optional<Account> getAccountByAddress(String address);
 	
-	@Update("update account set amount=#{amount} where address=#{address}")
+	@Update("update account set amount=#{amount},nonce=#{nonce} where address=#{address}")
 	int updateAmount(@Param("account")Account account);
 }
 /*
