@@ -36,14 +36,14 @@ public interface AccountMapper {
 	@Select("SELECT count(1) FROM account WHERE address = #{address}")
 	int findAddress(String address);
 	
-	@Select("SELECT count(1) FROM account WHERE address = #{address} and amount <= #{amount}")
+	@Select("SELECT count(1) FROM account WHERE address = #{address} and amount >= #{amount}")
 	int queryAmountEnough(@Param("address")String address, @Param("amount")BigInteger amount);
 	
 	@Select("SELECT * FROM account WHERE address = #{address}")
 	Account getAccountByAddress(String address);
 	
 	@Update("update account set amount=#{amount},nonce=#{nonce} where address=#{address}")
-	int updateAmount(@Param("account")Account account);
+	int updateAmount(Account account);
 }
 /*
 

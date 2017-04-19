@@ -4,6 +4,8 @@ package com.ugc.micropayment.service;
 import com.ugc.micropayment.domain.Account;
 import com.ugc.micropayment.domain.AccountStatusEnum;
 import com.ugc.micropayment.mapper.AccountMapper;
+import com.ugc.micropayment.mapper.SequenceMapper;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,11 +28,19 @@ public class AccountServiceImpl implements AccountService {
 	@Autowired
 	private AccountMapper accountMapper;
 	
+	@Autowired
+	private SequenceMapper sequenceMapper;
+	
+
+    public int nextTransactionId() {
+        return sequenceMapper.nextId(sequenceMapper.BLOCK_RECORD);
+    }
 	
 	
     @Override
     public void createAccount(String address,BigInteger amount) {
     	Account account = new Account();
+    	account.setAccountId(nextTransactionId());
     	account.setAddress(address);
     	account.setNonce(0);
     	account.setStatus(AccountStatusEnum.NORMAL.getId());
