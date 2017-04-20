@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Optional;
 
+import static com.ugc.micropayment.util.HexUtil.getHex;
 import static com.ugc.micropayment.util.Parameters.KECCAK_256;
 import static org.web3j.tx.Contract.GAS_LIMIT;
 import static org.web3j.tx.ManagedTransaction.GAS_PRICE;
@@ -86,7 +87,7 @@ public class TransactionRecordServiceImpl implements TransactionRecordService {
 
     @Override
     public String keccakHash(String data) {
-        return   keccak.getHash(data.toString(),KECCAK_256);
+        return   keccak.getHash(getHex(data.toString().getBytes()),KECCAK_256);
     }
 
     @Override
@@ -117,8 +118,8 @@ public class TransactionRecordServiceImpl implements TransactionRecordService {
                 if(account.isPresent()){
                     accountService.updateAmount(fromAddress.toString(),value.getValue(), AmountChangeTypeEnum.ADD.getId());
                 }else {
-                    LOGGER.error("Contract Listener get Account While insert error , fromAddress :"+fromAddress.toString()+",value :"+value.getValue());
-                    throw new RuntimeException("Contract Listener get Account While insert error , fromAddress :"+fromAddress.toString()+",value :"+value.getValue());
+                    LOGGER.error("Contract Listener  error while insert account , fromAddress :"+fromAddress.toString()+",value :"+value.getValue());
+                    throw new RuntimeException("Contract Listener  error while insert account , fromAddress :"+fromAddress.toString()+",value :"+value.getValue());
                 }
 
             }
@@ -131,6 +132,7 @@ public class TransactionRecordServiceImpl implements TransactionRecordService {
     @Transactional(rollbackFor=Exception.class)
     public void transfer(String fromAddress, String toAddress, BigInteger amount, int nonce, String signedMsg, String msg) {
         Optional<Account> fromAccount = accountService.getAccountByAddress(fromAddress);
+        verifySigned(fromAddress,signedMsg,msg,nonce);
         Optional<Account> toAccount = accountService.getAccountByAddress(toAddress);
         if(!fromAccount.isPresent()){
             LOGGER.info(String.format("Account is not present,fromAddress:%s",fromAddress));
@@ -158,6 +160,7 @@ public class TransactionRecordServiceImpl implements TransactionRecordService {
         StringBuilder data = new StringBuilder();
         data.append(address).append(nonce).append(msg);
         String hashData = keccakHash(data.toString());
+
         // TODO: 2017/4/7  验证以太坊签名
         return false;
     }
