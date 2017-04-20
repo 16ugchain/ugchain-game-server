@@ -4,6 +4,8 @@ package com.ugc.micropayment.service;
 import com.ugc.micropayment.domain.Account;
 import com.ugc.micropayment.domain.AccountStatusEnum;
 import com.ugc.micropayment.mapper.AccountMapper;
+import com.ugc.micropayment.mapper.SequenceMapper;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,11 +28,19 @@ public class AccountServiceImpl implements AccountService {
 	@Autowired
 	private AccountMapper accountMapper;
 	
+	@Autowired
+	private SequenceMapper sequenceMapper;
+	
+
+    public int nextTransactionId() {
+        return sequenceMapper.nextId(sequenceMapper.BLOCK_RECORD);
+    }
 	
 	
     @Override
     public void createAccount(String address,BigInteger amount) {
     	Account account = new Account();
+    	account.setAccountId(nextTransactionId());
     	account.setAddress(address);
     	account.setNonce(0);
     	account.setStatus(AccountStatusEnum.NORMAL.getId());
@@ -49,6 +59,7 @@ public class AccountServiceImpl implements AccountService {
 		}
     }
 
+    
     @Override
     public boolean isAmountEnough(String address, BigInteger amount) {
     	
@@ -85,15 +96,21 @@ public class AccountServiceImpl implements AccountService {
 					}
 				}
 				else {
-					account.setAmount(OldAmount.subtract(amount));
-					account.setNonce(++nonce);
-					i = accountMapper.updateAmount(account);
-					if (i == 1) {
-						LOGGER.info(String.format("Account is subtraction amount:%s address:%s ", amount,address));
-						return true;
-					} else {
+					boolean enough = isAmountEnough(address, OldAmount);
+					if (enough) {
+						account.setAmount(OldAmount.subtract(amount));
+						account.setNonce(++nonce);
+						i = accountMapper.updateAmount(account);
+						if (i == 1) {
+							LOGGER.info(String.format("Account is subtraction amount:%s address:%s ", amount,address));
+							return true;
+						} else {
+							return false;
+						}
+					}else {
 						return false;
 					}
+					
 				}
 			} catch (Exception e) {
 				LOGGER.error(e.getMessage());
