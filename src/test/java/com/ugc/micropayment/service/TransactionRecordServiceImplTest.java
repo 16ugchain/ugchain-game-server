@@ -1,12 +1,14 @@
 package com.ugc.micropayment.service;
 
-import com.ugc.micropayment.config.AppConfig;
+import com.ugc.gameserver.config.AppConfig;
+import com.ugc.gameserver.service.AccountService;
+import com.ugc.gameserver.service.TransactionRecordService;
 import com.ugc.micropayment.configuration.ConfigurationTest;
-import com.ugc.micropayment.domain.BlockRecord;
-import com.ugc.micropayment.domain.OrderStatusEnum;
-import com.ugc.micropayment.domain.OrderTypeEnum;
-import com.ugc.micropayment.mapper.BlockRecordMapper;
-import com.ugc.micropayment.util.Keccak;
+import com.ugc.gameserver.domain.BlockRecord;
+import com.ugc.gameserver.domain.OrderStatusEnum;
+import com.ugc.gameserver.domain.OrderTypeEnum;
+import com.ugc.gameserver.mapper.BlockRecordMapper;
+import com.ugc.gameserver.util.Keccak;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,8 +26,8 @@ import org.web3j.protocol.parity.methods.response.PersonalUnlockAccount;
 
 import java.math.BigInteger;
 
-import static com.ugc.micropayment.util.HexUtil.getHex;
-import static com.ugc.micropayment.util.Parameters.KECCAK_256;
+import static com.ugc.gameserver.util.HexUtil.getHex;
+import static com.ugc.gameserver.util.Parameters.KECCAK_256;
 
 /**
  * Created by fanjl on 2017/4/7.

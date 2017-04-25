@@ -1,6 +1,8 @@
 package com.ugc.micropayment.service;
 
-import com.ugc.micropayment.config.AppConfig;
+import com.ugc.gameserver.config.AppConfig;
+import com.ugc.gameserver.service.AccountService;
+import com.ugc.gameserver.service.TransactionRecordService;
 import com.ugc.micropayment.configuration.ConfigurationTest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
