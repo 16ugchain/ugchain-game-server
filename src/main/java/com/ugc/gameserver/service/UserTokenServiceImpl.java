@@ -32,18 +32,40 @@ public class UserTokenServiceImpl implements UserTokenService {
     }
 
     @Override
-    public UserToken insertAndGet(String token, String data, int status) {
+    public UserToken insertAndGet(String userName,String token, String data, int status) {
         Optional<UserToken> utOp = getUserTokenByToken(token);
         if(utOp.isPresent()){
             return utOp.get();
         }
         UserToken usertoken = new UserToken();
+        usertoken.setUserName(userName);
+        usertoken.setDerma(0);
         usertoken.setUserTokenId(nextUserTokenId());
         usertoken.setToken(token);
         usertoken.setData(data);
         usertoken.setStatus(UserTokenStatusEnum.USEING.getId());
         userTokenMapper.insertUserToken(usertoken);
         return usertoken;
+    }
+
+    @Override
+    public boolean updateDerma(String token, int derma) {
+        Optional<UserToken> utOp = getUserTokenByToken(token);
+        if(!utOp.isPresent()){
+            return false;
+        }
+        userTokenMapper.updateDerma(derma,token);
+        return true;
+    }
+
+    @Override
+    public boolean updateData(String token, int data) {
+        Optional<UserToken> utOp = getUserTokenByToken(token);
+        if(!utOp.isPresent()){
+            return false;
+        }
+        userTokenMapper.updateData(data,token);
+        return true;
     }
 
 

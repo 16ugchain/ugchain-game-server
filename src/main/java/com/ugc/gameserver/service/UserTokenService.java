@@ -13,7 +13,11 @@ public interface UserTokenService {
 
     UserToken getUserTokenById(int userTokenId);
 
-    UserToken insertAndGet(String token,String data,int status);
+    UserToken insertAndGet(String userName,String token,String data,int status);
+
+    boolean updateDerma(String token,int derma);
+
+    boolean updateData(String token,int data);
 
     boolean isExistsUserToken(String token);
 

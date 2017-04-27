@@ -1,6 +1,5 @@
 package com.ugc.gameserver.mapper;
 
-import com.ugc.gameserver.domain.Account;
 import com.ugc.gameserver.domain.UserToken;
 import com.ugc.gameserver.mapper.util.SimpleSelectInExtendedLanguageDriver;
 import org.apache.ibatis.annotations.Insert;
@@ -20,9 +19,9 @@ import java.util.List;
  */
 @Mapper
 public interface UserTokenMapper {
-	final String columns = "user_token_id,token,data,create_time,update_time,status";
-    final String entity = "#{userToken.userTokenId},#{userToken.token},#{userToken.data}" +
-            ",#{userToken.createTime},#{userToken.updateTime},#{userToken.status}";
+	final String columns = "user_token_id,user_name,token,data,derma,create_time,update_time,status";
+    final String entity = "#{userToken.userTokenId},#{userToken.user_name},#{userToken.token},#{userToken.data}" +
+            ",#{userToken.derma},#{userToken.createTime},#{userToken.updateTime},#{userToken.status}";
 
 	
 
@@ -32,6 +31,8 @@ public interface UserTokenMapper {
 	@Results(id="userToken",value={
 			@Result(property = "userTokenId", column = "user_token_id"),
 			@Result(property = "token", column = "token"),
+			@Result(property = "userName", column = "user_name"),
+			@Result(property = "derma", column = "derma"),
 			@Result(property = "data", column = "data"),
 			@Result(property = "createTime", column = "create_time"),
 			@Result(property = "updateTime", column = "update_time"),
@@ -52,16 +53,22 @@ public interface UserTokenMapper {
 	@Select("SELECT exists(SELECT data FROM user_token WHERE token = #{token})")
 	boolean isExistsUserToken(String token);
 	
-	@Update("update account set amount=#{amount},nonce=#{nonce} where address=#{address}")
-	int updateAmount(Account account);
+	@Update("update user_token set derma=#{derma} where token=#{token}")
+	void updateDerma(int derma,String token);
+
+	@Update("update user_token set data=#{data} where token=#{token}")
+	void updateData(int data,String token);
+
 }
 /*
 
 CREATE TABLE `user_token` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_token_id` int(11) NOT NULL,
+  `user_name` varchar(15) NOT NULL,
   `token` varchar(50) NOT NULL,
   `data` varchar(50) NOT NULL,
+  `derma` int(11) NOT NULL default '0',
   `create_time` timestamp NOT NULL default CURRENT_TIMESTAMP,
   `update_time` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   `status` tinyint(4) NOT NULL default '0',

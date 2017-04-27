@@ -7,8 +7,10 @@ import java.util.Date;
  */
 public class UserToken {
     private int userTokenId;
+    private String userName;
     private String token;
     private String data;
+    private int derma;
     private Date createTime;
     private Date updateTime;
     private int status;
@@ -59,5 +61,21 @@ public class UserToken {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public int getDerma() {
+        return this.derma;
+    }
+
+    public void setDerma(int derma) {
+        this.derma = derma;
+    }
+
+    public String getUserName() {
+        return this.userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }
