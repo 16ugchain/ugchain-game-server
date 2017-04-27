@@ -54,10 +54,10 @@ public interface UserTokenMapper {
 	boolean isExistsUserToken(String token);
 	
 	@Update("update user_token set derma=#{derma} where token=#{token}")
-	void updateDerma(int derma,String token);
+	void updateDerma(@Param("derma") int derma,@Param("token")String token);
 
 	@Update("update user_token set data=#{data} where token=#{token}")
-	void updateData(int data,String token);
+	void updateData(@Param("data")int data,@Param("token")String token);
 
 }
 /*

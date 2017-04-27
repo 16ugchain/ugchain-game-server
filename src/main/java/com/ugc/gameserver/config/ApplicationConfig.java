@@ -7,7 +7,6 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
-import org.springframework.web.servlet.view.xml.MappingJackson2XmlView;
 
 /**
  * Created by fanjl on 2017/4/27.
@@ -17,14 +16,14 @@ import org.springframework.web.servlet.view.xml.MappingJackson2XmlView;
 public class ApplicationConfig extends WebMvcConfigurerAdapter{
     @Override
     public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
-        configurer.ignoreUnknownPathExtensions(false).defaultContentType(MediaType.TEXT_HTML);
+        configurer.ignoreUnknownPathExtensions(true).defaultContentType(MediaType.APPLICATION_JSON_UTF8);
     }
     @Override
     public void configureViewResolvers(ViewResolverRegistry registry) {
         MappingJackson2JsonView jsonView = new MappingJackson2JsonView();
         jsonView.setPrettyPrint(true);
-        MappingJackson2XmlView xmlView = new MappingJackson2XmlView();
-        xmlView.setPrettyPrint(true);
+//        MappingJackson2XmlView xmlView = new MappingJackson2XmlView();
+//        xmlView.setPrettyPrint(true);
         registry.enableContentNegotiation(jsonView);
 //        registry.jsp("/WEB-INF/view/", ".jsp");
     }
