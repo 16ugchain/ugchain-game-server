@@ -3,13 +3,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.ugc.micropayment</groupId>
-    <artifactId>micro-payment</artifactId>
+    <groupId>com.ugc.gameserver</groupId>
+    <artifactId>ugc-game-server</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>micro-payment</name>
-    <description>Micro Payment Project</description>
+    <name>ugc-game-server</name>
+    <description>ugc-game-server Project</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
