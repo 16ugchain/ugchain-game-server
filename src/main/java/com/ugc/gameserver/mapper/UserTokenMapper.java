@@ -20,7 +20,7 @@ import java.util.List;
 @Mapper
 public interface UserTokenMapper {
 	final String columns = "user_token_id,user_name,token,data,derma,create_time,update_time,status";
-    final String entity = "#{userToken.userTokenId},#{userToken.user_name},#{userToken.token},#{userToken.data}" +
+    final String entity = "#{userToken.userTokenId},#{userToken.userName},#{userToken.token},#{userToken.data}" +
             ",#{userToken.derma},#{userToken.createTime},#{userToken.updateTime},#{userToken.status}";
 
 	
