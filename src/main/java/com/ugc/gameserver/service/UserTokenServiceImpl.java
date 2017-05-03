@@ -7,6 +7,7 @@ import com.ugc.gameserver.mapper.UserTokenMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,9 +38,11 @@ public class UserTokenServiceImpl implements UserTokenService {
         if(utOp.isPresent()){
             return utOp.get();
         }
+        List<String> dermas = new LinkedList<String>();
+        dermas.add("0");
         UserToken usertoken = new UserToken();
         usertoken.setUserName(userName);
-        usertoken.setDerma(0);
+        usertoken.setDerma(dermas);
         usertoken.setUserTokenId(nextUserTokenId());
         usertoken.setToken(token);
         usertoken.setData(data);

@@ -1,6 +1,7 @@
 package com.ugc.gameserver.domain;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by fanjl on 2017/4/25.
@@ -10,7 +11,7 @@ public class UserToken {
     private String userName;
     private String token;
     private String data;
-    private int derma;
+    private List<String> derma;
     private Date createTime;
     private Date updateTime;
     private int status;
@@ -63,11 +64,11 @@ public class UserToken {
         this.status = status;
     }
 
-    public int getDerma() {
+    public List<String> getDerma() {
         return this.derma;
     }
 
-    public void setDerma(int derma) {
+    public void setDerma(List<String> derma) {
         this.derma = derma;
     }
 

@@ -1,6 +1,7 @@
 package com.ugc.gameserver.mapper;
 
 import com.ugc.gameserver.domain.UserToken;
+import com.ugc.gameserver.mapper.util.ListTypeHandler;
 import com.ugc.gameserver.mapper.util.SimpleSelectInExtendedLanguageDriver;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Lang;
@@ -11,7 +12,9 @@ import org.apache.ibatis.annotations.ResultMap;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.type.JdbcType;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,7 +24,7 @@ import java.util.List;
 public interface UserTokenMapper {
 	final String columns = "user_token_id,user_name,token,data,derma,create_time,update_time,status";
     final String entity = "#{userToken.userTokenId},#{userToken.userName},#{userToken.token},#{userToken.data}" +
-            ",#{userToken.derma},#{userToken.createTime},#{userToken.updateTime},#{userToken.status}";
+            ",#{userToken.derma,typeHandler=com.ugc.gameserver.mapper.util.ListTypeHandler},#{userToken.createTime},#{userToken.updateTime},#{userToken.status}";
 
 	
 
@@ -32,7 +35,7 @@ public interface UserTokenMapper {
 			@Result(property = "userTokenId", column = "user_token_id"),
 			@Result(property = "token", column = "token"),
 			@Result(property = "userName", column = "user_name"),
-			@Result(property = "derma", column = "derma"),
+			@Result(property = "derma", column = "derma",typeHandler = ListTypeHandler.class,jdbcType = JdbcType.VARCHAR,javaType = ArrayList.class),
 			@Result(property = "data", column = "data"),
 			@Result(property = "createTime", column = "create_time"),
 			@Result(property = "updateTime", column = "update_time"),
@@ -53,7 +56,7 @@ public interface UserTokenMapper {
 	@Select("SELECT exists(SELECT data FROM user_token WHERE token = #{token})")
 	boolean isExistsUserToken(String token);
 	
-	@Update("update user_token set derma=#{derma} where token=#{token}")
+	@Update("update user_token set derma=#{derma,typeHandler=com.ugc.gameserver.mapper.util.ListTypeHandler} where token=#{token}")
 	void updateDerma(@Param("derma") int derma,@Param("token")String token);
 
 	@Update("update user_token set data=#{data} where token=#{token}")

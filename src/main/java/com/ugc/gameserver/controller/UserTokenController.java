@@ -70,6 +70,9 @@ public class UserTokenController {
 
             return ResultUtil.successCallBack(callback,op.get());
         }
+        if(userName==null){
+            return ResultUtil.buildErrorResultCallBack(ErrorInfo.USERNAME_NULL,callback);
+        }
         UserToken userToken = userTokenService.insertAndGet(userName,token,"0",UserTokenStatusEnum.USEING.getId());
         return ResultUtil.successCallBack(callback,userToken);
     }

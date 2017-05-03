@@ -3,6 +3,7 @@ package com.ugc.gameserver.domain.result;
 public enum ErrorInfo {
 
     TOKEN_NOTEXISTS(4001, "token不存在"),
+    USERNAME_NULL(4002, "username为null"),
     SERVER_ERROR(9001,"服务器错误");
 
     private int errorCode;
