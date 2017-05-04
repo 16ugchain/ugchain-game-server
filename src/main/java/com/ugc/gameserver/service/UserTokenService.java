@@ -15,7 +15,7 @@ public interface UserTokenService {
 
     UserToken insertAndGet(String userName,String token,String data,int status);
 
-    boolean updateDerma(String token,int derma);
+    boolean updateDerma(String token,List<String> derma);
 
     boolean updateData(String token,int data);
 

@@ -2,6 +2,7 @@ package com.ugc.gameserver.controller;
 
 import com.ugc.gameserver.domain.Derma;
 import com.ugc.gameserver.domain.DermaListEnum;
+import com.ugc.gameserver.domain.DermaOrder;
 import com.ugc.gameserver.domain.UserToken;
 import com.ugc.gameserver.domain.UserTokenStatusEnum;
 import com.ugc.gameserver.domain.result.ErrorInfo;
@@ -29,18 +30,18 @@ public class UserTokenController {
     @Autowired
     private DermaOrderService dermaOrderService;
 
-    @RequestMapping(value = "/updateData/insert")
-    public String initData(@RequestParam("token") String token,
-                             @RequestParam("data") String data,
-                             @RequestParam("userName") String userName,
-                             @RequestParam(value = "callback", required = false) String callback) {
-        UserToken userToken = userTokenService.insertAndGet(userName, token, data, UserTokenStatusEnum.USEING.getId());
-        return ResultUtil.successCallBack(callback,userToken);
-    }
+//    @RequestMapping(value = "/updateData/insert")
+//    public String initData(@RequestParam("token") String token,
+//                             @RequestParam("data") String data,
+//                             @RequestParam("userName") String userName,
+//                             @RequestParam(value = "callback", required = false) String callback) {
+//        UserToken userToken = userTokenService.insertAndGet(userName, token, data, UserTokenStatusEnum.USEING.getId());
+//        return ResultUtil.successCallBack(callback,userToken);
+//    }
 
-    @RequestMapping(value = "/updateData/derma")
+    @RequestMapping(value = "/insertOrder/{token}")
     public String getDerma(@RequestParam("derma") int derma,
-                           @RequestParam("token") String token
+                           @PathVariable("token") String token
             , @RequestParam(value = "callback", required = false) String callback) {
         Optional<UserToken> opt = userTokenService.getUserTokenByToken(token);
         if(!opt.isPresent()){
@@ -51,8 +52,8 @@ public class UserTokenController {
         dermaModel.setId(dermaListEnum.getId());
         dermaModel.setPrices(dermaListEnum.getPrices());
         dermaModel.setName(dermaListEnum.getName());
-        int orderId = dermaOrderService.createOrder(token,dermaModel);
-        return ResultUtil.successCallBack(callback,orderId);
+        DermaOrder dermaOrder = dermaOrderService.createOrder(token,dermaModel);
+        return ResultUtil.successCallBack(callback,dermaOrder);
     }
 
     @RequestMapping(value = "/updateData/data")
@@ -96,5 +97,27 @@ public class UserTokenController {
             status.add(derma);
         }
         return ResultUtil.successCallBack(callback,status);
+    }
+
+    @RequestMapping(value = "/getOrder/{orderId}/derma",produces = "application/json; charset=utf-8")
+    public String getOrderById(@RequestParam(value = "callback", required = false) String callback
+                        ,@PathVariable("orderId") int orderId) {
+        DermaOrder dermaOrder = dermaOrderService.getOrderById(orderId);
+        return ResultUtil.successCallBack(callback,dermaOrder);
+    }
+
+    @RequestMapping(value = "/updateOrder/{token}/derma",produces = "application/json; charset=utf-8")
+    public String updateUserDerma(@RequestParam(value = "callback", required = false) String callback
+            ,@PathVariable("token") String token
+            ,@RequestParam("derma")int derma) {
+        Optional<UserToken> userToken = userTokenService.getUserTokenByToken(token);
+        if(!userToken.isPresent()){
+        }
+        List<String> dermas = userToken.get().getDerma();
+        List<String> newDermas = new LinkedList<String>();
+        newDermas.addAll(dermas);
+        newDermas.add(String.valueOf(derma));
+        boolean result = userTokenService.updateDerma(token,newDermas);
+        return ResultUtil.successCallBack(callback,result);
     }
 }

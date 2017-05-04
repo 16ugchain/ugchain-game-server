@@ -23,6 +23,16 @@ public class AppConfig {
 
     private String walletPath;
 
+    private String gethHttpURL;
+
+    public String getGethHttpURL() {
+        return this.gethHttpURL;
+    }
+
+    public void setGethHttpURL(String gethHttpURL) {
+        this.gethHttpURL = gethHttpURL;
+    }
+
     public String getWalletPassword() {
         return this.walletPassword;
     }

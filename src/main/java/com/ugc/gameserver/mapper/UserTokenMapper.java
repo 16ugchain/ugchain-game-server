@@ -57,7 +57,7 @@ public interface UserTokenMapper {
 	boolean isExistsUserToken(String token);
 	
 	@Update("update user_token set derma=#{derma,typeHandler=com.ugc.gameserver.mapper.util.ListTypeHandler} where token=#{token}")
-	void updateDerma(@Param("derma") int derma,@Param("token")String token);
+	void updateDerma(@Param("derma") List<String> derma,@Param("token")String token);
 
 	@Update("update user_token set data=#{data} where token=#{token}")
 	void updateData(@Param("data")int data,@Param("token")String token);

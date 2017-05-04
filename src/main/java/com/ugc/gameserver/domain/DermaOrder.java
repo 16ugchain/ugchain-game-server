@@ -8,6 +8,9 @@ import java.util.Date;
 public class DermaOrder {
     private int orderId;
     private String token;
+    private String seller;
+    private int gameId;
+
     private Date createTime;
     private Date updateTime;
     private int status;
@@ -59,5 +62,21 @@ public class DermaOrder {
 
     public void setDerma(Derma derma) {
         this.derma = derma;
+    }
+
+    public String getSeller() {
+        return this.seller;
+    }
+
+    public void setSeller(String seller) {
+        this.seller = seller;
+    }
+
+    public int getGameId() {
+        return this.gameId;
+    }
+
+    public void setGameId(int gameId) {
+        this.gameId = gameId;
     }
 }

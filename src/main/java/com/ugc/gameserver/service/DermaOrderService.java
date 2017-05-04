@@ -1,15 +1,22 @@
 package com.ugc.gameserver.service;
 
 import com.ugc.gameserver.domain.Derma;
+import com.ugc.gameserver.domain.DermaOrder;
 import com.ugc.gameserver.domain.OrderStatusEnum;
 
 /**
  * Created by fanjl on 2017/4/27.
  */
 public interface DermaOrderService {
-    int createOrder(String token, Derma derma);
+    DermaOrder createOrder(String token, Derma derma);
 
-    void updateOrder(String token, OrderStatusEnum orderStatusEnum);
+    void updateOrder(int orderId, OrderStatusEnum orderStatusEnum);
+
+    void listenContract();
+
+    DermaOrder getOrderById(int orderId);
+
+    void initContract();
 
     int nextId();
 }

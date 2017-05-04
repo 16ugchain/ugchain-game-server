@@ -52,7 +52,7 @@ public class UserTokenServiceImpl implements UserTokenService {
     }
 
     @Override
-    public boolean updateDerma(String token, int derma) {
+    public boolean updateDerma(String token, List<String> derma) {
         Optional<UserToken> utOp = getUserTokenByToken(token);
         if(!utOp.isPresent()){
             return false;

@@ -28,15 +28,4 @@ public class SimpleSelectInExtendedLanguageDriver extends XMLLanguageDriver impl
         return super.createSqlSource(configuration, script, parameterType);
     }
 
-    public static void main(String[] args) {
-        String script = "SELECT * FROM user_token WHERE status in (#{status})";
-        Pattern inPattern = Pattern.compile("\\(#\\{(\\w+)\\}\\)");
-        Matcher matcher = inPattern.matcher(script);
-        if (matcher.find()) {
-            script = matcher.replaceAll("(<foreach collection=\"$1\" item=\"__item\" separator=\",\" >#{__item}</foreach>)");
-        }
-
-        script = "<script>" + script + "</script>";
-        System.out.println(script);
-    }
 }
