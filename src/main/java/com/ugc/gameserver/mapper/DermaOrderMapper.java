@@ -17,8 +17,8 @@ import java.util.List;
  */
 @Mapper
 public interface DermaOrderMapper {
-    final String columns = "order_id,token,seller,game_id,derma_name,derma_prices,status";
-    final String entity = "#{dermaOrder.orderId},#{dermaOrder.token},#{dermaOrder.seller},#{dermaOrder.gameId},#{dermaOrder.derma.name}" +
+    final String columns = "order_id,token,seller,game_id,derma_id,derma_name,derma_prices,status";
+    final String entity = "#{dermaOrder.orderId},#{dermaOrder.token},#{dermaOrder.seller},#{dermaOrder.gameId},#{dermaOrder.derma.id},#{dermaOrder.derma.name}" +
             ",#{dermaOrder.derma.prices},#{dermaOrder.status}";
 
     @Results(id="dermaOrder",value={
