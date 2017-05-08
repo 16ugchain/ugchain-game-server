@@ -12,6 +12,8 @@ public interface Web3jService {
 
     int queryAssetIdByToken(String token);
 
+    String queryTokenByAssetId(int assetId);
+
     boolean isOnSell(int assetId);
 
     void sell(int gameId,String proveHash, BigDecimal prices,int assetId);

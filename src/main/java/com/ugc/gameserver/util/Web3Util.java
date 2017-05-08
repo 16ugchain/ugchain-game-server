@@ -11,6 +11,8 @@ import java.math.BigInteger;
  */
 public class Web3Util {
 
+    private final static char[] hexArray = "0123456789ABCDEF".toCharArray();
+
     public static Uint64 toUint64(int src){
         BigInteger bigInteger = BigInteger.valueOf(new Integer(src).intValue());
         Uint64 uint64 = new Uint64(bigInteger);
@@ -35,6 +37,16 @@ public class Web3Util {
                     + Character.digit(s.charAt(i+1), 16));
         }
         return data;
+    }
+
+    public static String bytes32ToHexString(Bytes32 bytes32) {
+        char[] hexChars = new char[bytes32.getValue().length * 2];
+        for ( int j = 0; j < bytes32.getValue().length; j++ ) {
+            int v = bytes32.getValue()[j] & 0xFF;
+            hexChars[j * 2] = hexArray[v >>> 4];
+            hexChars[j * 2 + 1] = hexArray[v & 0x0F];
+        }
+        return new String(hexChars);
     }
 
 }

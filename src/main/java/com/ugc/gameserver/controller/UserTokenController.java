@@ -162,6 +162,16 @@ public class UserTokenController {
         return ResultUtil.successCallBack(callback,status);
     }
 
+    @RequestMapping(value = "/getData/{assetId}/assetId",produces = "application/json; charset=utf-8")
+    public String getUserTokenByAssetId(@PathVariable("assetId") int assetId,@RequestParam(value = "callback", required = false) String callback) {
+        String token = web3jService.queryTokenByAssetId(assetId);
+        Optional<UserToken> opt = userTokenService.getUserTokenByToken(token);
+        if(opt.isPresent()){
+            return ResultUtil.successCallBack(callback,opt.get());
+        }
+        return ResultUtil.buildErrorResultCallBack(ErrorInfo.TOKEN_NOTEXISTS,callback);
+    }
+
     @RequestMapping(value = "/getOrder/{orderId}/derma",produces = "application/json; charset=utf-8")
     public String getOrderById(@RequestParam(value = "callback", required = false) String callback
                         ,@PathVariable("orderId") int orderId) {

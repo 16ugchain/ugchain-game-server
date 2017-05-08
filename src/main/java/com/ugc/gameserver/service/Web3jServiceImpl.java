@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.web3j.abi.datatypes.Address;
+import org.web3j.abi.datatypes.generated.Bytes32;
 import org.web3j.abi.datatypes.generated.Uint256;
 import org.web3j.abi.datatypes.generated.Uint64;
 import org.web3j.crypto.CipherException;
@@ -129,6 +130,20 @@ public class Web3jServiceImpl implements Web3jService {
             LOGGER.error("ExecutionException occured while query asset id",e);
         }
         return assetId;
+    }
+
+    @Override
+    public String queryTokenByAssetId(int assetId) {
+        Future<Bytes32> tokenFuture = das.getTokenByAssetId(Web3Util.toUint64(assetId));
+        String token = "0x";
+        try {
+            token += Web3Util.bytes32ToHexString(tokenFuture.get());
+        } catch (InterruptedException e) {
+            LOGGER.error("InterruptedException occured while query token ",e);
+        } catch (ExecutionException e) {
+            LOGGER.error("ExecutionException occured while query token ",e);
+        }
+        return token.toLowerCase();
     }
 
     @Override
