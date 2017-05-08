@@ -17,8 +17,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -81,6 +83,7 @@ public class UserTokenController {
             ,@RequestParam("derma")int derma) {
         Optional<UserToken> userToken = userTokenService.getUserTokenByToken(token);
         if(!userToken.isPresent()){
+            return ResultUtil.successCallBack(callback,ErrorInfo.TOKEN_NOTEXISTS);
         }
         List<String> dermas = userToken.get().getDerma();
         List<String> newDermas = new LinkedList<String>();
@@ -89,18 +92,33 @@ public class UserTokenController {
         boolean result = userTokenService.updateDerma(token,newDermas);
         return ResultUtil.successCallBack(callback,result);
     }
+    @RequestMapping(value = "/updateData/{token}/status",produces = "application/json; charset=utf-8")
+    public String updateUserStatus(@RequestParam(value = "callback", required = false) String callback
+            ,@PathVariable("token") String token
+            ,@RequestParam("status")int status) {
+        Optional<UserToken> userToken = userTokenService.getUserTokenByToken(token);
+        if(!userToken.isPresent()){
+            return ResultUtil.successCallBack(callback,ErrorInfo.TOKEN_NOTEXISTS);
+        }
+        boolean result = userTokenService.updateStatus(token,status);
+        return ResultUtil.successCallBack(callback,result);
+    }
 
     @RequestMapping(value = "/getData/{token}",produces = "application/json; charset=utf-8")
     public String getDataByToken(@PathVariable("token") String token, @RequestParam(value = "callback", required = false) String callback
             , @RequestParam(value = "userName", required = false) String userName) {
 
-        int assetId = web3jService.queryAssetIdByToken(token);
-        boolean isOnSell = web3jService.isOnSell(assetId);
-        if(isOnSell){
-            return ResultUtil.buildErrorResultCallBack(ErrorInfo.ON_SELLING,callback);
-        }
+//        int assetId = web3jService.queryAssetIdByToken(token);
+//        boolean isOnSell = web3jService.isOnSell(assetId);
+//        if(isOnSell){
+//            return ResultUtil.buildErrorResultCallBack(ErrorInfo.ON_SELLING,callback);
+//        }
+
         Optional<UserToken> op = userTokenService.getUserTokenByToken(token);
         if (op.isPresent()) {
+            if(op.get().getStatus()==UserTokenStatusEnum.DEALING.getId()){
+                return ResultUtil.buildErrorResultCallBack(ErrorInfo.ON_SELLING,callback);
+            }
             return ResultUtil.successCallBack(callback,op.get());
         }
         if(userName==null){
@@ -108,6 +126,19 @@ public class UserTokenController {
         }
         UserToken userToken = userTokenService.insertAndGet(userName,token,"0",UserTokenStatusEnum.USEING.getId());
         return ResultUtil.successCallBack(callback,userToken);
+    }
+
+    @RequestMapping(value = "/getData/status",produces = "application/json; charset=utf-8")
+    public String getStatusList(@RequestParam("tokens") String tokenList, @RequestParam(value = "callback", required = false) String callback
+            ) {
+        Map<String,Boolean> status = new LinkedHashMap<String,Boolean>();
+        String[] tokens = tokenList.split(",");
+        for (String token : tokens){
+            int assetId = web3jService.queryAssetIdByToken(token);
+            boolean isOnSell = web3jService.isOnSell(assetId);
+            status.put(token,isOnSell);
+        }
+        return ResultUtil.successCallBack(callback,status);
     }
 
     @RequestMapping(value = "/getData/list",produces = "application/json; charset=utf-8")
