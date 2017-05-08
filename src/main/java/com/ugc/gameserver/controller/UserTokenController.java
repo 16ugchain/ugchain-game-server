@@ -8,6 +8,7 @@ import com.ugc.gameserver.domain.UserTokenStatusEnum;
 import com.ugc.gameserver.domain.result.ErrorInfo;
 import com.ugc.gameserver.service.DermaOrderService;
 import com.ugc.gameserver.service.UserTokenService;
+import com.ugc.gameserver.service.Web3jService;
 import com.ugc.gameserver.util.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,6 +31,8 @@ public class UserTokenController {
     private UserTokenService userTokenService;
     @Autowired
     private DermaOrderService dermaOrderService;
+    @Autowired
+    private Web3jService web3jService;
 
 //    @RequestMapping(value = "/updateData/insert")
 //    public String initData(@RequestParam("token") String token,
@@ -90,9 +93,14 @@ public class UserTokenController {
     @RequestMapping(value = "/getData/{token}",produces = "application/json; charset=utf-8")
     public String getDataByToken(@PathVariable("token") String token, @RequestParam(value = "callback", required = false) String callback
             , @RequestParam(value = "userName", required = false) String userName) {
+
+        int assetId = web3jService.queryAssetIdByToken(token);
+        boolean isOnSell = web3jService.isOnSell(assetId);
+        if(isOnSell){
+            return ResultUtil.buildErrorResultCallBack(ErrorInfo.ON_SELLING,callback);
+        }
         Optional<UserToken> op = userTokenService.getUserTokenByToken(token);
         if (op.isPresent()) {
-
             return ResultUtil.successCallBack(callback,op.get());
         }
         if(userName==null){

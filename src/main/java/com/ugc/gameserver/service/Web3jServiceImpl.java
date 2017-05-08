@@ -132,8 +132,20 @@ public class Web3jServiceImpl implements Web3jService {
     }
 
     @Override
-    public void sell(int gameId,String proveHash, BigDecimal prices, int assetId) {
+    public boolean isOnSell(int assetId) {
+        boolean result = false;
+        try {
+             result = das.getSellingStatusByAssetId(Web3Util.toUint64(assetId)).get().getValue();
+        } catch (InterruptedException e) {
+            LOGGER.error("InterruptedException occured while query is on sell,assetId"+assetId);
+        } catch (ExecutionException e) {
+            LOGGER.error("ExecutionException occured while query is on sell,assetId"+assetId);
+        }
+        return result;
+    }
 
+    @Override
+    public void sell(int gameId,String proveHash, BigDecimal prices, int assetId) {
         trade.sell(Web3Util.toUint64(gameId),Web3Util.toUint64(assetId),
                 Web3Util.toUint256(prices.intValue()), Web3Util.toBytes32(proveHash));
     }
