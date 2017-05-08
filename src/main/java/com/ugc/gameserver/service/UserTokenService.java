@@ -2,6 +2,7 @@ package com.ugc.gameserver.service;
 
 import com.ugc.gameserver.domain.UserToken;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +19,10 @@ public interface UserTokenService {
     boolean updateDerma(String token,List<String> derma);
 
     boolean updateData(String token,int data);
+
+    boolean updateStatus(String token,int status);
+
+    boolean onSelling(int gameId,String token, int status, BigDecimal prices);
 
     boolean isExistsUserToken(String token);
 

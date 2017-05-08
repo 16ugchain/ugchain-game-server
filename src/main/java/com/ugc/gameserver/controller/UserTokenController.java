@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -63,6 +64,29 @@ public class UserTokenController {
         return ResultUtil.successCallBack(callback,userTokenService.updateData(token, data));
     }
 
+    @RequestMapping(value = "/updateData/{token}/onSelling")
+    public String updateStatus(@PathVariable("token") String token,
+                               @RequestParam("prices") BigDecimal prices,
+                             @RequestParam(value = "callback", required = false) String callback) {
+
+        return ResultUtil.successCallBack(callback,userTokenService.onSelling(1,token,UserTokenStatusEnum.DEALING.getId(),prices));
+    }
+
+    @RequestMapping(value = "/updateOrder/{token}/derma",produces = "application/json; charset=utf-8")
+    public String updateUserDerma(@RequestParam(value = "callback", required = false) String callback
+            ,@PathVariable("token") String token
+            ,@RequestParam("derma")int derma) {
+        Optional<UserToken> userToken = userTokenService.getUserTokenByToken(token);
+        if(!userToken.isPresent()){
+        }
+        List<String> dermas = userToken.get().getDerma();
+        List<String> newDermas = new LinkedList<String>();
+        newDermas.addAll(dermas);
+        newDermas.add(String.valueOf(derma));
+        boolean result = userTokenService.updateDerma(token,newDermas);
+        return ResultUtil.successCallBack(callback,result);
+    }
+
     @RequestMapping(value = "/getData/{token}",produces = "application/json; charset=utf-8")
     public String getDataByToken(@PathVariable("token") String token, @RequestParam(value = "callback", required = false) String callback
             , @RequestParam(value = "userName", required = false) String userName) {
@@ -106,18 +130,5 @@ public class UserTokenController {
         return ResultUtil.successCallBack(callback,dermaOrder);
     }
 
-    @RequestMapping(value = "/updateOrder/{token}/derma",produces = "application/json; charset=utf-8")
-    public String updateUserDerma(@RequestParam(value = "callback", required = false) String callback
-            ,@PathVariable("token") String token
-            ,@RequestParam("derma")int derma) {
-        Optional<UserToken> userToken = userTokenService.getUserTokenByToken(token);
-        if(!userToken.isPresent()){
-        }
-        List<String> dermas = userToken.get().getDerma();
-        List<String> newDermas = new LinkedList<String>();
-        newDermas.addAll(dermas);
-        newDermas.add(String.valueOf(derma));
-        boolean result = userTokenService.updateDerma(token,newDermas);
-        return ResultUtil.successCallBack(callback,result);
-    }
+
 }

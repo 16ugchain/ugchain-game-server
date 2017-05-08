@@ -14,6 +14,7 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.apache.ibatis.type.JdbcType;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,6 +62,12 @@ public interface UserTokenMapper {
 
 	@Update("update user_token set data=#{data} where token=#{token}")
 	void updateData(@Param("data")int data,@Param("token")String token);
+
+	@Update("update user_token set status=#{status} where token=#{token}")
+	void updateStatus(@Param("status")int status,@Param("token")String token);
+
+	@Update("update user_token set status=#{status} , prices = #{prices} where token=#{token}")
+	void updateStatusAndPrices(@Param("status")int status, @Param("prices")BigDecimal prices, @Param("token")String token);
 
 }
 /*

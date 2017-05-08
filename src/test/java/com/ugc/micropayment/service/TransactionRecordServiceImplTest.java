@@ -60,7 +60,7 @@ public class TransactionRecordServiceImplTest {
         blockRecord.setAmount(BigInteger.valueOf(30));
         blockRecord.setBlockRecordId(transactionRecordService.nextTransactionId());
         blockRecord.setFee(appConfig.getFee());
-        blockRecord.setTargetAddress(appConfig.getUgAddress());
+        blockRecord.setTargetAddress(appConfig.getSellerAddress());
         blockRecord.setType(OrderTypeEnum.RECHARGE.getId());
         blockRecord.setStatus(OrderStatusEnum.SUCCESS.getId());
         blockRecordMapper.insertBlockRecord(blockRecord);

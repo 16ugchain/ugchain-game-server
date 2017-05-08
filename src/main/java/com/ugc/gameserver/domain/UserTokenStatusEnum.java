@@ -33,8 +33,8 @@ public enum UserTokenStatusEnum {
         return null;
     }
 
-    public static OrderStatusEnum fromString(String str) {
-        for (OrderStatusEnum role : OrderStatusEnum.values()) {
+    public static UserTokenStatusEnum fromString(String str) {
+        for (UserTokenStatusEnum role : UserTokenStatusEnum.values()) {
             if (role.name().equals(str)) {
                 return role;
             }

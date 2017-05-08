@@ -17,7 +17,13 @@ public class AppConfig {
 
     private String gethLocation;
 
-    private String ugAddress;
+    private String sellerAddress;
+
+    private String rechargeAddress;
+
+    private String tradeAddress;
+
+    private String dasAddress;
 
     private String walletPassword;
 
@@ -49,12 +55,20 @@ public class AppConfig {
         this.walletPath = walletPath;
     }
 
-    public String getUgAddress() {
-        return this.ugAddress;
+    public String getSellerAddress() {
+        return this.sellerAddress;
     }
 
-    public void setUgAddress(String ugAddress) {
-        this.ugAddress = ugAddress;
+    public void setSellerAddress(String sellerAddress) {
+        this.sellerAddress = sellerAddress;
+    }
+
+    public String getRechargeAddress() {
+        return this.rechargeAddress;
+    }
+
+    public void setRechargeAddress(String rechargeAddress) {
+        this.rechargeAddress = rechargeAddress;
     }
 
     public String getGethLocation() {
@@ -71,5 +85,21 @@ public class AppConfig {
 
     public void setFee(BigDecimal fee) {
         this.fee = fee;
+    }
+
+    public String getTradeAddress() {
+        return this.tradeAddress;
+    }
+
+    public void setTradeAddress(String tradeAddress) {
+        this.tradeAddress = tradeAddress;
+    }
+
+    public String getDasAddress() {
+        return this.dasAddress;
+    }
+
+    public void setDasAddress(String dasAddress) {
+        this.dasAddress = dasAddress;
     }
 }

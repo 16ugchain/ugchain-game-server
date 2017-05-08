@@ -76,7 +76,7 @@ public class TransactionRecordServiceImpl implements TransactionRecordService {
             LOGGER.error(e.getMessage());
         }
         contract = Cashier.load(
-        appConfig.getUgAddress(), web3, credentials, GAS_PRICE, GAS_LIMIT);
+        appConfig.getSellerAddress(), web3, credentials, GAS_PRICE, GAS_LIMIT);
     }
 
 
@@ -109,7 +109,7 @@ public class TransactionRecordServiceImpl implements TransactionRecordService {
                 blockRecord.setAmount(value.getValue().divide(BigInteger.valueOf(1000000000)) );
                 blockRecord.setBlockRecordId(nextTransactionId());
                 blockRecord.setFee(appConfig.getFee());
-                blockRecord.setTargetAddress(appConfig.getUgAddress());
+                blockRecord.setTargetAddress(appConfig.getSellerAddress());
                 blockRecord.setType(OrderTypeEnum.RECHARGE.getId());
                 blockRecord.setStatus(OrderStatusEnum.SUCCESS.getId());
                 System.out.println(value.getValue());

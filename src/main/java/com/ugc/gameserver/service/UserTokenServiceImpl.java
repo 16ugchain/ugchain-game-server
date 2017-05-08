@@ -1,12 +1,19 @@
 package com.ugc.gameserver.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ugc.gameserver.domain.UserToken;
 import com.ugc.gameserver.domain.UserTokenStatusEnum;
 import com.ugc.gameserver.mapper.SequenceMapper;
 import com.ugc.gameserver.mapper.UserTokenMapper;
+import com.ugc.gameserver.util.Encrypt;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -16,10 +23,18 @@ import java.util.Optional;
  */
 @Service
 public class UserTokenServiceImpl implements UserTokenService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserTokenServiceImpl.class);
     @Autowired
     private UserTokenMapper userTokenMapper;
     @Autowired
     private SequenceMapper sequenceMapper;
+    @Autowired
+    private Web3jService web3jService;
+
+    Encrypt encrypt = new Encrypt();
+
+    ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public int nextUserTokenId() {
@@ -68,6 +83,37 @@ public class UserTokenServiceImpl implements UserTokenService {
             return false;
         }
         userTokenMapper.updateData(data,token);
+        return true;
+    }
+
+    @Override
+    public boolean updateStatus(String token, int status) {
+        Optional<UserToken> utOp = getUserTokenByToken(token);
+        if(!utOp.isPresent()){
+            return false;
+        }
+        userTokenMapper.updateStatus(status,token);
+        return true;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean onSelling(int gameId,String token, int status, BigDecimal prices) {
+        Optional<UserToken> utOp = getUserTokenByToken(token);
+        if(!utOp.isPresent()){
+            return false;
+        }
+        String value = "";
+        try {
+            value = objectMapper.writeValueAsString(utOp.get());
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("convert from user token to json error ", e);
+        }
+
+        int assetId = web3jService.queryAssetIdByToken(token);
+        String proveHash = encrypt.SHA256(value);
+        web3jService.sell(gameId,proveHash,prices,assetId);
+        userTokenMapper.updateStatusAndPrices(status,prices,token);
         return true;
     }
 

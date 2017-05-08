@@ -12,11 +12,7 @@ public interface DermaOrderService {
 
     void updateOrder(int orderId, OrderStatusEnum orderStatusEnum);
 
-    void listenContract();
-
     DermaOrder getOrderById(int orderId);
-
-    void initContract();
 
     int nextId();
 }
