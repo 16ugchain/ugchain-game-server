@@ -74,7 +74,7 @@ public class UserTokenController {
                                @RequestParam("prices") BigDecimal prices,
                              @RequestParam(value = "callback", required = false) String callback) {
 
-        return ResultUtil.successCallBack(callback,userTokenService.onSelling(1,token,UserTokenStatusEnum.DEALING.getId(),prices));
+        return ResultUtil.successCallBack(callback,userTokenService.onSelling(web3jService.getGameId(),token,UserTokenStatusEnum.DEALING.getId(),prices));
     }
 
     @RequestMapping(value = "/updateOrder/{token}/derma",produces = "application/json; charset=utf-8")
@@ -116,9 +116,9 @@ public class UserTokenController {
 
         Optional<UserToken> op = userTokenService.getUserTokenByToken(token);
         if (op.isPresent()) {
-            if(op.get().getStatus()==UserTokenStatusEnum.DEALING.getId()){
-                return ResultUtil.buildErrorResultCallBack(ErrorInfo.ON_SELLING,callback);
-            }
+//            if(op.get().getStatus()==UserTokenStatusEnum.DEALING.getId()){
+//                return ResultUtil.buildErrorResultCallBack(ErrorInfo.ON_SELLING,callback);
+//            }
             return ResultUtil.successCallBack(callback,op.get());
         }
         if(userName==null){

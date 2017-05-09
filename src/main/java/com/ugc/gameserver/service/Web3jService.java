@@ -8,6 +8,8 @@ import java.math.BigDecimal;
 public interface Web3jService {
     void init();
 
+    int getGameId();
+
     void listenContract();
 
     int queryAssetIdByToken(String token);

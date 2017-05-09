@@ -27,13 +27,13 @@ import rx.functions.Action1;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-import static org.web3j.tx.Contract.GAS_LIMIT;
 import static org.web3j.tx.ManagedTransaction.GAS_PRICE;
 
 /**
@@ -58,6 +58,8 @@ public class Web3jServiceImpl implements Web3jService {
 
     private DAS das;
 
+    private int gameId = 0;
+
     @Override
     public void init() {
         web3 = Web3j.build(new HttpService(appConfig.getGethHttpURL()));
@@ -70,14 +72,40 @@ public class Web3jServiceImpl implements Web3jService {
             LOGGER.error(e.getMessage());
         }
         recharge = Recharge.load(
-                appConfig.getRechargeAddress(), web3, credentials, GAS_PRICE, GAS_LIMIT);
-        trade = Trade.load(appConfig.getTradeAddress(),web3,credentials,GAS_PRICE,GAS_LIMIT);
-        das = DAS.load(appConfig.getDasAddress(),web3,credentials,GAS_PRICE,GAS_LIMIT);
+                appConfig.getRechargeAddress(), web3, credentials, GAS_PRICE, BigInteger.valueOf(4_700_000));
+        trade = Trade.load(appConfig.getTradeAddress(),web3,credentials,GAS_PRICE, BigInteger.valueOf(4_700_000));
+        das = DAS.load(appConfig.getDasAddress(),web3,credentials,GAS_PRICE,BigInteger.valueOf(4_700_000));
+
         if(credentials!=null){
             LOGGER.info("init web3j and load contract end, use address :"+credentials.getAddress());
         }else{
             LOGGER.warn("credentials is null ! contract can only do query operation");
         }
+        das.initGameId();
+        int i = 0;
+        while (true){
+            try {
+                Address sellerAddress = new Address(appConfig.getSellerAddress());
+                gameId = das.getGameId(sellerAddress).get().getValue().intValue();
+                if(gameId !=0 ){
+                    LOGGER.info("get gameId success gameId:"+gameId);
+                    break;
+                }
+                LOGGER.info("wait for register gameId ,try get gameId times:"+i);
+                i++;
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                LOGGER.error("can't get game id");
+            } catch (ExecutionException e) {
+                LOGGER.error("can't get game id");
+            }
+
+        }
+    }
+
+    @Override
+    public int getGameId() {
+        return this.gameId;
     }
 
     @Override
@@ -163,6 +191,7 @@ public class Web3jServiceImpl implements Web3jService {
     public void sell(int gameId,String proveHash, BigDecimal prices, int assetId) {
         trade.sell(Web3Util.toUint64(gameId),Web3Util.toUint64(assetId),
                 Web3Util.toUint256(prices.intValue()), Web3Util.toBytes32(proveHash));
+        LOGGER.info("send transcation end , assetId:"+assetId);
     }
 
 }
