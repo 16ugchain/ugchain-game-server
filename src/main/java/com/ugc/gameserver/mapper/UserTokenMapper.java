@@ -69,6 +69,9 @@ public interface UserTokenMapper {
 	@Update("update user_token set status=#{status} , prices = #{prices} where token=#{token}")
 	void updateStatusAndPrices(@Param("status")int status, @Param("prices")BigDecimal prices, @Param("token")String token);
 
+	@Update("update user_token set  prices = #{prices} where token=#{token}")
+	void updatePrices( @Param("prices")BigDecimal prices, @Param("token")String token);
+
 }
 /*
 

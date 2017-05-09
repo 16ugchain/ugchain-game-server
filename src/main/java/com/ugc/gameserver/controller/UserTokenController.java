@@ -108,11 +108,11 @@ public class UserTokenController {
     public String getDataByToken(@PathVariable("token") String token, @RequestParam(value = "callback", required = false) String callback
             , @RequestParam(value = "userName", required = false) String userName) {
 
-//        int assetId = web3jService.queryAssetIdByToken(token);
-//        boolean isOnSell = web3jService.isOnSell(assetId);
-//        if(isOnSell){
-//            return ResultUtil.buildErrorResultCallBack(ErrorInfo.ON_SELLING,callback);
-//        }
+        int assetId = web3jService.queryAssetIdByToken(token);
+        boolean isOnSell = web3jService.isOnSell(assetId);
+        if(isOnSell){
+            return ResultUtil.buildErrorResultCallBack(ErrorInfo.ON_SELLING,callback);
+        }
 
         Optional<UserToken> op = userTokenService.getUserTokenByToken(token);
         if (op.isPresent()) {
