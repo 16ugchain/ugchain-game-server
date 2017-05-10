@@ -16,7 +16,8 @@ public class UGCGameServerApplication {
 	public static void main(String[] args) {
 		ConfigurableApplicationContext context = SpringApplication.run(UGCGameServerApplication.class, args);
 		context.getBean(Web3jServiceImpl.class).init();
-		context.getBean(Web3jServiceImpl.class).listenContract();
+		context.getBean(Web3jServiceImpl.class).listenRecharge();
+		context.getBean(Web3jServiceImpl.class).listenBuyEvent();
 
 	}
 

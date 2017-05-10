@@ -4,6 +4,7 @@ import com.ugc.gameserver.config.AppConfig;
 import com.ugc.gameserver.domain.DermaOrder;
 import com.ugc.gameserver.domain.OrderStatusEnum;
 import com.ugc.gameserver.domain.UserToken;
+import com.ugc.gameserver.domain.UserTokenStatusEnum;
 import com.ugc.gameserver.domain.contract.DAS;
 import com.ugc.gameserver.domain.contract.Recharge;
 import com.ugc.gameserver.domain.contract.Trade;
@@ -113,7 +114,7 @@ public class Web3jServiceImpl implements Web3jService {
     }
 
     @Override
-    public void listenContract() {
+    public void listenRecharge() {
         LOGGER.info("init web3j end,start listen contract--> address:"+appConfig.getRechargeAddress());
         Observable<Recharge.PayEventResponse> observable = recharge.payEventObservable();
         observable.subscribe(new Action1<Recharge.PayEventResponse>() {
@@ -130,14 +131,17 @@ public class Web3jServiceImpl implements Web3jService {
 
                 if(order.getDerma().getPrices()!=value.getValue().intValue()
                         ||order.getGameId()!=gameId.getValue().intValue()){
+                    LOGGER.error("order amount is not equal");
                     throw new RuntimeException("order amount is not equal");
                 }
                 dermaOrderService.updateOrder(tradeId.getValue().intValue(), OrderStatusEnum.SUCCESS);
                 Optional<UserToken> userToken = userTokenService.getUserTokenByToken(order.getToken());
                 if(!userToken.isPresent()){
+                    LOGGER.error("the token which pay order is not exists,please check");
                     throw new RuntimeException("the token which pay order is not exists,please check");
                 }
                 if(!toAddress.toString().equals(appConfig.getSellerAddress())){
+                    LOGGER.error("seller address is not equal: "+toAddress.toString());
                     throw new RuntimeException("seller address is not equal: "+toAddress.toString());
                 }
                 List<String> dermas = userToken.get().getDerma();
@@ -148,6 +152,23 @@ public class Web3jServiceImpl implements Web3jService {
                 LOGGER.info("update order and user derma end,order token:"+order.getToken()+"result is: "+ result);
             }
 
+        });
+    }
+
+    @Override
+    public void listenBuyEvent() {
+        LOGGER.info("listen buy event contract--> address:"+appConfig.getTradeAddress());
+        Observable<Trade.BuyEventResponse> observable = trade.buyEventObservable();
+        observable.subscribe(new Action1<Trade.BuyEventResponse>() {
+            @Override
+            @Transactional(rollbackFor = Exception.class)
+            public void call(Trade.BuyEventResponse buyEventResponse) {
+                Uint64 assetIdU = buyEventResponse._assetIndex;
+                int assetId = assetIdU.getValue().intValue();
+                String token = queryTokenByAssetId(assetId);
+                userTokenService.updateStatus(token, UserTokenStatusEnum.USEING.getId());
+                LOGGER.info("buy event end ,update user token status using,token:"+token);
+            }
         });
     }
 

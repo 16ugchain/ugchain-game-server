@@ -10,7 +10,9 @@ public interface Web3jService {
 
     int getGameId();
 
-    void listenContract();
+    void listenRecharge();
+
+    void listenBuyEvent();
 
     int queryAssetIdByToken(String token);
 

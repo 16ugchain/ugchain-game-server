@@ -113,7 +113,7 @@ public class UserTokenServiceImpl implements UserTokenService {
         int assetId = web3jService.queryAssetIdByToken(token);
         String proveHash = encrypt.SHA256(value);
         web3jService.sell(gameId,proveHash,prices,assetId);
-        userTokenMapper.updatePrices(prices,token);
+        userTokenMapper.updateStatusAndPrices(status,prices,token);
         return true;
     }
 

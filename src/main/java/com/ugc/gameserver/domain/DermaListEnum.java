@@ -50,6 +50,16 @@ public enum DermaListEnum {
         throw new IllegalArgumentException(str);
     }
 
+    public static boolean contains(int id) {
+        for (DermaListEnum role : DermaListEnum.values()) {
+            if (role.getId()==id) {
+                return true;
+            }
+        }
+        return  false;
+
+    }
+
 
 
 }

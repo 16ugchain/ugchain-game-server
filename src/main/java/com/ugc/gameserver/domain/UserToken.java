@@ -18,6 +18,7 @@ public class UserToken {
     private Date updateTime;
     private int status;
     private GameDes gameDes;
+    private List<Derma> dermaList;
 
     public GameDes getGameDes() {
         return this.gameDes;
@@ -81,6 +82,14 @@ public class UserToken {
 
     public void setDerma(List<String> derma) {
         this.derma = derma;
+    }
+
+    public List<Derma> getDermaList() {
+        return this.dermaList;
+    }
+
+    public void setDermaList(List<Derma> dermaList) {
+        this.dermaList = dermaList;
     }
 
     public String getUserName() {

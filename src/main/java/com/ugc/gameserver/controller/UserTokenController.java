@@ -130,15 +130,27 @@ public class UserTokenController {
     }
 
     @RequestMapping(value = "/getData/status",produces = "application/json; charset=utf-8")
-    public String getStatusList(@RequestParam("tokens") String tokenList, @RequestParam(value = "callback", required = false) String callback
+    public String getStatusList(@RequestParam("tokens") String tokenList,@RequestParam("type") int type, @RequestParam(value = "callback", required = false) String callback
             ) {
         Map<String,Boolean> status = new LinkedHashMap<String,Boolean>();
         String[] tokens = tokenList.split(",");
-        for (String token : tokens){
-            int assetId = web3jService.queryAssetIdByToken(token);
-            boolean isOnSell = web3jService.isOnSell(assetId);
-            status.put(token,isOnSell);
+        switch (type){
+            case 0:
+                for (String token : tokens){
+                    int assetId = web3jService.queryAssetIdByToken(token);
+                    boolean isOnSell = web3jService.isOnSell(assetId);
+                    status.put(token,isOnSell);
+                };break;
+            case 1:
+                for (String token : tokens){
+                    Optional<UserToken> userToken = userTokenService.getUserTokenByToken(token);
+                    if(userToken.isPresent()){
+                        boolean isOnSell = userToken.get().getStatus()==UserTokenStatusEnum.DEALING.getId()?true:false;
+                        status.put(token,isOnSell);
+                    }
+                }break;
         }
+
         return ResultUtil.successCallBack(callback,status);
     }
 
@@ -169,11 +181,27 @@ public class UserTokenController {
         String name = web3jService.queryGameNameById(web3jService.getGameId());
         Optional<UserToken> opt = userTokenService.getUserTokenByToken(token);
         if(opt.isPresent()){
+            UserToken userToken = opt.get();
             GameDes gameDes = new GameDes();
             gameDes.setGameId(web3jService.getGameId());
             gameDes.setGameName(name);
             opt.get().setGameDes(gameDes);
-            return ResultUtil.successCallBack(callback,opt.get());
+            List<Derma> dermas = new LinkedList<Derma>();
+            List<String> dermaIds = userToken.getDerma();
+            for(String id : dermaIds){
+
+                if (id.equals("0")) {
+                    continue;
+                }
+                int dermaId = Integer.parseInt(id);
+                Derma derma = new Derma();
+                derma.setId(dermaId);
+                derma.setName(DermaListEnum.fromValue(dermaId).getName());
+                derma.setPrices(DermaListEnum.fromValue(dermaId).getPrices());
+                dermas.add(derma);
+            }
+            userToken.setDermaList(dermas);
+            return ResultUtil.successCallBack(callback,userToken);
         }
         return ResultUtil.buildErrorResultCallBack(ErrorInfo.TOKEN_NOTEXISTS,callback);
     }
