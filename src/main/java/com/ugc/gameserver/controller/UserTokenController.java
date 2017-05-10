@@ -6,6 +6,7 @@ import com.ugc.gameserver.domain.DermaOrder;
 import com.ugc.gameserver.domain.UserToken;
 import com.ugc.gameserver.domain.UserTokenStatusEnum;
 import com.ugc.gameserver.domain.result.ErrorInfo;
+import com.ugc.gameserver.domain.result.GameDes;
 import com.ugc.gameserver.service.DermaOrderService;
 import com.ugc.gameserver.service.UserTokenService;
 import com.ugc.gameserver.service.Web3jService;
@@ -165,11 +166,45 @@ public class UserTokenController {
     @RequestMapping(value = "/getData/{assetId}/assetId",produces = "application/json; charset=utf-8")
     public String getUserTokenByAssetId(@PathVariable("assetId") int assetId,@RequestParam(value = "callback", required = false) String callback) {
         String token = web3jService.queryTokenByAssetId(assetId);
+        String name = web3jService.queryGameNameById(web3jService.getGameId());
         Optional<UserToken> opt = userTokenService.getUserTokenByToken(token);
         if(opt.isPresent()){
+            GameDes gameDes = new GameDes();
+            gameDes.setGameId(web3jService.getGameId());
+            gameDes.setGameName(name);
+            opt.get().setGameDes(gameDes);
             return ResultUtil.successCallBack(callback,opt.get());
         }
         return ResultUtil.buildErrorResultCallBack(ErrorInfo.TOKEN_NOTEXISTS,callback);
+    }
+
+    @RequestMapping(value = "/getData/assetList",produces = "application/json; charset=utf-8")
+    public String getUserTokensByAssetId(@RequestParam(value = "assetIds") String assetIds,@RequestParam(value = "callback", required = false) String callback) {
+        String[] assetIdList = assetIds.split(",");
+        List<UserToken> userTokens = new LinkedList<UserToken>();
+        for(String assetId:assetIdList){
+            String token = web3jService.queryTokenByAssetId(Integer.parseInt(assetId));
+            String name = web3jService.queryGameNameById(web3jService.getGameId());
+            Optional<UserToken> opt = userTokenService.getUserTokenByToken(token);
+            if(opt.isPresent()){
+                GameDes gameDes = new GameDes();
+                gameDes.setGameId(web3jService.getGameId());
+                gameDes.setGameName(name);
+                opt.get().setGameDes(gameDes);
+                userTokens.add(opt.get());
+            }
+        }
+
+        return ResultUtil.successCallBack(callback,userTokens);
+    }
+
+    @RequestMapping(value = "/getData/currentGame",produces = "application/json; charset=utf-8")
+    public String getGameName(@RequestParam(value = "callback", required = false) String callback) {
+        String name = web3jService.queryGameNameById(web3jService.getGameId());
+        GameDes gameDes = new GameDes();
+        gameDes.setGameId(web3jService.getGameId());
+        gameDes.setGameName(name);
+        return ResultUtil.successCallBack(callback,gameDes);
     }
 
     @RequestMapping(value = "/getOrder/{orderId}/derma",produces = "application/json; charset=utf-8")

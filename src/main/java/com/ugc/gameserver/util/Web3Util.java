@@ -5,6 +5,7 @@ import org.web3j.abi.datatypes.generated.Uint256;
 import org.web3j.abi.datatypes.generated.Uint64;
 
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 
 /**
  * Created by fanjl on 2017/5/8.
@@ -25,11 +26,14 @@ public class Web3Util {
         return uint256;
     }
 
-    public static Bytes32 toBytes32(String src){
-        return new Bytes32(hexStringToByte32(src.substring(2)));
+    public static Bytes32 hexStringToByte32(String src){
+        if(src.startsWith("0x")){
+            return new Bytes32(hexStringToByte(src.substring(2)));
+        }
+        return new Bytes32(hexStringToByte(src));
     }
 
-    public static byte[] hexStringToByte32(String s) {
+    public static byte[] hexStringToByte(String s) {
         int len = s.length();
         byte[] data = new byte[32];
         for (int i = 0; i < len; i += 2) {
@@ -47,6 +51,29 @@ public class Web3Util {
             hexChars[j * 2 + 1] = hexArray[v & 0x0F];
         }
         return new String(hexChars);
+    }
+
+    public static String bytesToHexString(byte[] bytes) {
+        char[] hexChars = new char[bytes.length * 2];
+        for ( int j = 0; j < bytes.length; j++ ) {
+            int v = bytes[j] & 0xFF;
+            hexChars[j * 2] = hexArray[v >>> 4];
+            hexChars[j * 2 + 1] = hexArray[v & 0x0F];
+        }
+        return new String(hexChars).toLowerCase();
+    }
+    public static byte[] fromUtf8(byte[] src){
+        ByteBuffer byteBuffer = ByteBuffer.allocate(src.length);
+        for(byte b : src){
+            if(b==0){
+                break;
+            }
+            byteBuffer.put(b);
+        }
+        byteBuffer.flip();
+        byte[] ret = new byte[byteBuffer.limit()];
+        byteBuffer.get(ret,0,ret.length);
+        return ret;
     }
 
 }

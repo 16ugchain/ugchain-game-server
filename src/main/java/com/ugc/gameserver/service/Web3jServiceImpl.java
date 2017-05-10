@@ -81,7 +81,8 @@ public class Web3jServiceImpl implements Web3jService {
         }else{
             LOGGER.warn("credentials is null ! contract can only do query operation");
         }
-        das.initGameId();
+        String gameName = Web3Util.bytesToHexString("过河拆桥".getBytes());
+        das.initGameId(Web3Util.hexStringToByte32(gameName));
         int i = 0;
         while (true){
             try {
@@ -93,13 +94,16 @@ public class Web3jServiceImpl implements Web3jService {
                 }
                 LOGGER.info("wait for register gameId ,try get gameId times:"+i);
                 i++;
+            } catch (InterruptedException e) {
+                LOGGER.error("InterruptedException!can't get game id");
+            } catch (ExecutionException e) {
+                LOGGER.error("ExecutionException!can't get game id,Please check network");
+            }
+            try {
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
-                LOGGER.error("can't get game id");
-            } catch (ExecutionException e) {
-                LOGGER.error("can't get game id");
+                e.printStackTrace();
             }
-
         }
     }
 
@@ -121,6 +125,7 @@ public class Web3jServiceImpl implements Web3jService {
                 Address toAddress = payEventResponse._seller;
                 Uint64 gameId = payEventResponse._gameId;
                 Uint64 tradeId = payEventResponse._tradeId;
+                LOGGER.info("get recharge event,gameId: "+gameId.getValue()+", tradeId:"+tradeId.getValue()+", seller address:"+toAddress.toString() );
                 DermaOrder order = dermaOrderService.getOrderById(tradeId.getValue().intValue());
 
                 if(order.getDerma().getPrices()!=value.getValue().intValue()
@@ -148,7 +153,7 @@ public class Web3jServiceImpl implements Web3jService {
 
     @Override
     public int queryAssetIdByToken(String token) {
-        Future<Uint64> assetIdFuture = das.getIndexByToken(Web3Util.toBytes32(token));
+        Future<Uint64> assetIdFuture = das.getIndexByToken(Web3Util.hexStringToByte32(token));
         int assetId = 0;
         try {
             assetId = assetIdFuture.get().getValue().intValue();
@@ -175,6 +180,24 @@ public class Web3jServiceImpl implements Web3jService {
     }
 
     @Override
+    public String queryGameNameById(int gameId) {
+        Future<Bytes32> tokenFuture = das.getGameNameByGameId(Web3Util.toUint64(gameId));
+        String name = "";
+        try {
+//            name = Web3Util.bytes32ToHexString(tokenFuture.get());
+//            byte[] nameByte = Web3Util.hexStringToByte(name);
+
+            byte[] str = tokenFuture.get().getValue();
+            name = new String(Web3Util.fromUtf8(str));
+        } catch (InterruptedException e) {
+            LOGGER.error("InterruptedException occured while query token ",e);
+        } catch (ExecutionException e) {
+            LOGGER.error("ExecutionException occured while query token ",e);
+        }
+        return name;
+    }
+
+    @Override
     public boolean isOnSell(int assetId) {
         boolean result = false;
         try {
@@ -190,7 +213,7 @@ public class Web3jServiceImpl implements Web3jService {
     @Override
     public void sell(int gameId,String proveHash, BigDecimal prices, int assetId) {
         trade.sell(Web3Util.toUint64(gameId),Web3Util.toUint64(assetId),
-                Web3Util.toUint256(prices.intValue()), Web3Util.toBytes32(proveHash));
+                Web3Util.toUint256(prices.intValue()), Web3Util.hexStringToByte32(proveHash));
         LOGGER.info("send transcation end , assetId:"+assetId);
     }
 

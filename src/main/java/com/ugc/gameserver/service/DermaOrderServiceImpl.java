@@ -23,6 +23,8 @@ public class DermaOrderServiceImpl implements DermaOrderService {
     @Autowired
     private DermaOrderMapper dermaOrderMapper;
     @Autowired
+    private Web3jService web3jService;
+    @Autowired
     private AppConfig appConfig;
 
     @Override
@@ -33,7 +35,7 @@ public class DermaOrderServiceImpl implements DermaOrderService {
         dermaOrder.setOrderId(nextId());
         dermaOrder.setStatus(OrderStatusEnum.PENDING.getId());
         dermaOrder.setSeller(appConfig.getSellerAddress());
-        dermaOrder.setGameId(1);
+        dermaOrder.setGameId(web3jService.getGameId());
         dermaOrderMapper.insertDermaOrder(dermaOrder);
         return dermaOrder;
     }

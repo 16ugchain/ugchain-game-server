@@ -1,5 +1,7 @@
 package com.ugc.gameserver.domain;
 
+import com.ugc.gameserver.domain.result.GameDes;
+
 import java.util.Date;
 import java.util.List;
 
@@ -15,6 +17,15 @@ public class UserToken {
     private Date createTime;
     private Date updateTime;
     private int status;
+    private GameDes gameDes;
+
+    public GameDes getGameDes() {
+        return this.gameDes;
+    }
+
+    public void setGameDes(GameDes gameDes) {
+        this.gameDes = gameDes;
+    }
 
     public int getUserTokenId() {
         return this.userTokenId;
