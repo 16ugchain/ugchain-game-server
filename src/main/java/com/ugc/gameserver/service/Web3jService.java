@@ -14,6 +14,8 @@ public interface Web3jService {
 
     void listenBuyEvent();
 
+    void listenSellEvent();
+
     int queryAssetIdByToken(String token);
 
     String queryTokenByAssetId(int assetId);

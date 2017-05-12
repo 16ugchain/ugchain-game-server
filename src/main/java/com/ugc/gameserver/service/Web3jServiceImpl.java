@@ -115,7 +115,7 @@ public class Web3jServiceImpl implements Web3jService {
 
     @Override
     public void listenRecharge() {
-        LOGGER.info("init web3j end,start listen contract--> address:"+appConfig.getRechargeAddress());
+        LOGGER.info("start listen recharge contract--> address:"+appConfig.getRechargeAddress());
         Observable<Recharge.PayEventResponse> observable = recharge.payEventObservable();
         observable.subscribe(new Action1<Recharge.PayEventResponse>() {
             @Override
@@ -168,6 +168,25 @@ public class Web3jServiceImpl implements Web3jService {
                 String token = queryTokenByAssetId(assetId);
                 userTokenService.updateStatus(token, UserTokenStatusEnum.USEING.getId());
                 LOGGER.info("buy event end ,update user token status using,token:"+token);
+            }
+        });
+    }
+
+    @Override
+    public void listenSellEvent() {
+        LOGGER.info("listen sell event contract--> address:"+appConfig.getTradeAddress());
+        Observable<Trade.SellEventResponse> observable = trade.sellEventObservable();
+        observable.subscribe(new Action1<Trade.SellEventResponse>() {
+            @Override
+            @Transactional(rollbackFor = Exception.class)
+            public void call(Trade.SellEventResponse sellEventResponse) {
+                Uint64 assetIdU = sellEventResponse._assetIndex;
+                Uint64 gameIdU = sellEventResponse._gameId;
+                int assetId = assetIdU.getValue().intValue();
+                int gameId = gameIdU.getValue().intValue();
+                String token = queryTokenByAssetId(assetId);
+                userTokenService.updateStatus(token, UserTokenStatusEnum.DEALING.getId());
+                LOGGER.info("sell event end ,gameId:"+gameId+", update user token status dealing,token:"+token);
             }
         });
     }
