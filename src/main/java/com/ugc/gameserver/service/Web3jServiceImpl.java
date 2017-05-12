@@ -129,10 +129,9 @@ public class Web3jServiceImpl implements Web3jService {
                 LOGGER.info("get recharge event,gameId: "+gameId.getValue()+", tradeId:"+tradeId.getValue()+", seller address:"+toAddress.toString() );
                 DermaOrder order = dermaOrderService.getOrderById(tradeId.getValue().intValue());
 
-                if(order.getDerma().getPrices()!=value.getValue().intValue()
-                        ||order.getGameId()!=gameId.getValue().intValue()){
-                    LOGGER.error("order amount is not equal");
-                    throw new RuntimeException("order amount is not equal");
+                if(order.getGameId()!=gameId.getValue().intValue()){
+                    LOGGER.error("gameId is not equal");
+                    throw new RuntimeException("gameId is not equal");
                 }
                 dermaOrderService.updateOrder(tradeId.getValue().intValue(), OrderStatusEnum.SUCCESS);
                 Optional<UserToken> userToken = userTokenService.getUserTokenByToken(order.getToken());
