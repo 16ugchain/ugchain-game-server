@@ -49,10 +49,10 @@ public class UserTokenServiceImpl implements UserTokenService {
 
     @Override
     public UserToken insertAndGet(String userName,String token, String data, int status) {
-        Optional<UserToken> utOp = getUserTokenByToken(token);
-        if(utOp.isPresent()){
-            return utOp.get();
-        }
+//        Optional<UserToken> utOp = getUserTokenByToken(token);
+//        if(utOp.isPresent()){
+//            return utOp.get();
+//        }
         List<String> dermas = new LinkedList<String>();
         dermas.add("0");
         UserToken usertoken = new UserToken();
