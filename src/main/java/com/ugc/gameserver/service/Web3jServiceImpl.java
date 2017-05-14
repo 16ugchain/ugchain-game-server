@@ -251,9 +251,11 @@ public class Web3jServiceImpl implements Web3jService {
 
     @Override
     public void sell(int gameId,String proveHash, BigDecimal prices, int assetId) {
+//        Long unit = new Double(Math.pow(10,18)).longValue();
+//        BigInteger price = BigInteger.valueOf(unit).multiply(BigInteger.valueOf(prices.intValue()));
         trade.sell(Web3Util.toUint64(gameId),Web3Util.toUint64(assetId),
                 Web3Util.toUint256(prices.intValue()), Web3Util.hexStringToByte32(proveHash));
-        LOGGER.info("send transcation end , assetId:"+assetId);
+        LOGGER.info("send transcation end , prices:"+prices+", assetId:"+assetId);
     }
 
 }

@@ -63,4 +63,19 @@ CREATE TABLE `derma_order` (
   `status` tinyint(4) NOT NULL default '0',
   PRIMARY KEY (`id`)
 ) DEFAULT CHARSET=utf8 COLLATE = utf8_bin
+
+CREATE TABLE `derma_order` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `order_id` int(11) NOT NULL ,
+  `token` varchar(50) NOT NULL,
+  `seller` varchar(50) NOT NULL,
+  `game_id` int(11) NOT NULL default '0',
+  `derma_id` int(11) NOT NULL default '0',
+  `derma_name` varchar(50) NOT NULL,
+  `derma_prices` decimal(10,5) NOT NULL,
+  `create_time` timestamp NOT NULL default CURRENT_TIMESTAMP,
+  `update_time` timestamp NOT NULL default CURRENT_TIMESTAMP ,
+  `status` tinyint(4) NOT NULL default '0',
+  PRIMARY KEY (`id`)
+) DEFAULT CHARSET=utf8 COLLATE = utf8_bin
 */

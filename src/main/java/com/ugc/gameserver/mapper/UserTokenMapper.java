@@ -88,6 +88,17 @@ CREATE TABLE `user_token` (
   PRIMARY KEY (`id`)
 ) DEFAULT CHARSET=utf8 COLLATE = utf8_bin
 
-
+CREATE TABLE `user_token` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_token_id` int(11) NOT NULL,
+  `user_name` varchar(15) NOT NULL,
+  `token` varchar(50) NOT NULL,
+  `data` varchar(50) NOT NULL,
+  `derma` int(11) NOT NULL default '0',
+  `create_time` timestamp NOT NULL default CURRENT_TIMESTAMP,
+  `update_time` timestamp NOT NULL default CURRENT_TIMESTAMP,
+  `status` tinyint(4) NOT NULL default '0',
+  PRIMARY KEY (`id`)
+) DEFAULT CHARSET=utf8 COLLATE = utf8_bin
 
 */

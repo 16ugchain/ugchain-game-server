@@ -48,7 +48,7 @@ DELIMITER $$
 
 DROP FUNCTION IF EXISTS `currval`$$
 
-CREATE DEFINER=`touclick`@`%` FUNCTION `currval`(seq_name VARCHAR(50)) RETURNS INT(11)
+CREATE DEFINER=`blockchain`@`%` FUNCTION `currval`(seq_name VARCHAR(50)) RETURNS INT(11)
 BEGIN
 DECLARE VALUE INTEGER;
 SET VALUE=0;
@@ -64,7 +64,7 @@ DELIMITER ;
 DELIMITER $$
 DROP FUNCTION IF EXISTS `nextval`$$
 
-CREATE DEFINER=`touclick`@`%` FUNCTION `nextval`(seq_name varchar(50)) RETURNS int(11)
+CREATE DEFINER=`blockchain`@`%` FUNCTION `nextval`(seq_name varchar(50)) RETURNS int(11)
 BEGIN
 UPDATE sys_sequence
 SET CURRENT_VALUE = CURRENT_VALUE + INCREMENT
